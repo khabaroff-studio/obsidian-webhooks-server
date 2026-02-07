@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian Webhooks Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f6f8;
+            padding: 20px;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .status-box {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e4e8;
+        }
+
+        .status-box h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2c3e50;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f4;
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .status-indicator.connected {
+            background: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+        }
+
+        .status-indicator.disconnected {
+            background: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .status-indicator.warning {
+            background: #f39c12;
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.2);
+        }
+
+        .status-label {
+            font-weight: 500;
+            color: #2c3e50;
+            min-width: 120px;
+        }
+
+        .status-value {
+            color: #7f8c8d;
+            margin-left: auto;
+            font-size: 14px;
+        }
+
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5da;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #7f8c8d;
+            background: #f6f8fa;
+        }
+
+        .filter-btn.active {
+            background: #0366d6;
+            color: white;
+            border-color: #0366d6;
+        }
+
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .events-table thead {
+            background: #f6f8fa;
+        }
+
+        .events-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #586069;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+
+        .events-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 14px;
+        }
+
+        .events-table tbody tr {
+            transition: background 0.15s;
+        }
+
+        .events-table tbody tr:hover {
+            background: #f6f8fa;
+        }
+
+        .events-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .badge.processed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .event-id {
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+            color: #6a737d;
+        }
+
+        .event-path {
+            font-weight: 500;
+            color: #24292e;
+        }
+
+        .event-time {
+            color: #6a737d;
+            font-size: 13px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5da;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #24292e;
+        }
+
+        .action-btn:hover {
+            background: #f6f8fa;
+            border-color: #959da5;
+        }
+
+        .action-btn.delete:hover {
+            background: #ffeef0;
+            border-color: #d73a49;
+            color: #d73a49;
+        }
+
+        .message {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.error {
+            background: #ffeef0;
+            color: #86181d;
+            border: 1px solid #ffdce0;
+            display: block;
+        }
+
+        .message.success {
+            background: #dcffe4;
+            color: #144620;
+            border: 1px solid #c8e6c9;
+            display: block;
+        }
+
+        .message.info {
+            background: #dbedff;
+            color: #0366d6;
+            border: 1px solid #c8e1ff;
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #0366d6;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e4e8;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6a737d;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            opacity: 0.3;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #24292e;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Obsidian Webhooks Dashboard</h1>
+        <p class="subtitle">Monitor and manage your webhook events</p>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-events">0</div>
+                <div class="stat-label">Total Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="processed-count">0</div>
+                <div class="stat-label">Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pending-count">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="failed-count">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="status-box">
+            <h2>Connection Status</h2>
+            <div class="status-row">
+                <span class="status-indicator connected" id="status-indicator"></span>
+                <span class="status-label">Server Status</span>
+                <span class="status-value" id="status-text">Loading...</span>
+            </div>
+            <div class="status-row">
+                <span class="status-indicator connected" id="client-indicator"></span>
+                <span class="status-label">Client Key</span>
+                <span class="status-value" id="client-key">Not configured</span>
+            </div>
+            <div class="status-row">
+                <span class="status-indicator warning" id="webhook-indicator"></span>
+                <span class="status-label">Webhook Key</span>
+                <span class="status-value" id="webhook-key">Not configured</span>
+            </div>
+        </div>
+
+        <!-- Events Table -->
+        <div class="status-box">
+            <div class="events-header">
+                <h2>Recent Events</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="processed">Processed</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="failed">Failed</button>
+                </div>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <table class="events-table">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Path</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="events-tbody">
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                            </svg>
+                            <h3>No events yet</h3>
+                            <p>Webhook events will appear here when they are received by the server</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard JavaScript - Placeholder for future implementation
+        // This would be connected to the Go server API endpoints
+
+        const API_BASE_URL = window.location.origin;
+        let currentFilter = 'all';
+        let clientKey = null;
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Dashboard initialized');
+
+            // Get client key from URL parameter or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            clientKey = urlParams.get('client_key') || localStorage.getItem('client_key');
+
+            if (clientKey) {
+                localStorage.setItem('client_key', clientKey);
+                loadDashboard();
+            } else {
+                showMessage('Please provide client_key parameter in URL', 'error');
+            }
+
+            // Setup filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilter = e.target.dataset.filter;
+                    filterEvents();
+                });
+            });
+        });
+
+        // Load dashboard data from server
+        async function loadDashboard() {
+            try {
+                updateStatus('loading', 'Loading...');
+
+                // Fetch connection status (placeholder - implement actual API endpoint)
+                // const statusResponse = await fetch(`${API_BASE_URL}/api/status/${clientKey}`);
+
+                // Fetch events (placeholder - implement actual API endpoint)
+                // const eventsResponse = await fetch(`${API_BASE_URL}/dashboard/events?client_key=${clientKey}&limit=100`);
+
+                // Mock data for demonstration
+                setTimeout(() => {
+                    updateStatus('connected', 'Connected');
+                    document.getElementById('client-key').textContent = clientKey;
+
+                    // Update statistics (mock data)
+                    document.getElementById('total-events').textContent = '0';
+                    document.getElementById('processed-count').textContent = '0';
+                    document.getElementById('pending-count').textContent = '0';
+                    document.getElementById('failed-count').textContent = '0';
+
+                    showMessage('Dashboard loaded successfully', 'success');
+                }, 500);
+
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+                updateStatus('disconnected', 'Connection failed');
+                showMessage('Failed to connect to server: ' + error.message, 'error');
+            }
+        }
+
+        // Update connection status indicator
+        function updateStatus(status, text) {
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+
+            indicator.className = 'status-indicator';
+
+            if (status === 'connected') {
+                indicator.classList.add('connected');
+            } else if (status === 'disconnected') {
+                indicator.classList.add('disconnected');
+            } else if (status === 'loading') {
+                indicator.classList.add('warning');
+            }
+
+            statusText.textContent = text;
+        }
+
+        // Show message to user
+        function showMessage(text, type = 'info') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Filter events table
+        function filterEvents() {
+            const rows = document.querySelectorAll('#events-tbody tr');
+            rows.forEach(row => {
+                if (currentFilter === 'all') {
+                    row.style.display = '';
+                } else {
+                    const status = row.dataset.status;
+                    row.style.display = status === currentFilter ? '' : 'none';
+                }
+            });
+        }
+
+        // Delete event (placeholder)
+        function deleteEvent(eventId) {
+            if (!confirm('Are you sure you want to delete this event?')) {
+                return;
+            }
+
+            // Implement actual delete endpoint
+            console.log('Delete event:', eventId);
+            showMessage('Event deleted successfully', 'success');
+        }
+
+        // Refresh dashboard
+        function refreshDashboard() {
+            loadDashboard();
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(refreshDashboard, 30000);
+    </script>
+</body>
+</html>

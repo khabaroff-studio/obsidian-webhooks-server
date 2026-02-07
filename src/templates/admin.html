@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Dashboard - Obsidian Webhooks</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					fontFamily: {
+						display: ['Oswald', 'sans-serif'],
+						body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+					},
+					colors: {
+						ink: '#0a0a0a',
+						'ink-soft': '#444444',
+						'ink-muted': '#777777',
+						'ink-dark': '#1a1a1a',
+						accent: '#7C3AED',
+						line: '#e5e5e5',
+						paper: '#FFFFFF',
+						'paper-warm': '#f5f5f5',
+						'paper-cta': '#f7f7f7',
+						github: '#24292e',
+						status: '#22c55e',
+					},
+				},
+			},
+		}
+	</script>
+
+	<style>
+		body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+		::selection { background: #7C3AED; color: white; }
+
+		.btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
+		.btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+		.toast {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			background: #7C3AED;
+			color: white;
+			padding: 12px 24px;
+			font-size: 14px;
+			font-weight: 500;
+			display: none;
+			z-index: 1000;
+		}
+		.toast.show { display: block; }
+	</style>
+</head>
+<body class="font-body text-ink bg-paper">
+
+	<!-- Login Screen -->
+	<div id="loginScreen" class="min-h-screen flex items-center justify-center px-4" style="display:none;">
+		<div class="w-full max-w-md">
+			<div class="text-center mb-10">
+				<h1 class="font-display text-4xl font-bold text-ink mb-2">Obsidian Webhooks</h1>
+				<p class="text-sm text-ink-muted">Admin Panel</p>
+			</div>
+			<div class="border border-line p-8 space-y-6">
+				<div>
+					<label class="block text-xs font-semibold text-ink-muted mb-2 tracking-wide uppercase">Username</label>
+					<input id="username" type="text" placeholder="Enter username"
+						class="w-full px-4 py-3 bg-paper border border-line text-ink placeholder-ink-muted text-sm focus:outline-none focus:border-ink transition-colors">
+				</div>
+				<div>
+					<label class="block text-xs font-semibold text-ink-muted mb-2 tracking-wide uppercase">Password</label>
+					<input id="password" type="password" placeholder="Enter password"
+						class="w-full px-4 py-3 bg-paper border border-line text-ink placeholder-ink-muted text-sm focus:outline-none focus:border-ink transition-colors">
+				</div>
+				<button id="loginBtn" class="btn-lift w-full bg-ink text-white font-medium text-sm py-3 transition-colors hover:bg-accent">
+					Login
+				</button>
+				<div id="loginError" class="hidden border-l-4 border-accent bg-paper-warm px-4 py-3 text-sm text-ink-soft"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Dashboard Screen -->
+	<div id="dashboardScreen" class="min-h-screen" style="display:none;">
+		<!-- Fixed Header -->
+		<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line">
+			<div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-16 lg:px-[100px] h-[72px]">
+				<a href="/" class="font-display text-xs font-bold tracking-wide text-ink hover:text-accent transition-colors">
+					OBSIDIAN WEBHOOKS
+				</a>
+				<div class="flex items-center gap-6">
+					<span class="font-display text-xs font-bold tracking-wide text-ink-muted">ADMIN</span>
+					<span id="status" class="text-xs text-ink-muted"></span>
+					<button id="logoutBtn" class="border border-line text-xs font-medium text-ink px-4 py-2 hover:border-ink transition-colors">
+						Logout
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<div class="max-w-[1440px] mx-auto px-6 md:px-16 lg:px-[100px] pt-[96px] pb-12">
+			<!-- Page Heading -->
+			<div class="mb-8">
+				<p class="text-xs font-semibold text-ink-muted mb-2 tracking-wide">DASHBOARD</p>
+				<h1 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">OBSIDIAN WEBHOOKS ADMIN</h1>
+			</div>
+
+			<!-- Undelivered Alerts -->
+			<div id="alertSection" class="mb-8 hidden">
+				<div class="border border-line border-l-4 border-l-accent px-6 py-4 flex items-center gap-3">
+					<span class="text-sm font-semibold text-ink">Alert:</span>
+					<span id="alertText" class="text-sm text-ink-soft"></span>
+				</div>
+			</div>
+
+			<!-- Users List -->
+			<div class="border border-line p-6 md:p-8">
+				<div class="flex justify-between items-center mb-6">
+					<h2 class="font-display text-xl font-bold text-ink tracking-wide">USERS</h2>
+					<span id="userCount" class="text-xs font-medium text-ink-muted"></span>
+				</div>
+				<div id="usersList" class="space-y-3 text-sm text-ink-muted">Loading...</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="toast" class="toast"></div>
+
+	<script>
+		const API_BASE = window.location.origin;
+
+		function showLogin() {
+			document.getElementById('loginScreen').style.display = 'flex';
+			document.getElementById('dashboardScreen').style.display = 'none';
+		}
+
+		function showDashboard() {
+			document.getElementById('loginScreen').style.display = 'none';
+			document.getElementById('dashboardScreen').style.display = 'block';
+			loadStatus();
+			loadUsers();
+			loadAlerts();
+		}
+
+		// Login handler
+		document.getElementById('loginBtn').addEventListener('click', async () => {
+			const username = document.getElementById('username');
+			const password = document.getElementById('password');
+			const loginBtn = document.getElementById('loginBtn');
+			const loginError = document.getElementById('loginError');
+
+			loginError.classList.add('hidden');
+			loginBtn.disabled = true;
+			loginBtn.textContent = 'Logging in...';
+
+			try {
+				const response = await fetch('/admin/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ username: username.value, password: password.value })
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					localStorage.setItem('admin_token', data.token);
+					showDashboard();
+				} else {
+					const data = await response.json();
+					loginError.textContent = data.error || 'Login failed';
+					loginError.classList.remove('hidden');
+				}
+			} catch (err) {
+				loginError.textContent = 'Network error: ' + err.message;
+				loginError.classList.remove('hidden');
+			} finally {
+				loginBtn.disabled = false;
+				loginBtn.textContent = 'Login';
+			}
+		});
+
+		document.getElementById('password').addEventListener('keypress', (e) => {
+			if (e.key === 'Enter') document.getElementById('loginBtn').click();
+		});
+
+		// Init: check token
+		if (localStorage.getItem('admin_token')) {
+			showDashboard();
+		} else {
+			showLogin();
+		}
+
+		function copyToClipboard(text) {
+			navigator.clipboard.writeText(text);
+			showToast('Copied to clipboard');
+		}
+
+		function showToast(message) {
+			const toast = document.getElementById('toast');
+			toast.textContent = message;
+			toast.classList.add('show');
+			setTimeout(() => toast.classList.remove('show'), 2000);
+		}
+
+		function authHeaders() {
+			return { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` };
+		}
+
+		async function loadStatus() {
+			try {
+				const response = await fetch(API_BASE + '/health');
+				document.getElementById('status').innerHTML = response.ok
+					? '<span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-status"></span> Server OK</span>'
+					: '<span class="text-accent">Server Error</span>';
+			} catch (err) {
+				document.getElementById('status').innerHTML = '<span class="text-accent">Server Unreachable</span>';
+			}
+		}
+
+		async function loadUsers() {
+			try {
+				const response = await fetch(API_BASE + '/admin/users', {
+					headers: authHeaders()
+				});
+				if (!response.ok) {
+					if (response.status === 401) {
+						localStorage.removeItem('admin_token');
+						showLogin();
+						return;
+					}
+					throw new Error('Failed to load users');
+				}
+
+				const data = await response.json();
+				const users = data.users || [];
+
+				document.getElementById('userCount').textContent = `${users.length} users`;
+
+				if (users.length === 0) {
+					document.getElementById('usersList').innerHTML = '<p class="text-ink-muted text-sm">No users yet</p>';
+					return;
+				}
+
+				const html = users.map(user => {
+					const isActive = user.is_active;
+					const statusClass = isActive
+						? 'bg-paper-warm text-status border border-line'
+						: 'bg-paper-warm text-accent border border-line';
+					const statusText = isActive ? 'Active' : 'Suspended';
+					const created = user.created_at ? new Date(user.created_at).toLocaleDateString() : '-';
+					const lastUsed = user.last_used ? new Date(user.last_used).toLocaleDateString() : 'Never';
+
+					return `
+						<div class="border border-line p-4">
+							<div class="flex items-center justify-between mb-3">
+								<div class="flex items-center gap-3">
+									<span class="font-medium text-ink text-sm">${user.user_email || '-'}</span>
+									<span class="text-xs text-ink-muted">${user.user_name || ''}</span>
+									<span class="px-2 py-0.5 text-xs ${statusClass}">${statusText}</span>
+								</div>
+								<div class="flex items-center gap-3 text-xs text-ink-muted">
+									<span>Created: ${created}</span>
+									<span>Last used: ${lastUsed}</span>
+									<span>Events: ${user.usage_count || 0}</span>
+									${isActive
+										? `<button class="toggle-status ml-2 px-3 py-1 border border-line text-ink-soft text-xs hover:border-ink hover:text-ink transition-colors" data-webhook-key="${user.webhook_key || ''}" data-client-key="${user.client_key || ''}" data-action="deactivate">Suspend</button>`
+										: `<button class="toggle-status ml-2 px-3 py-1 bg-ink text-white text-xs hover:bg-accent transition-colors" data-webhook-key="${user.webhook_key || ''}" data-client-key="${user.client_key || ''}" data-action="activate">Activate</button>`
+									}
+								</div>
+							</div>
+							<div class="flex gap-2 text-xs">
+								<button class="copy-key flex-1 px-3 py-2 bg-paper-warm border border-line font-mono text-left hover:border-ink transition-colors truncate" data-key="${user.webhook_key || ''}" title="Webhook: ${user.webhook_key || ''}">
+									WH: ${user.webhook_key || '-'}
+								</button>
+								<button class="copy-key flex-1 px-3 py-2 bg-paper-warm border border-line font-mono text-left hover:border-ink transition-colors truncate" data-key="${user.client_key || ''}" title="Client: ${user.client_key || ''}">
+									CK: ${user.client_key || '-'}
+								</button>
+							</div>
+						</div>
+					`;
+				}).join('');
+
+				document.getElementById('usersList').innerHTML = html;
+
+				document.querySelectorAll('.copy-key').forEach(btn => {
+					btn.addEventListener('click', () => {
+						if (btn.dataset.key) copyToClipboard(btn.dataset.key);
+					});
+				});
+
+				document.querySelectorAll('.toggle-status').forEach(btn => {
+					btn.addEventListener('click', async () => {
+						const action = btn.dataset.action;
+						const webhookKey = btn.dataset.webhookKey;
+						const clientKey = btn.dataset.clientKey;
+
+						if (!confirm(`${action === 'activate' ? 'Activate' : 'Suspend'} this user?`)) return;
+
+						try {
+							const response = await fetch(API_BASE + `/admin/${action}`, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+									...authHeaders()
+								},
+								body: JSON.stringify({ webhook_key: webhookKey, client_key: clientKey })
+							});
+
+							if (response.ok) {
+								showToast(`User ${action}d`);
+								loadUsers();
+							} else {
+								const data = await response.json();
+								alert(`Failed: ${data.error || 'Unknown error'}`);
+							}
+						} catch (err) {
+							alert('Error: ' + err.message);
+						}
+					});
+				});
+
+			} catch (err) {
+				document.getElementById('usersList').innerHTML = '<p class="text-accent text-sm">Error loading users</p>';
+				console.error(err);
+			}
+		}
+
+		document.getElementById('logoutBtn').addEventListener('click', () => {
+			localStorage.removeItem('admin_token');
+			showLogin();
+		});
+
+		async function loadAlerts() {
+			try {
+				const response = await fetch(API_BASE + '/admin/alerts/undelivered', {
+					headers: authHeaders()
+				});
+				if (response.ok) {
+					const data = await response.json();
+					if (data.undelivered_count > 0) {
+						document.getElementById('alertSection').classList.remove('hidden');
+						document.getElementById('alertText').textContent =
+							`${data.undelivered_count} webhooks undelivered for 24+ hours`;
+					} else {
+						document.getElementById('alertSection').classList.add('hidden');
+					}
+				}
+			} catch (err) {
+				// Silently fail — alerts are non-critical
+			}
+		}
+
+		setInterval(loadUsers, 30000);
+		setInterval(loadAlerts, 60000);
+	</script>
+</body>
+</html>

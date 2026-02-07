@@ -1,0 +1,22 @@
+{{.Greeting}}
+
+{{.Intro}}
+
+{{.NowYouCan}}
+
+{{range .Features}}— {{.Title}}
+  {{.Description}}
+{{end}}
+
+{{.NextStepsTitle}}
+{{range $i, $step := .Steps}}{{add $i 1}}. {{$step}}
+{{end}}
+
+Open your dashboard: {{.DashboardUrl}}
+
+Questions? Check the docs on GitHub or reply to this email.
+
+—
+{{.BrandName}}
+{{.Tagline}}
+{{.Website}}

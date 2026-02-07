@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /auth/
+Disallow: /webhook/
+Disallow: /events/
+Disallow: /ack/
+
+Sitemap: https://obsidian-webhooks.khabaroff.studio/sitemap.xml

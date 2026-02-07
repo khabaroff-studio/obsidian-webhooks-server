@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Войти — Obsidian Webhooks</title>
+    <meta name="description" content="Войдите или зарегистрируйтесь в Obsidian Webhooks. Магическая ссылка — без пароля.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/login">
+
+    <meta property="og:title" content="Войти — Obsidian Webhooks">
+    <meta property="og:description" content="Авторизация в Obsidian Webhooks без пароля.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/login">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        ::selection { background: #7C3AED; color: white; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+
+        .btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
+        .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+        .arrow-nudge { transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); display: inline-block; }
+        .btn-lift:hover .arrow-nudge,
+        a:hover .arrow-nudge { transform: translateX(4px); }
+
+        .footer-link { position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #7C3AED; transition: width 0.3s ease; }
+        .footer-link:hover::after { width: 100%; }
+    </style>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-16 lg:px-[100px] h-[72px]">
+            <a href="/ru" class="font-display text-xs font-bold tracking-wide text-ink hover:text-accent transition-colors">
+                OBSIDIAN WEBHOOKS
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/ru#how-it-works" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Как работает</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <span class="hidden sm:inline">GitHub</span>
+                </a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <a href="/login" class="text-ink-muted hover:text-ink transition-colors">EN</a>
+                    <span class="text-line">|</span>
+                    <span class="text-ink font-semibold">RU</span>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="min-h-[calc(100vh-72px-200px)] flex items-center justify-center pt-[72px] px-5">
+        <div class="w-full max-w-[440px] py-16 sm:py-24">
+
+            <!-- Form State -->
+            <div id="formState" class="flex flex-col gap-8">
+                <div class="flex flex-col gap-3 opacity-0 animate-fade-in">
+                    <h1 class="font-display text-3xl sm:text-4xl font-bold text-ink">ВОЙТИ В OBSIDIAN WEBHOOKS</h1>
+                    <p class="text-base text-ink-soft leading-[1.7]">
+                        Введите email — отправим ссылку для входа.<br>
+                        Нет аккаунта? Создадим автоматически.
+                    </p>
+                </div>
+
+                <form id="loginForm" class="flex flex-col gap-5 opacity-0 animate-fade-in animate-delay-1">
+                    <div>
+                        <label for="email" class="block mb-1.5 text-sm font-medium text-ink">Ваш email</label>
+                        <input type="email" id="email" name="email" required placeholder="ivan@example.com"
+                            class="w-full px-4 py-4 border border-line text-base font-body bg-white text-ink focus:outline-none focus:border-ink transition-colors">
+                    </div>
+
+                    <div id="loginError" class="hidden p-3 bg-red-50 text-red-600 text-sm"></div>
+
+                    <button type="submit" class="btn-lift w-full bg-ink text-white text-sm font-medium py-4 flex items-center justify-center gap-2 hover:bg-accent">
+                        Отправить ссылку для входа <span class="arrow-nudge">&#8594;</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Success State -->
+            <div id="successState" class="hidden flex-col gap-6 opacity-0 animate-fade-in">
+                <div class="text-5xl">&#9993;</div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-ink">ПРОВЕРЬТЕ ПОЧТУ</h2>
+                <p class="text-base text-ink-soft leading-[1.7]">
+                    Отправили ссылку для входа на <strong id="sentEmail" class="text-ink"></strong>.<br>
+                    Перейдите по ней для доступа к dashboard.
+                </p>
+                <p class="text-sm text-ink-muted">Ссылка действительна 60 минут.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[100px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white">OBSIDIAN WEBHOOKS</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted">PRODUCT</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/ru/how-it-works" class="footer-link text-sm text-white transition-colors">How it works</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted">RESOURCES</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted">CONTACT</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const formState = document.getElementById('formState');
+        const successState = document.getElementById('successState');
+        const sentEmail = document.getElementById('sentEmail');
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalHTML = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+            loginError.classList.add('hidden');
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    sentEmail.textContent = email;
+                    formState.classList.add('hidden');
+                    successState.classList.remove('hidden');
+                    successState.classList.add('flex');
+                } else {
+                    loginError.textContent = data.error || 'Ошибка. Попробуйте ещё раз.';
+                    loginError.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalHTML;
+                }
+            } catch (err) {
+                loginError.textContent = 'Ошибка сети. Проверьте подключение.';
+                loginError.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalHTML;
+            }
+        });
+
+        document.getElementById('email').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit'));
+        });
+    </script>
+</body>
+</html>

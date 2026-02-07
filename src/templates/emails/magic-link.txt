@@ -1,0 +1,15 @@
+{{.Greeting}}
+
+{{.Intro}}
+
+{{.MagicLink}}
+
+{{.ExpiryWarning}}
+{{.SecurityNote}}
+
+{{.IgnoreText}}
+
+—
+{{.BrandName}}
+{{.Tagline}}
+{{.Website}}

@@ -1,0 +1,75 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: obsidian_webhooks_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: false
+
+      - name: Setup test database schema
+        env:
+          PGHOST: localhost
+          PGPORT: 5433
+          PGUSER: test
+          PGPASSWORD: test
+          PGDATABASE: obsidian_webhooks_test
+        run: psql -f scripts/test_schema.sql
+
+      - name: Run unit tests
+        env:
+          TEST_DATABASE_URL: postgres://test:test@localhost:5433/obsidian_webhooks_test?sslmode=disable
+        run: go test -v -p 1 ./src/handlers ./src/middleware ./src/services
+
+      - name: Build
+        run: go build -o obsidian-webhooks-server .
+
+  deploy-production:
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Production
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/obsidian-webhooks
+            git pull origin main
+            docker compose build --no-cache
+            docker compose up -d
+            sleep 10
+            curl -f http://localhost:8081/health || exit 1
+            echo "Production deploy successful"
+            echo "URL: https://obsidian-webhooks.khabaroff.studio"
