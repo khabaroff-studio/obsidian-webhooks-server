@@ -1,0 +1,75 @@
+# Environment files
+.env
+.env.local
+.env.server
+.env.production
+
+# Build artifacts
+obsidian-webhooks-selfhosted
+obsidian-webhooks-server
+webhooks-server
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of go coverage
+*.out
+
+# Go workspace file
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Plugin build artifacts
+plugin/node_modules/
+plugin/main.js
+plugin/main.js.map
+plugin/data.json
+
+# Claude AI
+.claude/
+CLAUDE.md
+AGENTS.md
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database dumps
+*.sql.backup
+*.dump
+
+# Certificates (if any)
+*.pem
+*.key
+*.crt
+
+
+coverage.html
+
+# Local archive (historical artifacts)
+archive/
+
+# Build output
+bin/

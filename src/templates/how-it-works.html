@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works — Obsidian Webhooks</title>
+    <meta name="description" content="Architecture, setup, integration examples — all on one page. How Obsidian Webhooks delivers events from external services to your vault.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How It Works — Obsidian Webhooks">
+    <meta property="og:description" content="Architecture, setup, and integration examples. How Obsidian Webhooks delivers events from external services to your vault.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="How It Works — Obsidian Webhooks">
+    <meta name="twitter:description" content="Architecture, setup, and integration examples for Obsidian Webhooks.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        ::selection { background: #7C3AED; color: white; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+
+        .btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
+        .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+        .arrow-nudge { transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); display: inline-block; }
+        .btn-lift:hover .arrow-nudge,
+        a:hover .arrow-nudge { transform: translateX(4px); }
+
+        .card-hover:hover { border-color: #0a0a0a; }
+
+        .footer-link { position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #7C3AED; transition: width 0.3s ease; }
+        .footer-link:hover::after { width: 100%; }
+
+        code { font-family: 'SF Mono', 'Fira Code', monospace; }
+        pre { overflow-x: auto; position: relative; }
+        .copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 8px; font-size: 11px; font-family: inherit; border: none; border-radius: 4px; cursor: pointer; opacity: 0; transition: opacity 0.2s ease; }
+        pre:hover .copy-btn { opacity: 1; }
+        .copy-btn.light { background: #e5e5e5; color: #444; }
+        .copy-btn.light:hover { background: #d4d4d4; }
+        .copy-btn.dark { background: #333; color: #aaa; }
+        .copy-btn.dark:hover { background: #444; }
+
+        #mobileMenu { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.2s ease; }
+        #mobileMenu.open { max-height: 320px; opacity: 1; }
+    </style>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/how-it-works" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">How It Works</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Log In</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <span class="text-ink font-semibold">EN</span>
+                    <span class="text-line">|</span>
+                    <a href="/ru" class="text-ink-muted hover:text-ink transition-colors">RU</a>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Open menu" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/how-it-works" class="text-sm font-medium text-ink hover:text-accent transition-colors">How It Works</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Log In</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <span class="text-sm text-ink font-semibold">EN</span>
+                <span class="text-sm text-line">|</span>
+                <a href="/ru" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in">How Obsidian Webhooks Works</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-1">Architecture, setup, integration examples — all on one page</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARCHITECTURE ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Architecture</h2>
+
+                <img src="/assets/how.png" alt="Architecture: Your Service → Server → Queue → Obsidian Plugin → Your Vault" class="w-full fade-in">
+
+                <p class="text-lg text-ink-muted italic fade-in">"Vault" is a note storage in Obsidian. A folder on your disk where all .md files live.</p>
+
+                <!-- Steps text -->
+                <div class="flex flex-col gap-4 text-lg text-ink-soft leading-[1.7] fade-in">
+                    <p><strong class="text-ink">1. Your Service</strong> — n8n, Make, script, or bot sends an HTTP POST with content</p>
+                    <p><strong class="text-ink">2. Server</strong> — validates the webhook_key and saves content to the queue</p>
+                    <p><strong class="text-ink">3. Queue</strong> — stores data for up to 30 days, even when Obsidian is closed</p>
+                    <p><strong class="text-ink">4. Obsidian Plugin</strong> — online: content arrives via SSE in 1-3 seconds. Was offline: picks up everything on reconnect</p>
+                    <p><strong class="text-ink">5. Your Vault</strong> — plugin creates a note and sends delivery confirmation (ACK). Server clears the queue</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== QUICK START ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <div>
+                    <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Quick Start</h2>
+                    <p class="text-lg text-ink-soft mt-3">From signup to your first note in vault — 5 minutes</p>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-1">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">01</span>
+                    <h3 class="text-xl font-semibold text-ink">Sign up</h3>
+                    <a href="/login" class="btn-lift bg-ink text-white text-sm font-medium px-7 py-3 inline-flex items-center gap-2 hover:bg-accent self-start">
+                        <span class="arrow-nudge">&#8594;</span> Get API keys
+                    </a>
+                    <p class="text-lg text-ink-soft leading-[1.7]">
+                        Check your email &#8594; click the login link &#8594; open your dashboard. You'll see two keys:
+                    </p>
+                    <ul class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-1 pl-1">
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">webhook_key</code> — for sending content to the server</li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">client_key</code> — for connecting the plugin in Obsidian</li>
+                    </ul>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-2">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">02</span>
+                    <h3 class="text-xl font-semibold text-ink">Install the plugin in Obsidian</h3>
+                    <div class="flex flex-col gap-3 text-lg text-ink-soft leading-[1.7]">
+                        <p><strong class="text-ink">1.</strong> Download: <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="text-accent hover:underline">Download Plugin &#8594;</a></p>
+                        <p><strong class="text-ink">2.</strong> Extract to your vault:</p>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed"><code>.obsidian/plugins/obsidian-webhooks/
+├── main.js
+└── manifest.json</code></pre>
+                        <p><strong class="text-ink">3.</strong> Obsidian &#8594; Settings &#8594; Community plugins &#8594; "Obsidian Webhooks" &#8594; Enable</p>
+                        <p><strong class="text-ink">4.</strong> Settings &#8594; Obsidian Webhooks &#8594; paste your client_key &#8594; Connect. <span class="text-status">&#9679;</span> = connected</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-3">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">03</span>
+                    <h3 class="text-xl font-semibold text-ink">Send your first webhook</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Quickest way to check it works — curl:</p>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST \
+  "https://obsidian-webhooks.khabaroff.studio/webhook/{your_webhook_key}?path=inbox/test.md" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "# First note\n\nSent via webhook!"}'</code></pre>
+                    <p class="text-lg text-ink-soft leading-[1.7]">A note will appear in your vault within 1-3 seconds at <code class="bg-paper-warm px-1.5 py-0.5 font-mono">inbox/test.md</code>.</p>
+                    <div class="flex flex-col gap-2 text-lg text-ink-muted">
+                        <p class="text-ink-soft font-medium">Server response:</p>
+                        <p><code class="text-ink bg-paper-warm px-1.5 py-0.5">200 OK</code> — content accepted and queued</p>
+                        <p><code class="text-ink bg-paper-warm px-1.5 py-0.5">400 Bad Request</code> — missing <code class="font-mono">path</code> query parameter</p>
+                        <p><code class="text-ink bg-paper-warm px-1.5 py-0.5">401 Unauthorized</code> — invalid webhook_key</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== KEYS ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Two Keys for Sending and Receiving</h2>
+
+                <div class="flex flex-col gap-8">
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
+                        <h3 class="font-body text-[22px] font-bold text-ink-dark">webhook_key</h3>
+                        <p class="text-lg text-ink-soft leading-[1.7]">For sending content to the server.</p>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>POST https://obsidian-webhooks.khabaroff.studio/webhook/{webhook_key}?path=inbox/note.md
+Content-Type: application/json
+
+{
+  "title": "My Note",
+  "content": "# Title\n\nNote text",
+  "tags": ["inbox", "webhook"]
+}</code></pre>
+                        <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                            <p><code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">path</code> — where to save in vault (required, query param)</p>
+                            <p><code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">content</code> — note body in Markdown</p>
+                            <p><code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">title</code>, <code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">tags</code>, <code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">date</code>, ... — go to YAML frontmatter</p>
+                            <p>Plain text body is written as-is, without JSON parsing.</p>
+                        </div>
+                    </div>
+
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
+                        <h3 class="font-body text-[22px] font-bold text-ink-dark">client_key</h3>
+                        <p class="text-lg text-ink-soft leading-[1.7]">Paste into Obsidian: Settings &#8594; Obsidian Webhooks &#8594; Client Key.</p>
+                        <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                            <p>Each <code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">webhook_key</code> is paired with a <code class="text-ink bg-paper-warm px-1 py-0.5 font-mono">client_key</code>. Content sent to one is only accessible to its pair.</p>
+                            <p>Keys are generated cryptographically — impossible to guess.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== INTEGRATIONS ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <div>
+                    <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Integration Examples</h2>
+                    <p class="text-lg text-ink-soft mt-3">Works with any service that supports HTTP POST</p>
+                </div>
+
+                <div class="flex flex-col gap-8">
+                    <!-- n8n -->
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">n8n</h3>
+                        <div class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-2">
+                            <p>1. New Workflow &#8594; "HTTP Request" node</p>
+                            <p>2. Method: POST</p>
+                            <p>3. URL: <code class="bg-paper-warm px-1.5 py-0.5">https://obsidian-webhooks.khabaroff.studio/webhook/{webhook_key}?path=inbox/n8n-note.md</code></p>
+                        </div>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>{
+  "content": "# Note from n8n\n\nWorkflow data",
+  "source": "n8n"
+}</code></pre>
+                    </div>
+
+                    <!-- Make -->
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Make</h3>
+                        <div class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-2">
+                            <p>1. New Scenario &#8594; "HTTP" module &#8594; "Make a request"</p>
+                            <p>2. Method: POST</p>
+                            <p>3. URL: <code class="bg-paper-warm px-1.5 py-0.5">https://obsidian-webhooks.khabaroff.studio/webhook/{webhook_key}?path=inbox/make-note.md</code></p>
+                        </div>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>{
+  "content": "# From Make\n\nText",
+  "source": "make"
+}</code></pre>
+                    </div>
+
+                    <!-- Python -->
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Python</h3>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>import requests
+
+response = requests.post(
+    "https://obsidian-webhooks.khabaroff.studio/webhook/{webhook_key}?path=inbox/script-note.md",
+    json={
+        "content": "# Note from Python\n\nText",
+        "source": "python"
+    }
+)
+print(response.status_code)  # 200</code></pre>
+                    </div>
+
+                    <!-- Telegram bot -->
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Telegram Bot</h3>
+                        <p class="text-lg text-ink-soft leading-[1.7]">Telegram doesn't send webhooks to arbitrary URLs. You need a bot — a simple script that forwards messages as HTTP POST.</p>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>WEBHOOK_URL = "https://obsidian-webhooks.khabaroff.studio/webhook/{webhook_key}"
+
+def handle_message(update, context):
+    text = update.message.text
+    requests.post(
+        f"{WEBHOOK_URL}?path=inbox/telegram.md",
+        json={"content": f"# Telegram\n\n{text}"}
+    )</code></pre>
+                        <p class="text-lg text-ink-muted">Token: Telegram &#8594; @BotFather &#8594; /newbot</p>
+                    </div>
+
+                    <!-- curl -->
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">cURL</h3>
+                        <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST \
+  "https://obsidian-webhooks.khabaroff.studio/webhook/{webhook_key}?path=inbox/test.md" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "# Test\n\nIt works!"}'</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DASHBOARD ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <div>
+                    <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Dashboard</h2>
+                    <p class="text-lg text-ink-soft mt-3">Keys, stats, request format</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Keys and stats</h3>
+                        <p class="text-lg text-ink-soft leading-[1.7]">Your <code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">webhook_key</code> and <code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">client_key</code> with Show/Hide and Copy. Stats: key status, creation date, last used, event count.</p>
+                    </div>
+                    <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Quick start and request format</h3>
+                        <p class="text-lg text-ink-soft leading-[1.7]">Step-by-step setup guide, plugin download link, curl example, and a full table of JSON body fields (<code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">content</code>, <code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">title</code>, <code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">tags</code>, ...).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/how-it-works" class="footer-link text-sm text-white transition-colors">How it works</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

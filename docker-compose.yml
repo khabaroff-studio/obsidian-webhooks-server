@@ -1,0 +1,39 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: obsidian_webhooks_server
+    env_file: .env
+    environment:
+      PORT: ${PORT:-8081}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      EXTERNAL_HOST: ${EXTERNAL_HOST}
+      EVENT_TTL_DAYS: ${EVENT_TTL_DAYS:-30}
+      ENABLE_AUTO_CLEANUP: ${ENABLE_AUTO_CLEANUP:-true}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-}
+      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN:-}
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY:-}
+      MAILGUN_FROM_EMAIL: ${MAILGUN_FROM_EMAIL:-}
+      MAILGUN_FROM_NAME: ${MAILGUN_FROM_NAME:-}
+      MAILERLITE_API_KEY: ${MAILERLITE_API_KEY:-}
+      MAILERLITE_GROUP_SIGNUPS: ${MAILERLITE_GROUP_SIGNUPS:-}
+      MAILERLITE_GROUP_ACTIVE: ${MAILERLITE_GROUP_ACTIVE:-}
+      MAGIC_LINK_EXPIRY: ${MAGIC_LINK_EXPIRY:-3600}
+      MAGIC_LINK_BASE_URL: ${MAGIC_LINK_BASE_URL}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
+      POSTHOG_HOST: ${POSTHOG_HOST:-https://eu.i.posthog.com}
+      POSTHOG_ENABLED: ${POSTHOG_ENABLED:-false}
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./plugin/release:/app/plugin/release:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:${PORT:-8081}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

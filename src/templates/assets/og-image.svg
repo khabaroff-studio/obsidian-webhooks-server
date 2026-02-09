@@ -1,0 +1,76 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9b5de5"/>
+      <stop offset="100%" stop-color="#6c2bd9"/>
+    </linearGradient>
+    <linearGradient id="gemTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#b07ae8"/>
+      <stop offset="100%" stop-color="#8b4fd8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.04">
+    <line x1="0" y1="0" x2="0" y2="630" stroke="white" stroke-width="1" transform="translate(60,0)"/>
+    <line x1="0" y1="0" x2="0" y2="630" stroke="white" stroke-width="1" transform="translate(120,0)"/>
+    <line x1="0" y1="0" x2="0" y2="630" stroke="white" stroke-width="1" transform="translate(180,0)"/>
+    <line x1="0" y1="0" x2="0" y2="630" stroke="white" stroke-width="1" transform="translate(240,0)"/>
+    <line x1="0" y1="0" x2="0" y2="630" stroke="white" stroke-width="1" transform="translate(300,0)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="white" stroke-width="1" transform="translate(0,60)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="white" stroke-width="1" transform="translate(0,120)"/>
+    <line x1="0" y1="0" x2="1200" y2="0" stroke="white" stroke-width="1" transform="translate(0,180)"/>
+  </g>
+
+  <!-- Gem icon (centered left area) -->
+  <g transform="translate(130, 180) scale(0.35)">
+    <!-- Gem body -->
+    <polygon points="350,50 550,50 650,250 500,550 250,250" fill="url(#gemGrad)"/>
+    <!-- Gem top facet -->
+    <polygon points="350,50 550,50 600,180 300,180" fill="url(#gemTop)"/>
+    <!-- Gem center line -->
+    <line x1="450" y1="50" x2="500" y2="550" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+    <!-- Arrow -->
+    <g transform="translate(-30, 30)">
+      <rect x="50" y="235" width="250" height="30" rx="15" fill="rgba(255,255,255,0.9)"/>
+      <polygon points="300,200 400,250 300,300" fill="rgba(255,255,255,0.9)"/>
+    </g>
+  </g>
+
+  <!-- Text area -->
+  <g transform="translate(420, 0)">
+    <!-- Product name -->
+    <text x="0" y="230" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="72" fill="white" letter-spacing="-1">
+      <tspan>OBSIDIAN</tspan>
+    </text>
+    <text x="0" y="310" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="72" fill="#7C3AED" letter-spacing="-1">
+      <tspan>WEBHOOKS</tspan>
+    </text>
+
+    <!-- Tagline -->
+    <text x="0" y="380" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="28" fill="#999999" letter-spacing="0.5">
+      <tspan>Self-hosted webhook delivery for Obsidian</tspan>
+    </text>
+
+    <!-- Feature pills -->
+    <g transform="translate(0, 420)">
+      <rect x="0" y="0" width="130" height="36" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+      <text x="65" y="23" font-family="system-ui, sans-serif" font-size="14" fill="#aaa" text-anchor="middle">Real-time SSE</text>
+
+      <rect x="145" y="0" width="155" height="36" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+      <text x="222" y="23" font-family="system-ui, sans-serif" font-size="14" fill="#aaa" text-anchor="middle">Exactly-once ACK</text>
+
+      <rect x="315" y="0" width="110" height="36" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+      <text x="370" y="23" font-family="system-ui, sans-serif" font-size="14" fill="#aaa" text-anchor="middle">Offline sync</text>
+
+      <rect x="440" y="0" width="140" height="36" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+      <text x="510" y="23" font-family="system-ui, sans-serif" font-size="14" fill="#aaa" text-anchor="middle">Free &amp; open source</text>
+    </g>
+  </g>
+
+  <!-- Bottom accent line -->
+  <rect x="0" y="620" width="1200" height="10" fill="#7C3AED"/>
+</svg>

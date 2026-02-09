@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Obsidian Webhooks</title>
+    <meta name="description" content="Manage your API keys, view webhook history, and monitor your Obsidian Webhooks integration.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/dashboard">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        ::selection { background: #7C3AED; color: white; }
+        code { font-family: 'SF Mono', 'Fira Code', monospace; }
+
+        .btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
+        .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+        .footer-link { position: relative; }
+        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #7C3AED; transition: width 0.3s ease; }
+        .footer-link:hover::after { width: 100%; }
+    </style>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-16 lg:px-[100px] h-[72px]">
+            <a href="/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <div class="flex items-center gap-4 md:gap-6">
+                <span id="userEmail" class="text-xs text-ink-muted">Loading...</span>
+                <button
+                    id="logoutBtn"
+                    class="btn-lift bg-ink text-white text-xs font-medium px-5 py-3 hover:bg-accent transition-colors"
+                >
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN ==================== -->
+    <main class="max-w-[1440px] mx-auto px-6 md:px-16 lg:px-[100px] pt-[120px] pb-16">
+
+        <h1 class="sr-only">Obsidian Webhooks Dashboard</h1>
+
+        <!-- ==================== API KEYS ==================== -->
+        <section class="bg-white border border-line p-8 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-display text-2xl font-bold uppercase tracking-wide">Your API Keys</h2>
+                <button
+                    id="newKeyPairBtn"
+                    class="btn-lift bg-ink text-white text-sm font-medium px-5 py-2.5 hover:bg-accent transition-colors"
+                >
+                    + New Key Pair
+                </button>
+            </div>
+
+            <div id="keysContainer">
+                <div id="keysLoading" class="text-ink-muted">Loading your keys...</div>
+                <div id="keysList" class="hidden flex flex-col gap-6"></div>
+            </div>
+        </section>
+
+        <!-- ==================== WEBHOOK LOGS ==================== -->
+        <section class="bg-white border border-line p-8">
+            <h2 class="font-display text-2xl font-bold uppercase tracking-wide mb-6">Webhook Logs</h2>
+
+            <div id="logsContainer">
+                <div id="logsLoading" class="text-ink-muted">Loading logs...</div>
+
+                <!-- Empty state -->
+                <div id="logsEmpty" class="hidden text-center py-12">
+                    <p class="text-lg text-ink-muted">No webhooks yet</p>
+                    <p class="text-sm text-ink-muted mt-2">Send your first one using the webhook_key above.</p>
+                </div>
+
+                <!-- Logs table -->
+                <div id="logsTable" class="hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead>
+                                <tr class="border-b border-line">
+                                    <th class="py-3 pr-4 font-semibold text-ink text-xs uppercase tracking-wider">Time</th>
+                                    <th class="py-3 font-semibold text-ink text-xs uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsBody" class="text-ink-soft">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="logsLoadMore" class="hidden pt-4 text-center">
+                        <button id="loadMoreBtn" class="text-sm font-medium text-ink-muted hover:text-accent transition-colors">Load more</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[100px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/how-it-works" class="footer-link text-sm text-white transition-colors">How it works</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let allKeys = [];
+        let logsOffset = 0;
+        const LOGS_LIMIT = 50;
+
+        // Render all key pair cards
+        function renderKeyPairs(keys) {
+            const container = document.getElementById('keysList');
+            container.innerHTML = '';
+
+            if (!keys || keys.length === 0) {
+                container.innerHTML = '<p class="text-ink-muted">No key pairs yet. Click "+ New Key Pair" to create one.</p>';
+                return;
+            }
+
+            keys.forEach((kp, idx) => {
+                const card = document.createElement('div');
+                const opacity = kp.is_active ? '' : ' opacity-60';
+                card.className = 'border border-line p-6' + opacity;
+                card.dataset.pairId = kp.pair_id;
+
+                const statusColor = kp.is_active ? 'text-status' : 'text-red-500';
+                const statusText = kp.is_active ? 'Active' : 'Revoked';
+                const created = new Date(kp.created_at).toLocaleDateString();
+                const lastUsed = kp.last_used ? new Date(kp.last_used).toLocaleDateString() : 'Never';
+                const revokeBtn = kp.is_active
+                    ? `<button class="revoke-btn text-xs font-medium text-red-600 hover:text-red-800 px-3 py-1.5 border border-red-200 hover:border-red-400 transition-colors" data-pair-id="${kp.pair_id}">Revoke</button>`
+                    : '<span class="text-xs text-red-400">Revoked</span>';
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">Key Pair #${idx + 1}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold ${statusColor}">${statusText}</span>
+                            ${revokeBtn}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-ink">Webhook Key</label>
+                                <button class="toggle-key text-xs text-ink-muted hover:text-ink transition-colors cursor-pointer" data-target="wh-${kp.pair_id}" data-value="${kp.webhook_key}">Show</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input id="wh-${kp.pair_id}" type="password" readonly value="••••••••••••••••••••••••" class="flex-1 min-w-0 px-3 py-2 border border-line bg-paper-warm font-mono text-xs text-ink focus:outline-none" />
+                                <button class="copy-btn btn-lift bg-ink text-white text-xs font-medium px-4 py-2 hover:bg-accent transition-colors shrink-0" data-value="${kp.webhook_key}">Copy</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-ink">Client Key</label>
+                                <button class="toggle-key text-xs text-ink-muted hover:text-ink transition-colors cursor-pointer" data-target="ck-${kp.pair_id}" data-value="${kp.client_key}">Show</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input id="ck-${kp.pair_id}" type="password" readonly value="••••••••••••••••••••••••" class="flex-1 min-w-0 px-3 py-2 border border-line bg-paper-warm font-mono text-xs text-ink focus:outline-none" />
+                                <button class="copy-btn btn-lift bg-ink text-white text-xs font-medium px-4 py-2 hover:bg-accent transition-colors shrink-0" data-value="${kp.client_key}">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 text-xs text-ink-muted">
+                        <span>Created: <strong class="text-ink">${created}</strong></span>
+                        <span>Last used: <strong class="text-ink">${lastUsed}</strong></span>
+                        <span>Events: <strong class="text-ink">${kp.usage_count || 0}</strong></span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Bind toggle Show/Hide
+            container.querySelectorAll('.toggle-key').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const input = document.getElementById(this.dataset.target);
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        input.value = this.dataset.value;
+                        this.textContent = 'Hide';
+                    } else {
+                        input.type = 'password';
+                        input.value = '••••••••••••••••••••••••';
+                        this.textContent = 'Show';
+                    }
+                });
+            });
+
+            // Bind Copy buttons
+            container.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    await navigator.clipboard.writeText(this.dataset.value);
+                    this.textContent = 'Copied!';
+                    this.classList.remove('bg-ink', 'hover:bg-accent');
+                    this.classList.add('bg-status');
+                    setTimeout(() => {
+                        this.textContent = 'Copy';
+                        this.classList.remove('bg-status');
+                        this.classList.add('bg-ink', 'hover:bg-accent');
+                    }, 2000);
+                });
+            });
+
+            // Bind Revoke buttons
+            container.querySelectorAll('.revoke-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const pairId = this.dataset.pairId;
+                    if (!confirm('Revoke this key pair? Webhooks using these keys will stop working immediately.')) return;
+                    try {
+                        const resp = await fetch('/dashboard/api/revoke', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ pair_id: pairId }),
+                        });
+                        if (!resp.ok) throw new Error('Failed to revoke');
+                        // Re-fetch and re-render
+                        await loadDashboard();
+                    } catch (error) {
+                        alert('Failed to revoke keys. Please try again.');
+                    }
+                });
+            });
+        }
+
+        // Load user data and keys
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/dashboard/api/me');
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = '/login';
+                        return;
+                    }
+                    throw new Error('Failed to load dashboard');
+                }
+
+                const data = await response.json();
+
+                document.getElementById('userEmail').textContent = data.email;
+
+                allKeys = data.keys || [];
+
+                document.getElementById('keysLoading').classList.add('hidden');
+                document.getElementById('keysList').classList.remove('hidden');
+                renderKeyPairs(allKeys);
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('keysLoading').innerHTML = '<p class="text-red-600">Failed to load dashboard. Please refresh the page.</p>';
+            }
+        }
+
+        // Load webhook logs
+        async function loadLogs(append) {
+            try {
+                const response = await fetch(`/dashboard/api/logs?limit=${LOGS_LIMIT}&offset=${logsOffset}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        document.getElementById('logsLoading').classList.add('hidden');
+                        document.getElementById('logsEmpty').classList.remove('hidden');
+                        return;
+                    }
+                    throw new Error('Failed to load logs');
+                }
+
+                const data = await response.json();
+                document.getElementById('logsLoading').classList.add('hidden');
+
+                if (!data.logs || data.logs.length === 0) {
+                    if (!append) {
+                        document.getElementById('logsEmpty').classList.remove('hidden');
+                    }
+                    return;
+                }
+
+                document.getElementById('logsTable').classList.remove('hidden');
+
+                const tbody = document.getElementById('logsBody');
+                data.logs.forEach(log => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-line/50';
+
+                    const time = new Date(log.attempted_at);
+                    const timeStr = time.toLocaleDateString() + ' ' + time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+                    const statusColors = {
+                        pending: 'bg-yellow-100 text-yellow-800',
+                        delivered: 'bg-blue-100 text-blue-800',
+                        acked: 'bg-green-100 text-green-800',
+                        failed: 'bg-red-100 text-red-800'
+                    };
+                    const badgeClass = statusColors[log.delivery_status] || 'bg-gray-100 text-gray-800';
+
+                    tr.innerHTML = `
+                        <td class="py-3 pr-4 text-sm text-ink-muted whitespace-nowrap">${timeStr}</td>
+                        <td class="py-3"><span class="px-2 py-0.5 text-xs font-medium rounded ${badgeClass}">${log.delivery_status}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                logsOffset += data.logs.length;
+
+                if (logsOffset < data.total) {
+                    document.getElementById('logsLoadMore').classList.remove('hidden');
+                } else {
+                    document.getElementById('logsLoadMore').classList.add('hidden');
+                }
+
+            } catch (error) {
+                console.error('Error loading logs:', error);
+                document.getElementById('logsLoading').classList.add('hidden');
+                document.getElementById('logsEmpty').classList.remove('hidden');
+            }
+        }
+
+        // Load more logs
+        document.getElementById('loadMoreBtn').addEventListener('click', function() {
+            loadLogs(true);
+        });
+
+        // New key pair
+        document.getElementById('newKeyPairBtn').addEventListener('click', async function() {
+            if (!confirm('Create a new key pair? You will need to update your plugin settings with the new keys.')) return;
+            try {
+                const resp = await fetch('/dashboard/api/keys/new', { method: 'POST' });
+                if (!resp.ok) throw new Error('Failed to create keys');
+                // Re-fetch all data and re-render
+                await loadDashboard();
+            } catch (error) {
+                alert('Failed to create new keys. Please try again.');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            try {
+                await fetch('/auth/logout', { method: 'POST' });
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                document.cookie = 'session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                window.location.href = '/';
+            }
+        });
+
+        // Init
+        loadDashboard();
+        loadLogs(false);
+    </script>
+</body>
+</html>
