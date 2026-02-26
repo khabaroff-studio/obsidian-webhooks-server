@@ -3,10 +3,8 @@
 /* Status banner */
 .webhook-status-banner {
 	padding: 10px 14px;
-	border-radius: var(--radius-s, 4px);
 	margin-bottom: var(--size-4-3, 12px);
 	border-left: 3px solid var(--text-muted);
-	background: var(--background-secondary);
 	font-size: var(--font-ui-small);
 	font-weight: 500;
 }

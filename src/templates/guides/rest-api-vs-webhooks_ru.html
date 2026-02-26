@@ -66,7 +66,7 @@
                 Obsidian Webhooks
             </a>
             <nav class="flex items-center gap-4 md:gap-8">
-                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Гайды</a>
                 <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
@@ -90,7 +90,7 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
         <div class="flex flex-col px-6 py-5 gap-4">
-            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Гайды</a>
             <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                 GitHub
@@ -108,7 +108,7 @@
         <!-- ==================== HERO ==================== -->
         <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
             <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
-                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все руководства</a>
+                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все гайды</a>
                 <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Obsidian REST API vs Webhooks: что выбрать?</h1>
                 <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Руководство по выбору между плагином Local REST API и Webhooks Server для автоматизации Obsidian</p>
             </div>
@@ -186,11 +186,11 @@
                 <p><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API plugin</a> от coddingtonbear превращает десктопное приложение Obsidian в веб-сервер. Когда Obsidian запущен, он предоставляет HTTP endpoints, которые вы можете вызывать для:</p>
 
                 <ul>
-                    <li><strong>Create</strong> -- создание новых заметок</li>
-                    <li><strong>Read</strong> -- чтение существующих заметок (получение контента, поиск)</li>
-                    <li><strong>Update</strong> -- обновление содержимого заметок</li>
-                    <li><strong>Delete</strong> -- удаление заметок</li>
-                    <li><strong>Search</strong> -- поиск по хранилищу</li>
+                    <li><strong>Create</strong> —создание новых заметок</li>
+                    <li><strong>Read</strong> —чтение существующих заметок (получение контента, поиск)</li>
+                    <li><strong>Update</strong> —обновление содержимого заметок</li>
+                    <li><strong>Delete</strong> —удаление заметок</li>
+                    <li><strong>Search</strong> —поиск по хранилищу</li>
                 </ul>
 
                 <p>Это <strong>модель запрос-ответ</strong>. Ваше внешнее приложение (Python-скрипт, мобильное приложение, другой сервис) отправляет HTTP-запросы в Obsidian, и Obsidian отвечает данными или подтверждает действие.</p>
@@ -220,7 +220,7 @@
 
                 <h2>Как работает Obsidian Webhooks Server</h2>
 
-                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> -- это событийно-ориентированная архитектура. Внешние сервисы отправляют данные на ваш self-hosted сервер через webhook POST-запросы. Сервер:</p>
+                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> —это событийно-ориентированная архитектура. Внешние сервисы отправляют данные на ваш self-hosted сервер через webhook POST-запросы. Сервер:</p>
 
                 <ol>
                     <li><strong>Получает</strong> webhook-нагрузку от любого интернет-сервиса</li>
@@ -230,7 +230,7 @@
                     <li><strong>Шифрует</strong> чувствительный контент с помощью AES-256-GCM</li>
                 </ol>
 
-                <p>Это <strong>push-модель</strong>. Вы не запрашиваете данные; данные приходят и стоят в очереди, пока Obsidian не будет готов их получить. Подробнее об архитектуре -- в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
+                <p>Это <strong>push-модель</strong>. Вы не запрашиваете данные; данные приходят и стоят в очереди, пока Obsidian не будет готов их получить. Подробнее об архитектуре —в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
 
                 <p><strong>Аутентификация</strong> использует magic links, генерируемые сервером. Никаких API keys в конфигах внешних сервисов. Webhook URL подписаны и зашифрованы.</p>
 
@@ -241,10 +241,10 @@
                 <p>Вы используете несколько сервисов, которые должны создавать заметки в Obsidian:</p>
 
                 <ol>
-                    <li><strong>Telegram bot</strong> -- пересылка сообщений для сохранения идей</li>
-                    <li><strong>Zapier</strong> -- сохранение помеченных писем в ежедневные заметки</li>
-                    <li><strong>n8n</strong> -- сводки RSS-лент в inbox для чтения</li>
-                    <li><strong>GitHub Actions</strong> -- результаты CI в виде заметок</li>
+                    <li><strong>Telegram bot</strong> —пересылка сообщений для сохранения идей</li>
+                    <li><strong>Zapier</strong> —сохранение помеченных писем в ежедневные заметки</li>
+                    <li><strong>n8n</strong> —сводки RSS-лент в inbox для чтения</li>
+                    <li><strong>GitHub Actions</strong> —результаты CI в виде заметок</li>
                 </ol>
 
                 <p>С Webhooks Server:</p>
@@ -271,7 +271,7 @@
 
                 <h3>Вам нужно читать заметки из внешних приложений</h3>
 
-                <p>Если вашему внешнему приложению нужно <strong>получать</strong> данные из Obsidian, REST API -- единственный вариант. Webhooks не могут отдавать содержимое заметок другим приложениям -- они только доставляют входящие данные.</p>
+                <p>Если вашему внешнему приложению нужно <strong>получать</strong> данные из Obsidian, REST API —единственный вариант. Webhooks не могут отдавать содержимое заметок другим приложениям —они только доставляют входящие данные.</p>
 
                 <p><strong>Сценарии:</strong></p>
                 <ul>
@@ -318,10 +318,10 @@
 
                 <p><strong>Сценарии:</strong></p>
                 <ul>
-                    <li><strong>Zapier</strong> -- сохранение меток Gmail, закладок Slack, лайков Twitter</li>
-                    <li><strong>Make (Integromat)</strong> -- RSS-ленты, события календаря, формы</li>
-                    <li><strong>n8n</strong> -- кастомные workflow, мониторинг API, запланированные отчеты</li>
-                    <li><strong>IFTTT</strong> -- IoT-триггеры, заметки на основе местоположения, архивы соцсетей</li>
+                    <li><strong>Zapier</strong> —сохранение меток Gmail, закладок Slack, лайков Twitter</li>
+                    <li><strong>Make (Integromat)</strong> —RSS-ленты, события календаря, формы</li>
+                    <li><strong>n8n</strong> —кастомные workflow, мониторинг API, запланированные отчеты</li>
+                    <li><strong>IFTTT</strong> —IoT-триггеры, заметки на основе местоположения, архивы соцсетей</li>
                 </ul>
 
                 <h3>Вы не всегда за компьютером</h3>
@@ -531,7 +531,7 @@
 
                 <h3>Для Webhooks Server</h3>
 
-                <p><strong>Сложность настройки:</strong> Средняя (Docker Compose, PostgreSQL, установка plugin). Пошаговая инструкция -- в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке</a>.</p>
+                <p><strong>Сложность настройки:</strong> Средняя (Docker Compose, PostgreSQL, установка plugin). Пошаговая инструкция —в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке</a>.</p>
 
                 <p><strong>Сетевые требования:</strong> Сервер с доступом из интернета (VPS, домашний сервер с доменом)</p>
 
@@ -587,7 +587,7 @@
 
                 <h2>Заключение</h2>
 
-                <p>Obsidian Local REST API и Webhooks Server -- это не конкурирующие решения, а инструменты для разных задач.</p>
+                <p>Obsidian Local REST API и Webhooks Server —это не конкурирующие решения, а инструменты для разных задач.</p>
 
                 <p><strong>Выбирайте REST API</strong>, когда вам нужно вытягивать данные из Obsidian или изменять заметки из внешних приложений. Это правильный выбор для панелей, мобильных приложений и двунаправленной синхронизации.</p>
 
@@ -602,18 +602,18 @@
                 <h2>Ресурсы</h2>
 
                 <ul>
-                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> -- репозиторий на GitHub</li>
-                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> -- репозиторий на GitHub</li>
-                    <li><a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">Webhooks Server Landing Page</a> -- документация и примеры</li>
+                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> —репозиторий на GitHub</li>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> —репозиторий на GitHub</li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">Webhooks Server Landing Page</a> —документация и примеры</li>
                 </ul>
 
                 <p><strong>Связанное чтение:</strong></p>
                 <ul>
-                    <li><a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a> -- архитектура и настройка</li>
-                    <li><a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a> -- полное руководство по входящим данным</li>
-                    <li><a href="/ru/guides/self-hosted-webhooks-setup">Self-Hosted: руководство по установке</a> -- Docker, PostgreSQL, Nginx</li>
-                    <li><a href="/ru/guides/webhook-recipes">10 рецептов автоматизации</a> -- готовые конфигурации</li>
-                    <li><a href="/ru/guides/ai-agents-obsidian">AI-агенты и Obsidian</a> -- интеграция Claude, GPT и кастомных агентов</li>
+                    <li><a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a> —архитектура и настройка</li>
+                    <li><a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a> —полное руководство по входящим данным</li>
+                    <li><a href="/ru/guides/self-hosted-webhooks-setup">Self-Hosted: руководство по установке</a> —Docker, PostgreSQL, Nginx</li>
+                    <li><a href="/ru/guides/webhook-recipes">10 рецептов автоматизации</a> —готовые конфигурации</li>
+                    <li><a href="/ru/guides/ai-agents-obsidian">AI-агенты и Obsidian</a> —интеграция Claude, GPT и кастомных агентов</li>
                 </ul>
 
             </div>
@@ -680,7 +680,7 @@
                         <input type="checkbox" class="faq-toggle hidden">
                     </label>
                     <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
-                        <p>Нет, вебхуки -- это односторонний механизм доставки (push-модель). Они только создают или добавляют контент в Obsidian. Для чтения заметок из внешних приложений используйте Local REST API плагин с GET-запросами.</p>
+                        <p>Нет, вебхуки —это односторонний механизм доставки (push-модель). Они только создают или добавляют контент в Obsidian. Для чтения заметок из внешних приложений используйте Local REST API плагин с GET-запросами.</p>
                     </div>
                 </div>
             </div>
@@ -689,7 +689,7 @@
         <!-- ==================== OTHER GUIDES ==================== -->
         <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие руководства</h2>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие гайды</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <a href="/ru/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
                         <h3 class="font-body text-lg font-bold text-ink">Как работает Obsidian Webhooks</h3>
@@ -737,7 +737,7 @@
                     <div class="flex flex-col gap-4">
                         <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
                         <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
-                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Руководства</a>
+                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Гайды</a>
                         <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                             GitHub
@@ -757,7 +757,7 @@
             <div class="h-px bg-[#333333]"></div>
             <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
                 <span>2026 Obsidian Webhooks</span>
-                <span>A product by Khabaroff.Studio</span>
+                <a href="https://khabaroff.studio" target="_blank" rel="noopener" class="hover:text-white transition-colors">A product by Khabaroff.Studio</a>
             </div>
         </div>
     </footer>

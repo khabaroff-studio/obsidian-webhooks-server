@@ -243,10 +243,10 @@
                 <p>You use multiple services that should create notes in Obsidian:</p>
 
                 <ol>
-                    <li><strong>Telegram bot</strong> -- Forward messages to save ideas</li>
-                    <li><strong>Zapier</strong> -- Save starred emails to daily notes</li>
-                    <li><strong>n8n</strong> -- RSS feed summaries to reading inbox</li>
-                    <li><strong>GitHub Actions</strong> -- CI results as notes</li>
+                    <li><strong>Telegram bot</strong> — Forward messages to save ideas</li>
+                    <li><strong>Zapier</strong> — Save starred emails to daily notes</li>
+                    <li><strong>n8n</strong> — RSS feed summaries to reading inbox</li>
+                    <li><strong>GitHub Actions</strong> — CI results as notes</li>
                 </ol>
 
                 <p>With Webhooks Server:</p>
@@ -274,7 +274,7 @@
 
                 <h3>You Need to Read Notes from External Apps</h3>
 
-                <p>If your external application needs to <strong>fetch</strong> data from Obsidian, REST API is the only option. Webhooks can't serve note content to other applications -- they only deliver inbound data.</p>
+                <p>If your external application needs to <strong>fetch</strong> data from Obsidian, REST API is the only option. Webhooks can't serve note content to other applications — they only deliver inbound data.</p>
 
                 <p><strong>Scenarios:</strong></p>
                 <ul>
@@ -322,10 +322,10 @@
 
                 <p><strong>Scenarios:</strong></p>
                 <ul>
-                    <li><strong>Zapier</strong> -- Save Gmail labels, Slack bookmarks, Twitter likes</li>
-                    <li><strong>Make (Integromat)</strong> -- RSS feeds, calendar events, form submissions</li>
-                    <li><strong>n8n</strong> -- Custom workflows, API monitoring, scheduled reports</li>
-                    <li><strong>IFTTT</strong> -- IoT triggers, location-based notes, social media archives</li>
+                    <li><strong>Zapier</strong> — Save Gmail labels, Slack bookmarks, Twitter likes</li>
+                    <li><strong>Make (Integromat)</strong> — RSS feeds, calendar events, form submissions</li>
+                    <li><strong>n8n</strong> — Custom workflows, API monitoring, scheduled reports</li>
+                    <li><strong>IFTTT</strong> — IoT triggers, location-based notes, social media archives</li>
                 </ul>
 
                 <h3>You're Not Always at Your Computer</h3>
@@ -596,7 +596,7 @@
                 <!-- ==================== CONCLUSION ==================== -->
                 <h2>Conclusion</h2>
 
-                <p>Obsidian Local REST API and Webhooks Server aren't competing solutions -- they're tools for different jobs.</p>
+                <p>Obsidian Local REST API and Webhooks Server aren't competing solutions — they're tools for different jobs.</p>
 
                 <p><strong>Choose REST API</strong> when you need to pull data out of Obsidian or modify notes from external apps. It's the right choice for dashboards, mobile apps, and bidirectional sync.</p>
 
@@ -610,16 +610,16 @@
 
                 <p><strong>Resources:</strong></p>
                 <ul>
-                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> -- GitHub repository</li>
-                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> -- GitHub repository</li>
-                    <li><a href="https://obsidian-webhooks.khabaroff.studio">Webhooks Server Landing Page</a> -- Documentation and examples</li>
+                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> — GitHub repository</li>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> — GitHub repository</li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio">Webhooks Server Landing Page</a> — Documentation and examples</li>
                 </ul>
 
                 <p><strong>Related reading:</strong></p>
                 <ul>
-                    <li><a href="/guides/how-it-works">How Obsidian Webhooks Works</a> -- Architecture deep dive</li>
-                    <li><a href="/guides/receive-data-obsidian">How to Receive External Data in Obsidian</a> -- Complete integration guide</li>
-                    <li><a href="/guides/self-hosted-webhooks-setup">Self-Hosted Obsidian Webhooks Setup</a> -- Docker deployment tutorial</li>
+                    <li><a href="/guides/how-it-works">How Obsidian Webhooks Works</a> — Architecture deep dive</li>
+                    <li><a href="/guides/receive-data-obsidian">How to Receive External Data in Obsidian</a> — Complete integration guide</li>
+                    <li><a href="/guides/self-hosted-webhooks-setup">Self-Hosted Obsidian Webhooks Setup</a> — Docker deployment tutorial</li>
                 </ul>
 
             </div>
@@ -639,7 +639,7 @@
                             <input type="checkbox" class="faq-toggle sr-only">
                         </label>
                         <div class="faq-answer text-ink-soft leading-[1.7] px-0">
-                            <p>Yes, they work together perfectly. Use REST API for outbound data (reading notes, searching, serving content to external apps) and webhooks for inbound data (receiving content from external services). Many users run both simultaneously -- webhooks collect incoming data throughout the day, while REST API serves that data to dashboards or mobile apps.</p>
+                            <p>Yes, they work together perfectly. Use REST API for outbound data (reading notes, searching, serving content to external apps) and webhooks for inbound data (receiving content from external services). Many users run both simultaneously — webhooks collect incoming data throughout the day, while REST API serves that data to dashboards or mobile apps.</p>
                         </div>
                     </div>
 
@@ -765,7 +765,7 @@
             <div class="h-px bg-[#333333]"></div>
             <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
                 <span>2026 Obsidian Webhooks</span>
-                <span>A product by Khabaroff.Studio</span>
+                <a href="https://khabaroff.studio" target="_blank" rel="noopener" class="hover:text-white transition-colors">A product by Khabaroff.Studio</a>
             </div>
         </div>
     </footer>
