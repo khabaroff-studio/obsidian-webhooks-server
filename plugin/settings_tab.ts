@@ -7,7 +7,7 @@
  * - Smart defaults that "just work"
  */
 
-import { App, Notice, PluginSettingTab, Setting, Platform } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import type ObsidianWebhooksPlugin from "./main";
 
 export class WebhookSettingTab extends PluginSettingTab {
@@ -22,8 +22,6 @@ export class WebhookSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-
-		containerEl.createEl("h2", { text: "Obsidian Webhooks" });
 
 		// Status indicator at the top (most important)
 		this.renderStatusIndicator(containerEl);
@@ -41,20 +39,15 @@ export class WebhookSettingTab extends PluginSettingTab {
 	private renderStatusIndicator(containerEl: HTMLElement): void {
 		const status = this.plugin.connectionStatus;
 
-		// Determine emoji and style based on state
-		let emoji = "🔴";
 		let className = "webhook-status-error";
 		let message = status.message;
 
 		if (status.state === "connected") {
-			emoji = "🟢";
 			className = "webhook-status-connected";
-			message = `Connected (${status.eventsReceived} events received)`;
+			message = "Connected";
 		} else if (status.state === "connecting") {
-			emoji = "🟡";
 			className = "webhook-status-warning";
 		} else if (status.message.includes("Reconnecting")) {
-			emoji = "🟠";
 			className = "webhook-status-warning";
 		}
 
@@ -62,54 +55,14 @@ export class WebhookSettingTab extends PluginSettingTab {
 			cls: `webhook-status-banner ${className}`,
 		});
 		statusDiv.createEl("span", {
-			text: `${emoji} ${message}`,
+			text: message,
 			cls: "webhook-status-text",
 		});
-
-		// Add some CSS for the status banner
-		const style = containerEl.createEl("style");
-		style.textContent = `
-			.webhook-status-banner {
-				padding: 12px 16px;
-				border-radius: 6px;
-				margin: 16px 0;
-				font-weight: 500;
-			}
-			.webhook-status-connected {
-				background: #d4edda;
-				color: #155724;
-				border: 1px solid #c3e6cb;
-			}
-			.webhook-status-error {
-				background: #f8d7da;
-				color: #721c24;
-				border: 1px solid #f5c6cb;
-			}
-			.webhook-status-warning {
-				background: #fff3cd;
-				color: #856404;
-				border: 1px solid #ffeaa7;
-			}
-			.webhook-test-result {
-				margin-top: 8px;
-				padding: 8px 12px;
-				border-radius: 4px;
-				font-size: 0.9em;
-			}
-			.test-success {
-				background: #d4edda;
-				color: #155724;
-			}
-			.test-error {
-				background: #f8d7da;
-				color: #721c24;
-			}
-		`;
 	}
 
 	private renderClientKey(containerEl: HTMLElement): void {
 		new Setting(containerEl)
-			.setName("Client Key")
+			.setName("Client key")
 			.setDesc("Get your key from the dashboard")
 			.addText((text) =>
 				text
@@ -124,7 +77,7 @@ export class WebhookSettingTab extends PluginSettingTab {
 
 	private renderTestConnection(containerEl: HTMLElement): void {
 		const setting = new Setting(containerEl)
-			.setName("Test Connection")
+			.setName("Test connection")
 			.setDesc("Verify your client key and server connection")
 			.addButton((button) => {
 				button
@@ -140,20 +93,21 @@ export class WebhookSettingTab extends PluginSettingTab {
 	}
 
 	private async testConnection(settingEl: HTMLElement): Promise<void> {
-		// Remove previous result if exists
-		const existingResult = settingEl.querySelector(".webhook-test-result");
+		// Remove previous result if exists (search in parent since result is a sibling)
+		const parent = settingEl.parentElement;
+		const existingResult = parent?.querySelector(".webhook-test-result");
 		if (existingResult) {
 			existingResult.remove();
 		}
 
 		const clientKey = this.plugin.settings.clientKey;
 		if (!clientKey) {
-			const resultDiv = settingEl.createDiv({ cls: "webhook-test-result test-error" });
-			resultDiv.setText("Enter your client key first");
+			const resultDiv = this.createResultDiv(settingEl, "test-error");
+			resultDiv.textContent = "Enter your client key first";
 			return;
 		}
 
-		const resultDiv = settingEl.createDiv({ cls: "webhook-test-result" });
+		const resultDiv = this.createResultDiv(settingEl);
 
 		try {
 			const startTime = Date.now();
@@ -169,14 +123,14 @@ export class WebhookSettingTab extends PluginSettingTab {
 				const errorMsg = response.status === 401 || response.status === 404
 					? "Invalid client key"
 					: `Server error: ${response.statusText}`;
-				resultDiv.setText(`Test failed: ${errorMsg}`);
-				resultDiv.addClass("test-error");
+				resultDiv.textContent = `Test failed: ${errorMsg}`;
+				resultDiv.classList.add("test-error");
 				return;
 			}
 
 			const latency = Date.now() - startTime;
-			resultDiv.setText(`Test passed! Server responded in ${latency}ms`);
-			resultDiv.addClass("test-success");
+			resultDiv.textContent = `Test passed! Server responded in ${latency}ms`;
+			resultDiv.classList.add("test-success");
 
 			// Auto-hide result after 10 seconds
 			setTimeout(() => {
@@ -186,15 +140,22 @@ export class WebhookSettingTab extends PluginSettingTab {
 			const errorMsg = error instanceof Error
 				? (error.name === "TimeoutError" ? "Connection timeout" : error.message)
 				: "Network error";
-			resultDiv.setText(`Test failed: ${errorMsg}`);
-			resultDiv.addClass("test-error");
+			resultDiv.textContent = `Test failed: ${errorMsg}`;
+			resultDiv.classList.add("test-error");
 		}
+	}
+
+	private createResultDiv(settingEl: HTMLElement, ...classes: string[]): HTMLElement {
+		const div = document.createElement("div");
+		div.className = ["webhook-test-result", ...classes].join(" ");
+		settingEl.insertAdjacentElement("afterend", div);
+		return div;
 	}
 
 	private renderAdvancedSettings(containerEl: HTMLElement): void {
 		// Collapsible Advanced Settings section
 		const advancedSetting = new Setting(containerEl)
-			.setName("Advanced Settings")
+			.setName("Advanced settings")
 			.setHeading()
 			.addExtraButton((button) => {
 				button
@@ -213,7 +174,7 @@ export class WebhookSettingTab extends PluginSettingTab {
 		// Server URL (for self-hosted setups)
 		new Setting(containerEl)
 			.setName("Server URL")
-			.setDesc("💡 Change only for self-hosted setup")
+			.setDesc("Change only for self-hosted setup")
 			.addText((text) =>
 				text
 					.setPlaceholder("https://obsidian-webhooks.khabaroff.studio")
@@ -266,12 +227,14 @@ export class WebhookSettingTab extends PluginSettingTab {
 					})
 			);
 
-		// Quick Actions
-		containerEl.createEl("h4", { text: "🔗 Quick Actions" });
+		// Quick actions
+		new Setting(containerEl)
+			.setName("Quick actions")
+			.setHeading();
 
 		// Open Dashboard button
 		new Setting(containerEl)
-			.setName("User Dashboard")
+			.setName("User dashboard")
 			.setDesc("View your keys and webhook logs")
 			.addButton((button) => {
 				button
@@ -286,13 +249,6 @@ export class WebhookSettingTab extends PluginSettingTab {
 					});
 			});
 
-		// Statistics
-		containerEl.createEl("h4", { text: "📊 Statistics" });
-		const status = this.plugin.connectionStatus;
-		const statsDiv = containerEl.createDiv({ cls: "webhook-statistics" });
-		statsDiv.createEl("p", { text: `• Events received: ${status.eventsReceived}` });
-		statsDiv.createEl("p", { text: `• Events processed: ${status.eventsProcessed}` });
-		statsDiv.createEl("p", { text: `• Errors: ${status.errorCount}` });
 	}
 
 }

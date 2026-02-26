@@ -26,7 +26,6 @@ import { ACKHandler } from "./handlers/ack_handler";
 import { PollingHandler } from "./handlers/polling_handler";
 import { SSEHandler } from "./handlers/sse_handler";
 import { WebhookSettingTab } from "./settings_tab";
-import { analytics } from "./analytics";
 
 /**
  * Default settings for the plugin
@@ -65,8 +64,6 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 	 * Called when the plugin is loaded
 	 */
 	async onload() {
-		console.log("Loading Obsidian Webhooks Selfhosted plugin");
-
 		// Initialize connection status
 		this.connectionStatus = {
 			state: "disconnected",
@@ -79,12 +76,6 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 
 		// Load settings from disk
 		await this.loadSettings();
-
-		// Initialize PostHog analytics
-		analytics.init(
-			'phc_cBBWO6SRttjXK3we3pCcBe1qZHpoeZTh114PjWErKoc',
-			'https://eu.i.posthog.com'
-		);
 
 		// Initialize handlers
 		this.initializeHandlers();
@@ -108,7 +99,6 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 	 * Called when the plugin is unloaded
 	 */
 	onunload() {
-		console.log("Unloading Obsidian Webhooks Selfhosted plugin");
 		this.disconnect();
 	}
 

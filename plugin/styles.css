@@ -1,0 +1,62 @@
+/* Obsidian Webhooks - Plugin Styles */
+
+/* Status banner */
+.webhook-status-banner {
+	padding: 10px 14px;
+	border-radius: var(--radius-s, 4px);
+	margin-bottom: var(--size-4-3, 12px);
+	border-left: 3px solid var(--text-muted);
+	background: var(--background-secondary);
+	font-size: var(--font-ui-small);
+	font-weight: 500;
+}
+
+.webhook-status-banner.webhook-status-connected {
+	border-left-color: var(--color-green, #28a745);
+	color: var(--text-success);
+}
+
+.webhook-status-banner.webhook-status-error {
+	border-left-color: var(--color-red, #dc3545);
+	color: var(--text-error);
+}
+
+.webhook-status-banner.webhook-status-warning {
+	border-left-color: var(--color-yellow, #e6a817);
+	color: var(--text-warning);
+}
+
+/* Test connection result (sibling of .setting-item) */
+.webhook-test-result {
+	padding: 6px 12px;
+	border-radius: var(--radius-s, 4px);
+	font-size: var(--font-ui-smaller, 0.85em);
+	margin: 4px 0;
+}
+
+.webhook-test-result.test-success {
+	color: var(--text-success);
+	background: var(--background-modifier-success);
+}
+
+.webhook-test-result.test-error {
+	color: var(--text-error);
+	background: var(--background-modifier-error);
+}
+
+/* Status bar items */
+.status-bar-item.webhook-status-connected {
+	color: var(--text-success);
+}
+
+.status-bar-item.webhook-status-connecting {
+	color: var(--text-warning);
+}
+
+.status-bar-item.webhook-status-error {
+	color: var(--text-error);
+}
+
+.status-bar-item.webhook-status-disconnected {
+	color: var(--text-muted);
+}
