@@ -40,7 +40,7 @@ DATABASE_URL=postgres://user:password@host:5432/database
 MAILGUN_DOMAIN=mail.your-domain.com
 MAILGUN_API_KEY=your-mailgun-api-key
 MAILGUN_FROM_EMAIL=noreply@your-domain.com
-MAILGUN_FROM_NAME=Obsidian Webhooks
+MAILGUN_FROM_NAME=Khabaroff Studio: Obsidian Webhooks
 MAGIC_LINK_BASE_URL=https://your-domain.com
 ```
 

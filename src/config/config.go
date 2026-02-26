@@ -69,7 +69,7 @@ func Load() *Config {
 		MailgunDomain:          getEnv("MAILGUN_DOMAIN", ""),
 		MailgunAPIKey:          getEnv("MAILGUN_API_KEY", ""),
 		MailgunFromEmail:       getEnv("MAILGUN_FROM_EMAIL", "noreply@obsidian-webhooks.khabaroff.studio"),
-		MailgunFromName:        getEnv("MAILGUN_FROM_NAME", "Obsidian Webhooks"),
+		MailgunFromName:        getEnv("MAILGUN_FROM_NAME", "Khabaroff Studio: Obsidian Webhooks"),
 		MailerLiteAPIKey:       getEnv("MAILERLITE_API_KEY", ""),
 		MailerLiteGroupSignups: getEnv("MAILERLITE_GROUP_SIGNUPS", ""),
 		MailerLiteGroupActive:  getEnv("MAILERLITE_GROUP_ACTIVE", ""),

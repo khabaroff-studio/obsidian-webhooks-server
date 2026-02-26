@@ -2,14 +2,14 @@
 # All emails are English only
 
 branding:
-  name: "Obsidian Webhooks"
+  name: "Khabaroff Studio: Obsidian Webhooks"
   tagline: "Webhook delivery to Obsidian"
   website: "https://obsidian-webhooks.khabaroff.studio"
   dashboard_url: "https://obsidian-webhooks.khabaroff.studio/login"
   docs_url: "https://github.com/khabaroff-studio/obsidian-webhooks-server"
 
 design:
-  primary_color: "#0a0a0a"
+  primary_color: "#7C3AED"
   primary_hover: "#7C3AED"
   text_color: "#0a0a0a"
   muted_color: "#777777"

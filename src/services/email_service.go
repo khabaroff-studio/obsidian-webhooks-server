@@ -40,7 +40,7 @@ func getDefaultEmailConfig() *templates.EmailConfig {
 			DashboardURL string `yaml:"dashboard_url"`
 			DocsURL      string `yaml:"docs_url"`
 		}{
-			Name:         "Obsidian Webhooks",
+			Name:         "Khabaroff Studio: Obsidian Webhooks",
 			Tagline:      "Webhook delivery to Obsidian",
 			Website:      "https://obsidian-webhooks.khabaroff.studio",
 			DashboardURL: "https://obsidian-webhooks.khabaroff.studio/dashboard",
@@ -58,7 +58,7 @@ func getDefaultEmailConfig() *templates.EmailConfig {
 			CodeBg        string `yaml:"code_bg"`
 			BorderColor   string `yaml:"border_color"`
 		}{
-			PrimaryColor:  "#0a0a0a",
+			PrimaryColor:  "#7C3AED",
 			PrimaryHover:  "#7C3AED",
 			TextColor:     "#0a0a0a",
 			MutedColor:    "#777777",
@@ -247,7 +247,7 @@ func (s *EmailService) getMagicLinkHTMLTemplate(name, magicLink string, expiryMi
             <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;">Hi %s,</h2>
             <p style="margin:0 0 24px;font-size:15px;color:#444;">Click the button below to sign in to your dashboard.</p>
             <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-                <td style="background:#0a0a0a;padding:14px 32px;">
+                <td style="background:#7C3AED;padding:14px 32px;">
                     <a href="%s" style="color:#fff;text-decoration:none;font-size:14px;font-weight:600;">Sign in</a>
                 </td>
             </tr></table>
@@ -262,7 +262,7 @@ func (s *EmailService) getMagicLinkHTMLTemplate(name, magicLink string, expiryMi
             <p style="margin:0;font-size:13px;color:#777;">Didn't request this? Ignore this email.</p>
         </td></tr>
         <tr><td style="padding:24px;border-top:1px solid #e5e5e5;">
-            <p style="margin:0 0 4px;font-size:12px;color:#777;">Obsidian Webhooks — Webhook delivery to Obsidian</p>
+            <p style="margin:0 0 4px;font-size:12px;color:#777;">Khabaroff Studio: Obsidian Webhooks — Webhook delivery to Obsidian</p>
             <a href="https://obsidian-webhooks.khabaroff.studio" style="font-size:12px;color:#777;">obsidian-webhooks.khabaroff.studio</a>
         </td></tr>
     </table>
@@ -288,7 +288,7 @@ This link expires in %d minutes. Single use only.
 Didn't request this? Ignore this email.
 
 —
-Obsidian Webhooks
+Khabaroff Studio: Obsidian Webhooks
 Webhook delivery to Obsidian
 https://obsidian-webhooks.khabaroff.studio`, displayName, magicLink, expiryMinutes)
 }
@@ -317,25 +317,25 @@ func (s *EmailService) getWelcomeHTMLTemplate(name string) string {
             <p style="margin:0 0 24px;font-size:15px;color:#444;">Your account is ready.</p>
             <p style="margin:0 0 12px;font-size:14px;font-weight:600;">What you can do:</p>
             <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;"><tr>
-                <td style="background:#f5f5f5;padding:14px 16px;border-left:3px solid #0a0a0a;">
+                <td style="background:#f5f5f5;padding:14px 16px;border-left:3px solid #7C3AED;">
                     <span style="font-size:14px;font-weight:600;">Send webhooks to Obsidian</span><br>
                     <span style="font-size:13px;color:#444;">Connect n8n, Make, scripts, or any HTTP client to your vault</span>
                 </td>
             </tr></table>
             <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;"><tr>
-                <td style="background:#f5f5f5;padding:14px 16px;border-left:3px solid #0a0a0a;">
+                <td style="background:#f5f5f5;padding:14px 16px;border-left:3px solid #7C3AED;">
                     <span style="font-size:14px;font-weight:600;">Automatic note creation</span><br>
                     <span style="font-size:13px;color:#444;">Every webhook becomes a note in the right folder</span>
                 </td>
             </tr></table>
             <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;"><tr>
-                <td style="background:#f5f5f5;padding:14px 16px;border-left:3px solid #0a0a0a;">
+                <td style="background:#f5f5f5;padding:14px 16px;border-left:3px solid #7C3AED;">
                     <span style="font-size:14px;font-weight:600;">Real-time and offline delivery</span><br>
                     <span style="font-size:13px;color:#444;">Real-time when online, queued when offline (up to 30 days)</span>
                 </td>
             </tr></table>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;"><tr>
-                <td style="background:#0a0a0a;padding:14px 32px;">
+                <td style="background:#7C3AED;padding:14px 32px;">
                     <a href="https://obsidian-webhooks.khabaroff.studio/dashboard" style="color:#fff;text-decoration:none;font-size:14px;font-weight:600;">Open Dashboard</a>
                 </td>
             </tr></table>
@@ -344,7 +344,7 @@ func (s *EmailService) getWelcomeHTMLTemplate(name string) string {
             <p style="margin:24px 0 0;font-size:13px;color:#777;">Questions? Check the <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" style="color:#0a0a0a;font-weight:600;">docs on GitHub</a> or reply to this email.</p>
         </td></tr>
         <tr><td style="padding:24px;border-top:1px solid #e5e5e5;">
-            <p style="margin:0 0 4px;font-size:12px;color:#777;">Obsidian Webhooks — Webhook delivery to Obsidian</p>
+            <p style="margin:0 0 4px;font-size:12px;color:#777;">Khabaroff Studio: Obsidian Webhooks — Webhook delivery to Obsidian</p>
             <a href="https://obsidian-webhooks.khabaroff.studio" style="font-size:12px;color:#777;">obsidian-webhooks.khabaroff.studio</a>
         </td></tr>
     </table>
@@ -384,7 +384,7 @@ Open your dashboard: https://obsidian-webhooks.khabaroff.studio/dashboard
 Questions? Check the docs on GitHub or reply to this email.
 
 —
-Obsidian Webhooks
+Khabaroff Studio: Obsidian Webhooks
 Webhook delivery to Obsidian
 https://obsidian-webhooks.khabaroff.studio`, displayName)
 }
