@@ -26,7 +26,7 @@ type AnalyticsService struct {
 type posthogLogger struct{}
 
 func (l posthogLogger) Success(m posthog.APIMessage) {
-	log.Debug().Str("type", fmt.Sprintf("%T", m)).Msg("PostHog event delivered")
+	log.Info().Str("type", fmt.Sprintf("%T", m)).Msg("PostHog event delivered")
 }
 
 func (l posthogLogger) Failure(m posthog.APIMessage, err error) {
@@ -106,7 +106,7 @@ func (s *AnalyticsService) TrackEvent(ctx context.Context, distinctID, event str
 	}); err != nil {
 		log.Error().Err(err).Str("event", event).Msg("PostHog enqueue failed")
 	} else {
-		log.Debug().Str("event", event).Str("distinct_id", distinctID).Msg("PostHog event enqueued")
+		log.Info().Str("event", event).Str("distinct_id", distinctID).Msg("PostHog event enqueued")
 	}
 }
 
