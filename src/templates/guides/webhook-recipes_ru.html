@@ -379,7 +379,7 @@
                 <p><strong>Что делает:</strong> Создает заметку быстрого захвата из голосовой команды Google Assistant.</p>
 
                 <p><strong>Платформа:</strong> IFTTT<br>
-                <strong>Триггер:</strong> Google Assistant —Say a phrase with a text ingredient ("Add note $")<br>
+                <strong>Триггер:</strong> Google Assistant — Say a phrase with a text ingredient ("Add note $")<br>
                 <strong>Действие:</strong> Webhooks — Make a Web Request<br>
                 <strong>Назначение:</strong> <code>quick-capture/</code></p>
 
@@ -446,18 +446,18 @@
     "content": "# Test\n\nThis is a test."
   }'</code></pre>
 
-                <p>Больше примеров работы с API —в руководстве <a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a>. Сравнение подходов —в статье <a href="/ru/guides/rest-api-vs-webhooks">REST API vs Webhooks</a>.</p>
+                <p>Больше примеров работы с API — в руководстве <a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a>. Сравнение подходов — в статье <a href="/ru/guides/rest-api-vs-webhooks">REST API vs Webhooks</a>.</p>
 
                 <h2>Начало работы</h2>
 
                 <ol>
                     <li><strong>Установите сервер:</strong> Следуйте <a href="/ru/guides/self-hosted-webhooks-setup">руководству по установке</a> для самостоятельного хостинга или используйте хостинг-версию.</li>
                     <li><strong>Установите плагин:</strong> Найдите "Webhooks Server" в Obsidian Community Plugins.</li>
-                    <li><strong>Выберите рецепт:</strong> Начните с email или RSS —их проще всего тестировать.</li>
+                    <li><strong>Выберите рецепт:</strong> Начните с email или RSS — их проще всего тестировать.</li>
                     <li><strong>Кастомизируйте:</strong> Настройте пути папок, шаблоны имен файлов и поля frontmatter под структуру вашего хранилища.</li>
                 </ol>
 
-                <p>Автоматизация через вебхуки превращает Obsidian в универсальный inbox для вашей цифровой жизни. Отслеживаете ли вы GitHub-задачи, архивируете разговоры Slack или логируете AI-взаимодействия —эти рецепты дают вам отправную точку для построения собственных рабочих процессов автоматизации.</p>
+                <p>Автоматизация через вебхуки превращает Obsidian в универсальный inbox для вашей цифровой жизни. Отслеживаете ли вы GitHub-задачи, архивируете разговоры Slack или логируете AI-взаимодействия — эти рецепты дают вам отправную точку для построения собственных рабочих процессов автоматизации.</p>
 
                 <p><strong>Готовы к автоматизации?</strong> Получите <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> и начните создавать свой первый рецепт сегодня.</p>
 
@@ -478,7 +478,7 @@
                             <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                         </label>
                         <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
-                            <p>Да, сервер обрабатывает вебхуки из любого источника: можно одновременно настроить Zapier для email, n8n для RSS, GitHub native webhooks для issues и кастомные скрипты для AI-логов. Каждая платформа отправляет POST-запрос с вашим vault key —сервер не различает источник. Единственное ограничение: не превышайте пропускную способность сервера (обычно >1000 вебхуков/минуту).</p>
+                            <p>Да, сервер обрабатывает вебхуки из любого источника: можно одновременно настроить Zapier для email, n8n для RSS, GitHub native webhooks для issues и кастомные скрипты для AI-логов. Каждая платформа отправляет POST-запрос с вашим vault key — сервер не различает источник. Единственное ограничение: не превышайте пропускную способность сервера (обычно >1000 вебхуков/минуту).</p>
                         </div>
                     </div>
 
@@ -490,7 +490,7 @@
                             <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                         </label>
                         <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
-                            <p>Сервер валидирует структуру JSON перед обработкой. Некорректный запрос вернет HTTP 400 с описанием ошибки (например, "missing required field: path"). Плагин не получит данные, очередь не будет загрязнена. Проверьте логи сервера (<code>docker-compose logs server</code>) для диагностики —все ошибки валидации логируются с полным payload для отладки.</p>
+                            <p>Сервер валидирует структуру JSON перед обработкой. Некорректный запрос вернет HTTP 400 с описанием ошибки (например, "missing required field: path"). Плагин не получит данные, очередь не будет загрязнена. Проверьте логи сервера (<code>docker-compose logs server</code>) для диагностики — все ошибки валидации логируются с полным payload для отладки.</p>
                         </div>
                     </div>
 
@@ -502,7 +502,7 @@
                             <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                         </label>
                         <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
-                            <p>Hosted версия: неограниченное количество вебхуков, но лимит 10 МБ на заметку. Self-hosted: лимиты зависят от ресурсов сервера —базовый VPS ($5/месяц) обрабатывает тысячи вебхуков в день. PostgreSQL очередь масштабируется до миллионов записей. Единственное узкое место —размер базы данных, но delivered вебхуки удаляются автоматически.</p>
+                            <p>Hosted версия: неограниченное количество вебхуков, но лимит 10 МБ на заметку. Self-hosted: лимиты зависят от ресурсов сервера — базовый VPS ($5/месяц) обрабатывает тысячи вебхуков в день. PostgreSQL очередь масштабируется до миллионов записей. Единственное узкое место — размер базы данных, но delivered вебхуки удаляются автоматически.</p>
                         </div>
                     </div>
 
@@ -540,7 +540,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <a href="/ru/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
                         <h3 class="font-body text-lg font-bold text-ink">Как работает Obsidian Webhooks</h3>
-                        <p class="text-sm text-ink-soft leading-relaxed">Архитектура, настройка и примеры интеграций —всё на одной странице.</p>
+                        <p class="text-sm text-ink-soft leading-relaxed">Архитектура, настройка и примеры интеграций — всё на одной странице.</p>
                         <span class="text-xs text-ink-muted">8 мин</span>
                     </a>
                     <a href="/ru/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">

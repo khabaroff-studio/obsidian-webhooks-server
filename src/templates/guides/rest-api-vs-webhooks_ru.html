@@ -186,11 +186,11 @@
                 <p><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API plugin</a> от coddingtonbear превращает десктопное приложение Obsidian в веб-сервер. Когда Obsidian запущен, он предоставляет HTTP endpoints, которые вы можете вызывать для:</p>
 
                 <ul>
-                    <li><strong>Create</strong> —создание новых заметок</li>
-                    <li><strong>Read</strong> —чтение существующих заметок (получение контента, поиск)</li>
-                    <li><strong>Update</strong> —обновление содержимого заметок</li>
-                    <li><strong>Delete</strong> —удаление заметок</li>
-                    <li><strong>Search</strong> —поиск по хранилищу</li>
+                    <li><strong>Create</strong> — создание новых заметок</li>
+                    <li><strong>Read</strong> — чтение существующих заметок (получение контента, поиск)</li>
+                    <li><strong>Update</strong> — обновление содержимого заметок</li>
+                    <li><strong>Delete</strong> — удаление заметок</li>
+                    <li><strong>Search</strong> — поиск по хранилищу</li>
                 </ul>
 
                 <p>Это <strong>модель запрос-ответ</strong>. Ваше внешнее приложение (Python-скрипт, мобильное приложение, другой сервис) отправляет HTTP-запросы в Obsidian, и Obsidian отвечает данными или подтверждает действие.</p>
@@ -220,7 +220,7 @@
 
                 <h2>Как работает Obsidian Webhooks Server</h2>
 
-                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> —это событийно-ориентированная архитектура. Внешние сервисы отправляют данные на ваш self-hosted сервер через webhook POST-запросы. Сервер:</p>
+                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> — это событийно-ориентированная архитектура. Внешние сервисы отправляют данные на ваш self-hosted сервер через webhook POST-запросы. Сервер:</p>
 
                 <ol>
                     <li><strong>Получает</strong> webhook-нагрузку от любого интернет-сервиса</li>
@@ -230,7 +230,7 @@
                     <li><strong>Шифрует</strong> чувствительный контент с помощью AES-256-GCM</li>
                 </ol>
 
-                <p>Это <strong>push-модель</strong>. Вы не запрашиваете данные; данные приходят и стоят в очереди, пока Obsidian не будет готов их получить. Подробнее об архитектуре —в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
+                <p>Это <strong>push-модель</strong>. Вы не запрашиваете данные; данные приходят и стоят в очереди, пока Obsidian не будет готов их получить. Подробнее об архитектуре — в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
 
                 <p><strong>Аутентификация</strong> использует magic links, генерируемые сервером. Никаких API keys в конфигах внешних сервисов. Webhook URL подписаны и зашифрованы.</p>
 
@@ -241,10 +241,10 @@
                 <p>Вы используете несколько сервисов, которые должны создавать заметки в Obsidian:</p>
 
                 <ol>
-                    <li><strong>Telegram bot</strong> —пересылка сообщений для сохранения идей</li>
-                    <li><strong>Zapier</strong> —сохранение помеченных писем в ежедневные заметки</li>
-                    <li><strong>n8n</strong> —сводки RSS-лент в inbox для чтения</li>
-                    <li><strong>GitHub Actions</strong> —результаты CI в виде заметок</li>
+                    <li><strong>Telegram bot</strong> — пересылка сообщений для сохранения идей</li>
+                    <li><strong>Zapier</strong> — сохранение помеченных писем в ежедневные заметки</li>
+                    <li><strong>n8n</strong> — сводки RSS-лент в inbox для чтения</li>
+                    <li><strong>GitHub Actions</strong> — результаты CI в виде заметок</li>
                 </ol>
 
                 <p>С Webhooks Server:</p>
@@ -271,7 +271,7 @@
 
                 <h3>Вам нужно читать заметки из внешних приложений</h3>
 
-                <p>Если вашему внешнему приложению нужно <strong>получать</strong> данные из Obsidian, REST API —единственный вариант. Webhooks не могут отдавать содержимое заметок другим приложениям —они только доставляют входящие данные.</p>
+                <p>Если вашему внешнему приложению нужно <strong>получать</strong> данные из Obsidian, REST API — единственный вариант. Webhooks не могут отдавать содержимое заметок другим приложениям — они только доставляют входящие данные.</p>
 
                 <p><strong>Сценарии:</strong></p>
                 <ul>
@@ -318,10 +318,10 @@
 
                 <p><strong>Сценарии:</strong></p>
                 <ul>
-                    <li><strong>Zapier</strong> —сохранение меток Gmail, закладок Slack, лайков Twitter</li>
-                    <li><strong>Make (Integromat)</strong> —RSS-ленты, события календаря, формы</li>
-                    <li><strong>n8n</strong> —кастомные workflow, мониторинг API, запланированные отчеты</li>
-                    <li><strong>IFTTT</strong> —IoT-триггеры, заметки на основе местоположения, архивы соцсетей</li>
+                    <li><strong>Zapier</strong> — сохранение меток Gmail, закладок Slack, лайков Twitter</li>
+                    <li><strong>Make (Integromat)</strong> — RSS-ленты, события календаря, формы</li>
+                    <li><strong>n8n</strong> — кастомные workflow, мониторинг API, запланированные отчеты</li>
+                    <li><strong>IFTTT</strong> — IoT-триггеры, заметки на основе местоположения, архивы соцсетей</li>
                 </ul>
 
                 <h3>Вы не всегда за компьютером</h3>
@@ -531,7 +531,7 @@
 
                 <h3>Для Webhooks Server</h3>
 
-                <p><strong>Сложность настройки:</strong> Средняя (Docker Compose, PostgreSQL, установка plugin). Пошаговая инструкция —в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке</a>.</p>
+                <p><strong>Сложность настройки:</strong> Средняя (Docker Compose, PostgreSQL, установка plugin). Пошаговая инструкция — в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке</a>.</p>
 
                 <p><strong>Сетевые требования:</strong> Сервер с доступом из интернета (VPS, домашний сервер с доменом)</p>
 
@@ -587,7 +587,7 @@
 
                 <h2>Заключение</h2>
 
-                <p>Obsidian Local REST API и Webhooks Server —это не конкурирующие решения, а инструменты для разных задач.</p>
+                <p>Obsidian Local REST API и Webhooks Server — это не конкурирующие решения, а инструменты для разных задач.</p>
 
                 <p><strong>Выбирайте REST API</strong>, когда вам нужно вытягивать данные из Obsidian или изменять заметки из внешних приложений. Это правильный выбор для панелей, мобильных приложений и двунаправленной синхронизации.</p>
 
@@ -602,18 +602,18 @@
                 <h2>Ресурсы</h2>
 
                 <ul>
-                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> —репозиторий на GitHub</li>
-                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> —репозиторий на GitHub</li>
-                    <li><a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">Webhooks Server Landing Page</a> —документация и примеры</li>
+                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> — репозиторий на GitHub</li>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> — репозиторий на GitHub</li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">Webhooks Server Landing Page</a> — документация и примеры</li>
                 </ul>
 
                 <p><strong>Связанное чтение:</strong></p>
                 <ul>
-                    <li><a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a> —архитектура и настройка</li>
-                    <li><a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a> —полное руководство по входящим данным</li>
-                    <li><a href="/ru/guides/self-hosted-webhooks-setup">Self-Hosted: руководство по установке</a> —Docker, PostgreSQL, Nginx</li>
-                    <li><a href="/ru/guides/webhook-recipes">10 рецептов автоматизации</a> —готовые конфигурации</li>
-                    <li><a href="/ru/guides/ai-agents-obsidian">AI-агенты и Obsidian</a> —интеграция Claude, GPT и кастомных агентов</li>
+                    <li><a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a> — архитектура и настройка</li>
+                    <li><a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a> — полное руководство по входящим данным</li>
+                    <li><a href="/ru/guides/self-hosted-webhooks-setup">Self-Hosted: руководство по установке</a> — Docker, PostgreSQL, Nginx</li>
+                    <li><a href="/ru/guides/webhook-recipes">10 рецептов автоматизации</a> — готовые конфигурации</li>
+                    <li><a href="/ru/guides/ai-agents-obsidian">AI-агенты и Obsidian</a> — интеграция Claude, GPT и кастомных агентов</li>
                 </ul>
 
             </div>
@@ -680,7 +680,7 @@
                         <input type="checkbox" class="faq-toggle hidden">
                     </label>
                     <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
-                        <p>Нет, вебхуки —это односторонний механизм доставки (push-модель). Они только создают или добавляют контент в Obsidian. Для чтения заметок из внешних приложений используйте Local REST API плагин с GET-запросами.</p>
+                        <p>Нет, вебхуки — это односторонний механизм доставки (push-модель). Они только создают или добавляют контент в Obsidian. Для чтения заметок из внешних приложений используйте Local REST API плагин с GET-запросами.</p>
                     </div>
                 </div>
             </div>
