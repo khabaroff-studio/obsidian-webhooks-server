@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/posthog/posthog-go"
+	"github.com/rs/zerolog/log"
 )
 
 // HashEmail returns a hex-encoded SHA-256 hash of the email for use as PostHog distinct ID
@@ -20,6 +21,16 @@ func HashEmail(email string) string {
 type AnalyticsService struct {
 	client  posthog.Client
 	enabled bool
+}
+
+type posthogLogger struct{}
+
+func (l posthogLogger) Success(m posthog.APIMessage) {
+	log.Debug().Str("type", fmt.Sprintf("%T", m)).Msg("PostHog event delivered")
+}
+
+func (l posthogLogger) Failure(m posthog.APIMessage, err error) {
+	log.Error().Err(err).Str("type", fmt.Sprintf("%T", m)).Msg("PostHog delivery failed")
 }
 
 // AnalyticsConfig holds analytics configuration
@@ -42,11 +53,10 @@ func NewAnalyticsService(cfg AnalyticsConfig) (*AnalyticsService, error) {
 	client, err := posthog.NewWithConfig(
 		cfg.PostHogAPIKey,
 		posthog.Config{
-			Endpoint: cfg.PostHogHost,
-			// Batch events every 30s (reduces network calls)
-			Interval: 30 * time.Second,
-			// Buffer up to 100 events before flushing
+			Endpoint:  cfg.PostHogHost,
+			Interval:  30 * time.Second,
 			BatchSize: 100,
+			Callback: posthogLogger{},
 		},
 	)
 	if err != nil {
@@ -89,11 +99,15 @@ func (s *AnalyticsService) TrackEvent(ctx context.Context, distinctID, event str
 	properties["timestamp"] = time.Now().Unix()
 	properties["environment"] = getEnvironment()
 
-	s.client.Enqueue(posthog.Capture{
+	if err := s.client.Enqueue(posthog.Capture{
 		DistinctId: distinctID,
 		Event:      event,
 		Properties: properties,
-	})
+	}); err != nil {
+		log.Error().Err(err).Str("event", event).Msg("PostHog enqueue failed")
+	} else {
+		log.Debug().Str("event", event).Str("distinct_id", distinctID).Msg("PostHog event enqueued")
+	}
 }
 
 // Identify sets user properties
