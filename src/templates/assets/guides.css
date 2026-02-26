@@ -56,11 +56,11 @@ pre:hover .copy-btn { opacity: 1; }
 .guide-prose h2 { font-size: 1.75rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem; color: #0a0a0a; }
 .guide-prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #1a1a1a; }
 .guide-prose p { margin-bottom: 1.25rem; line-height: 1.8; color: #444444; }
-.guide-prose ul { margin-bottom: 1.25rem; padding-left: 1.5rem; color: #444444; list-style-type: disc; }
-.guide-prose ol { margin-bottom: 1.25rem; padding-left: 1.5rem; color: #444444; list-style-type: decimal; }
+.guide-prose ul { margin-bottom: 1.25rem; padding-left: 1.5rem; color: #444444; list-style-type: disc !important; }
+.guide-prose ol { margin-bottom: 1.25rem; padding-left: 1.5rem; color: #444444; list-style-type: decimal !important; }
 .guide-prose li { margin-bottom: 0.5rem; line-height: 1.7; }
-.guide-prose a { color: #7C3AED; text-decoration: underline; text-underline-offset: 2px; }
-.guide-prose a:hover { color: #0a0a0a; }
+.guide-prose a { color: #0a0a0a; text-decoration: underline; text-underline-offset: 2px; }
+.guide-prose a:hover { color: #7C3AED; }
 .guide-prose blockquote { border-left: 3px solid #7C3AED; padding-left: 1rem; margin: 1.5rem 0; color: #444444; font-style: italic; }
 .guide-prose img { max-width: 100%; border-radius: 8px; margin: 1.5rem 0; }
 .guide-prose pre { background: #1a1a1a; color: #e5e5e5; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0; font-size: 0.875rem; line-height: 1.6; }
