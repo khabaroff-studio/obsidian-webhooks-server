@@ -7,6 +7,7 @@
 
 import type { WebhookEvent, FileOperationOptions } from "../types";
 import type { Vault, TFile } from "obsidian";
+import { normalizePath } from "obsidian";
 import { formatData } from "../utils/json-formatter";
 
 /**
@@ -41,6 +42,9 @@ export class FileHandler {
 		// Validate event
 		this.validateEvent(event);
 
+		// Normalize the file path (required by Obsidian guidelines)
+		const path = normalizePath(event.path);
+
 		// Merge options with defaults
 		const opts = { ...DEFAULT_OPTIONS, ...options };
 
@@ -48,27 +52,27 @@ export class FileHandler {
 		const content = this.prepareContent(event.data!, opts);
 
 		// Ensure parent directory exists
-		await this.ensureDirectoryExists(event.path);
+		await this.ensureDirectoryExists(path);
 
 		// Use adapter.exists() for reliable file existence check (doesn't rely on cache)
-		const fileExists = await this.vault.adapter.exists(event.path);
+		const fileExists = await this.vault.adapter.exists(path);
 
 		if (fileExists) {
 			// File exists - get it and update
-			const existingFile = this.vault.getAbstractFileByPath(event.path);
+			const existingFile = this.vault.getAbstractFileByPath(path);
 			if (existingFile && this.isFile(existingFile)) {
 				await this.updateExistingFile(existingFile as TFile, content, opts);
 			} else {
 				// Fallback: file exists but not in cache - force update via adapter
-				const existingContent = await this.vault.adapter.read(event.path);
+				const existingContent = await this.vault.adapter.read(path);
 				const newContent = opts.mode === "overwrite"
 					? content
 					: this.mergeContent(existingContent, content, opts);
-				await this.vault.adapter.write(event.path, newContent);
+				await this.vault.adapter.write(path, newContent);
 			}
 		} else {
 			// File doesn't exist - create it
-			await this.createNewFile(event.path, content);
+			await this.createNewFile(path, content);
 		}
 	}
 

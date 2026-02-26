@@ -1,0 +1,35 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - "plugin-*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        working-directory: plugin
+        run: bun install --frozen-lockfile
+
+      - name: Build plugin
+        working-directory: plugin
+        run: bun run build
+
+      - name: Sync manifest.json to root
+        run: cp plugin/manifest.json manifest.json
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "plugin/main.js,plugin/manifest.json,plugin/styles.css"
+          draft: false
+          prerelease: false
