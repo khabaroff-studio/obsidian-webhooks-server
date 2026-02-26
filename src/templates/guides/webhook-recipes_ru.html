@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 рецептов автоматизации Obsidian через вебхуки: Zapier, Make, n8n, IFTTT — Obsidian Webhooks</title>
+    <meta name="description" content="Готовые рецепты вебхуков для автоматизации вашего хранилища Obsidian с 5000+ приложениями. Включает JSON-конфигурации для email, GitHub, Slack, RSS, календаря и других сервисов.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="10 рецептов автоматизации Obsidian через вебхуки — Obsidian Webhooks">
+    <meta property="og:description" content="Готовые рецепты вебхуков для автоматизации Obsidian с Zapier, Make, n8n, IFTTT. JSON-конфигурации для email, GitHub, Slack, RSS, календаря.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="10 рецептов автоматизации Obsidian через вебхуки — Obsidian Webhooks">
+    <meta name="twitter:description" content="Готовые рецепты вебхуков для автоматизации Obsidian с Zapier, Make, n8n, IFTTT. JSON-конфигурации для email, GitHub, Slack, RSS, календаря.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/ru/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/ru/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Войти</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <a href="/guides/webhook-recipes" class="text-ink-muted hover:text-ink transition-colors">EN</a>
+                    <span class="text-line">|</span>
+                    <span class="text-ink font-semibold">RU</span>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Получить ключи</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Открыть меню" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/ru/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Войти</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <a href="/guides/webhook-recipes" class="text-sm text-ink-muted hover:text-ink transition-colors">EN</a>
+                <span class="text-sm text-line">|</span>
+                <span class="text-sm text-ink font-semibold">RU</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все руководства</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">10 рецептов автоматизации Obsidian через вебхуки</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Готовые рецепты для Zapier, Make, n8n, IFTTT с JSON-конфигурациями для email, GitHub, Slack, RSS, календаря и других сервисов</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>Ваше хранилище Obsidian не должно быть изолированным островом. С помощью автоматизации через вебхуки вы можете направлять данные из email, Slack, GitHub, RSS-лент, календаря и 5000+ других приложений напрямую в заметки -- без ручного копирования.</p>
+
+                <p>Этот гайд содержит 10 готовых рецептов вебхуков для популярных платформ автоматизации. Каждый рецепт включает точный формат JSON и объясняет, куда попадают данные в вашем хранилище.</p>
+
+                <h2>Как работает автоматизация через вебхуки</h2>
+
+                <p>Вот схема работы:</p>
+
+                <ol>
+                    <li><strong>Внешний сервис</strong> (Zapier, Make, IFTTT и др.) обнаруживает триггер</li>
+                    <li><strong>Вебхук POST</strong> отправляет JSON-данные на ваш URL</li>
+                    <li><strong>Obsidian Webhooks Server</strong> получает данные</li>
+                    <li><strong>Server-Sent Events (SSE)</strong> передают данные в плагин</li>
+                    <li><strong>Плагин создает/обновляет файлы</strong> в хранилище</li>
+                </ol>
+
+                <p>Сервер преобразует JSON в YAML frontmatter и Markdown-контент. Вы контролируете имя файла, папку и режим работы: создать новый файл, добавить к существующему или перезаписать. Подробнее об архитектуре -- в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
+
+                <p><strong>Установка:</strong> Для настройки см. <a href="/ru/guides/self-hosted-webhooks-setup">руководство по установке</a> или <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">GitHub-репозиторий</a>.</p>
+
+                <h2>10 рецептов</h2>
+
+                <!-- ===== Recipe 1 ===== -->
+                <h3>1. Сохранение важных писем как заметок</h3>
+
+                <p><strong>Что делает:</strong> Создает заметку в хранилище при пометке письма звездочкой/флагом.</p>
+
+                <p><strong>Платформа:</strong> Zapier<br>
+                <strong>Триггер:</strong> Gmail -- New Starred Email<br>
+                <strong>Действие:</strong> Webhooks by Zapier -- POST<br>
+                <strong>Назначение:</strong> <code>inbox/emails/</code></p>
+
+                <pre><code>{
+  "filename": "Email - {{subject}} - {{date}}",
+  "folder": "inbox/emails",
+  "mode": "create",
+  "content": "# {{subject}}\n\nFrom: {{from_email}}\nDate: {{date}}\n\n{{body_plain}}",
+  "frontmatter": {
+    "date": "{{date}}",
+    "from": "{{from_email}}",
+    "tags": ["email", "inbox"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Захват важных писем от клиентов, избранных рассылок или чеков без переключения контекста.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 2 ===== -->
+                <h3>2. GitHub-задачи в систему отслеживания проектов</h3>
+
+                <p><strong>Что делает:</strong> Создает заметку для каждой новой GitHub-задачи в репозитории.</p>
+
+                <p><strong>Платформа:</strong> GitHub native webhook (или Zapier)<br>
+                <strong>Триггер:</strong> GitHub -- New Issue Created<br>
+                <strong>Действие:</strong> POST на URL вебхука<br>
+                <strong>Назначение:</strong> <code>projects/github-issues/</code></p>
+
+                <pre><code>{
+  "filename": "Issue #{{issue_number}} - {{issue_title}}",
+  "folder": "projects/github-issues",
+  "mode": "create",
+  "content": "# {{issue_title}}\n\n**Status:** {{state}}\n**Labels:** {{labels}}\n**Assignee:** {{assignee}}\n\n## Description\n{{body}}\n\n**URL:** {{html_url}}",
+  "frontmatter": {
+    "date": "{{created_at}}",
+    "status": "{{state}}",
+    "repo": "{{repository_name}}",
+    "issue_number": {{issue_number}},
+    "tags": ["github", "issue"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Отслеживание запросов на функции, багов или беклога спринта в Obsidian рядом с заметками проекта.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 3 ===== -->
+                <h3>3. Ежедневная сводка погоды</h3>
+
+                <p><strong>Что делает:</strong> Добавляет прогноз погоды в дневную заметку.</p>
+
+                <p><strong>Платформа:</strong> IFTTT<br>
+                <strong>Триггер:</strong> Weather Underground -- Today's Weather Report<br>
+                <strong>Действие:</strong> Webhooks -- Make a Web Request<br>
+                <strong>Назначение:</strong> <code>daily-notes/{{today}}.md</code> (режим append)</p>
+
+                <pre><code>{
+  "filename": "2026-02-26",
+  "folder": "daily-notes",
+  "mode": "append",
+  "content": "\n## Погода\n- **Температура:** {{temperature}}&deg;C\n- **Условия:** {{condition}}\n- **Осадки:** {{precip_chance}}%\n- **Ветер:** {{wind_speed}} км/ч"
+}</code></pre>
+
+                <p><strong>Применение:</strong> Добавление контекста погоды в ежедневное планирование. Полезно для работы на улице, путешествий или фитнес-трекинга.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 4 ===== -->
+                <h3>4. Сохраненные сообщения Slack в список для чтения</h3>
+
+                <p><strong>Что делает:</strong> Сохраняет сообщения Slack, которые вы пометили звездочкой/закладкой, в список для чтения в Obsidian.</p>
+
+                <p><strong>Платформа:</strong> Zapier<br>
+                <strong>Триггер:</strong> Slack -- New Saved Message<br>
+                <strong>Действие:</strong> Webhooks by Zapier -- POST<br>
+                <strong>Назначение:</strong> <code>inbox/slack/</code></p>
+
+                <pre><code>{
+  "filename": "Slack - {{channel}} - {{timestamp}}",
+  "folder": "inbox/slack",
+  "mode": "create",
+  "content": "# {{channel}}\n\n**От:** {{user_name}}\n**Дата:** {{timestamp}}\n\n{{message_text}}\n\n**Ссылка:** {{message_link}}",
+  "frontmatter": {
+    "date": "{{timestamp}}",
+    "channel": "{{channel}}",
+    "author": "{{user_name}}",
+    "tags": ["slack", "reference"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Архивирование важных командных обсуждений, технических объяснений или логов решений.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 5 ===== -->
+                <h3>5. Статьи из RSS-лент в список для чтения</h3>
+
+                <p><strong>Что делает:</strong> Создает заметку для каждой новой статьи из ваших любимых RSS-лент.</p>
+
+                <p><strong>Платформа:</strong> n8n<br>
+                <strong>Триггер:</strong> RSS Feed Trigger (интервал опроса: 1 час)<br>
+                <strong>Действие:</strong> HTTP Request -- POST webhook<br>
+                <strong>Назначение:</strong> <code>reading-list/</code></p>
+
+                <pre><code>{
+  "filename": "Article - {{title}}",
+  "folder": "reading-list",
+  "mode": "create",
+  "content": "# {{title}}\n\n**Источник:** {{feed_name}}\n**Автор:** {{author}}\n**Опубликовано:** {{pub_date}}\n\n{{description}}\n\n**Читать статью:** [Link]({{link}})",
+  "frontmatter": {
+    "date": "{{pub_date}}",
+    "source": "{{feed_name}}",
+    "url": "{{link}}",
+    "tags": ["article", "reading-list"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Агрегация длинных материалов из нескольких источников (блоги, рассылки, новостные сайты) в одном месте.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 6 ===== -->
+                <h3>6. События Google Calendar в дневные заметки</h3>
+
+                <p><strong>Что делает:</strong> Автоматически добавляет новые события календаря в дневную заметку.</p>
+
+                <p><strong>Платформа:</strong> Make (Integromat)<br>
+                <strong>Триггер:</strong> Google Calendar -- Watch Events (webhook)<br>
+                <strong>Действие:</strong> HTTP -- Make a Request<br>
+                <strong>Назначение:</strong> <code>daily-notes/{{event_date}}.md</code> (режим append)</p>
+
+                <pre><code>{
+  "filename": "2026-02-26",
+  "folder": "daily-notes",
+  "mode": "append",
+  "content": "\n## Событие: {{event_summary}}\n- **Время:** {{start_time}} - {{end_time}}\n- **Место:** {{location}}\n- **Участники:** {{attendees}}\n- **Описание:** {{description}}"
+}</code></pre>
+
+                <p><strong>Применение:</strong> Синхронизация встреч, дедлайнов и назначений в систему планирования Obsidian.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 7 ===== -->
+                <h3>7. Закладки Twitter/X в исследовательские заметки</h3>
+
+                <p><strong>Что делает:</strong> Сохраняет закладки твитов как отдельные заметки.</p>
+
+                <p><strong>Платформа:</strong> Zapier<br>
+                <strong>Триггер:</strong> Twitter -- New Bookmarked Tweet<br>
+                <strong>Действие:</strong> Webhooks by Zapier -- POST<br>
+                <strong>Назначение:</strong> <code>research/bookmarks/</code></p>
+
+                <pre><code>{
+  "filename": "Tweet - @{{username}} - {{tweet_id}}",
+  "folder": "research/bookmarks",
+  "mode": "create",
+  "content": "# @{{username}}\n\n**Дата:** {{created_at}}\n\n{{tweet_text}}\n\n**Ссылка:** {{tweet_url}}",
+  "frontmatter": {
+    "date": "{{created_at}}",
+    "author": "@{{username}}",
+    "url": "{{tweet_url}}",
+    "tags": ["twitter", "bookmark"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Курирование инсайтов, тредов или исследовательского материала из Twitter/X без потери источников.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 8 ===== -->
+                <h3>8. Уведомления о платежах Stripe</h3>
+
+                <p><strong>Что делает:</strong> Логирует успешные платежи из Stripe в заметку отслеживания клиентов.</p>
+
+                <p><strong>Платформа:</strong> Stripe native webhook (или Zapier)<br>
+                <strong>Триггер:</strong> Stripe -- charge.succeeded event<br>
+                <strong>Действие:</strong> POST на URL вебхука<br>
+                <strong>Назначение:</strong> <code>clients/payments/</code></p>
+
+                <pre><code>{
+  "filename": "Payment - {{customer_name}} - {{invoice_id}}",
+  "folder": "clients/payments",
+  "mode": "create",
+  "content": "# Платеж получен\n\n**Клиент:** {{customer_name}}\n**Email:** {{customer_email}}\n**Сумма:** ${{amount}} {{currency}}\n**Счет:** {{invoice_id}}\n**Дата:** {{created_at}}\n\n**Статус:** {{status}}",
+  "frontmatter": {
+    "date": "{{created_at}}",
+    "customer": "{{customer_name}}",
+    "amount": {{amount}},
+    "currency": "{{currency}}",
+    "invoice_id": "{{invoice_id}}",
+    "tags": ["payment", "stripe", "client"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Ведение реестра платежей в Obsidian рядом с заметками клиентских проектов и счетами.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 9 ===== -->
+                <h3>9. Логирование вывода AI-агентов</h3>
+
+                <p><strong>Что делает:</strong> Захватывает ответы от Claude, ChatGPT или кастомных AI-агентов для последующего анализа. Подробнее об интеграции AI -- в руководстве <a href="/ru/guides/ai-agents-obsidian">AI-агенты и Obsidian</a>.</p>
+
+                <p><strong>Платформа:</strong> Кастомный скрипт (Python, Node.js и др.)<br>
+                <strong>Триггер:</strong> Получен ответ от AI API<br>
+                <strong>Действие:</strong> POST JSON на вебхук<br>
+                <strong>Назначение:</strong> <code>ai-logs/{{model}}/</code></p>
+
+                <pre><code>{
+  "filename": "AI Log - {{timestamp}} - {{model}}",
+  "folder": "ai-logs/{{model}}",
+  "mode": "create",
+  "content": "# AI-взаимодействие\n\n**Модель:** {{model}}\n**Время:** {{timestamp}}\n**Токены:** {{tokens_used}}\n\n## Промпт\n{{prompt}}\n\n## Ответ\n{{response}}",
+  "frontmatter": {
+    "date": "{{timestamp}}",
+    "model": "{{model}}",
+    "tokens": {{tokens_used}},
+    "cost": {{cost_usd}},
+    "tags": ["ai", "log"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Архивирование AI-ассистированных исследований, сессий кодирования или черновиков для аудита и доработки.</p>
+
+                <hr>
+
+                <!-- ===== Recipe 10 ===== -->
+                <h3>10. Голосовые заметки через Google Assistant</h3>
+
+                <p><strong>Что делает:</strong> Создает заметку быстрого захвата из голосовой команды Google Assistant.</p>
+
+                <p><strong>Платформа:</strong> IFTTT<br>
+                <strong>Триггер:</strong> Google Assistant -- Say a phrase with a text ingredient ("Add note $")<br>
+                <strong>Действие:</strong> Webhooks -- Make a Web Request<br>
+                <strong>Назначение:</strong> <code>quick-capture/</code></p>
+
+                <pre><code>{
+  "filename": "Voice Note - {{timestamp}}",
+  "folder": "quick-capture",
+  "mode": "create",
+  "content": "{{TextField}}\n\n---\nЗахвачено: {{CreatedAt}}",
+  "frontmatter": {
+    "date": "{{CreatedAt}}",
+    "source": "google-assistant",
+    "tags": ["voice", "inbox"]
+  }
+}</code></pre>
+
+                <p><strong>Применение:</strong> Захват идей, напоминаний или заметок о встречах без использования рук во время вождения, готовки или прогулки.</p>
+
+                <hr>
+
+                <h2>Советы по созданию собственных рецептов</h2>
+
+                <h3>1. Выбор правильного режима</h3>
+
+                <ul>
+                    <li><strong>create:</strong> Новый файл для каждого триггера (письма, задачи, закладки)</li>
+                    <li><strong>append:</strong> Добавление к существующему файлу (дневные заметки, логи, списки)</li>
+                    <li><strong>overwrite:</strong> Замена содержимого файла (дашборды, страницы статуса)</li>
+                </ul>
+
+                <h3>2. Форматирование JSON-данных</h3>
+
+                <ul>
+                    <li>Используйте <code>\n</code> для переносов строк в поле <code>content</code></li>
+                    <li>Оборачивайте Markdown-заголовки в content: <code>"# Заголовок\n\nТекст"</code></li>
+                    <li>Включайте <code>frontmatter</code> для поиска и запросов метаданных</li>
+                </ul>
+
+                <h3>3. Стратегии организации папок</h3>
+
+                <ul>
+                    <li><strong>По источнику:</strong> <code>inbox/slack/</code>, <code>inbox/email/</code>, <code>inbox/github/</code></li>
+                    <li><strong>По проекту:</strong> <code>projects/website/</code>, <code>projects/app/</code></li>
+                    <li><strong>По типу:</strong> <code>reading-list/</code>, <code>meeting-notes/</code>, <code>quick-capture/</code></li>
+                </ul>
+
+                <h3>4. Динамические имена файлов</h3>
+
+                <ul>
+                    <li>Используйте временные метки: <code>"Note - {{timestamp}}"</code></li>
+                    <li>Включайте ключевые идентификаторы: <code>"Issue #{{number}} - {{title}}"</code></li>
+                    <li>Избегайте специальных символов: <code>/</code>, <code>:</code>, <code>*</code>, <code>?</code>, <code>&lt;</code>, <code>&gt;</code>, <code>|</code></li>
+                </ul>
+
+                <h3>5. Тестирование вебхуков</h3>
+
+                <p>Используйте <code>curl</code> для тестирования данных перед настройкой автоматизации:</p>
+
+                <pre><code>curl -X POST https://your-webhook-url.com/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filename": "Test Note",
+    "folder": "inbox",
+    "mode": "create",
+    "content": "# Test\n\nThis is a test."
+  }'</code></pre>
+
+                <p>Больше примеров работы с API -- в руководстве <a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a>. Сравнение подходов -- в статье <a href="/ru/guides/rest-api-vs-webhooks">REST API vs Webhooks</a>.</p>
+
+                <h2>Начало работы</h2>
+
+                <ol>
+                    <li><strong>Установите сервер:</strong> Следуйте <a href="/ru/guides/self-hosted-webhooks-setup">руководству по установке</a> для самостоятельного хостинга или используйте хостинг-версию.</li>
+                    <li><strong>Установите плагин:</strong> Найдите "Webhooks Server" в Obsidian Community Plugins.</li>
+                    <li><strong>Выберите рецепт:</strong> Начните с email или RSS -- их проще всего тестировать.</li>
+                    <li><strong>Кастомизируйте:</strong> Настройте пути папок, шаблоны имен файлов и поля frontmatter под структуру вашего хранилища.</li>
+                </ol>
+
+                <p>Автоматизация через вебхуки превращает Obsidian в универсальный inbox для вашей цифровой жизни. Отслеживаете ли вы GitHub-задачи, архивируете разговоры Slack или логируете AI-взаимодействия -- эти рецепты дают вам отправную точку для построения собственных рабочих процессов автоматизации.</p>
+
+                <p><strong>Готовы к автоматизации?</strong> Получите <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> и начните создавать свой первый рецепт сегодня.</p>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight mb-10">Часто задаваемые вопросы</h2>
+
+                <div class="flex flex-col gap-4">
+                    <!-- FAQ 1 -->
+                    <div class="border border-line">
+                        <input type="checkbox" id="faq1" class="faq-toggle hidden">
+                        <label for="faq1" class="flex items-center justify-between p-5 cursor-pointer hover:bg-paper-warm transition-colors">
+                            <span class="text-lg font-semibold text-ink pr-4">Можно ли использовать несколько платформ автоматизации одновременно?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </label>
+                        <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                            <p>Да, сервер обрабатывает вебхуки из любого источника: можно одновременно настроить Zapier для email, n8n для RSS, GitHub native webhooks для issues и кастомные скрипты для AI-логов. Каждая платформа отправляет POST-запрос с вашим vault key -- сервер не различает источник. Единственное ограничение: не превышайте пропускную способность сервера (обычно >1000 вебхуков/минуту).</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="border border-line">
+                        <input type="checkbox" id="faq2" class="faq-toggle hidden">
+                        <label for="faq2" class="flex items-center justify-between p-5 cursor-pointer hover:bg-paper-warm transition-colors">
+                            <span class="text-lg font-semibold text-ink pr-4">Что произойдет, если webhook-запрос некорректный?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </label>
+                        <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                            <p>Сервер валидирует структуру JSON перед обработкой. Некорректный запрос вернет HTTP 400 с описанием ошибки (например, "missing required field: path"). Плагин не получит данные, очередь не будет загрязнена. Проверьте логи сервера (<code>docker-compose logs server</code>) для диагностики -- все ошибки валидации логируются с полным payload для отладки.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="border border-line">
+                        <input type="checkbox" id="faq3" class="faq-toggle hidden">
+                        <label for="faq3" class="flex items-center justify-between p-5 cursor-pointer hover:bg-paper-warm transition-colors">
+                            <span class="text-lg font-semibold text-ink pr-4">Есть ли лимит на количество вебхуков?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </label>
+                        <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                            <p>Hosted версия: неограниченное количество вебхуков, но лимит 10 МБ на заметку. Self-hosted: лимиты зависят от ресурсов сервера -- базовый VPS ($5/месяц) обрабатывает тысячи вебхуков в день. PostgreSQL очередь масштабируется до миллионов записей. Единственное узкое место -- размер базы данных, но delivered вебхуки удаляются автоматически.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="border border-line">
+                        <input type="checkbox" id="faq4" class="faq-toggle hidden">
+                        <label for="faq4" class="flex items-center justify-between p-5 cursor-pointer hover:bg-paper-warm transition-colors">
+                            <span class="text-lg font-semibold text-ink pr-4">Можно ли фильтровать данные до попадания в Obsidian?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </label>
+                        <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                            <p>Сейчас фильтрация происходит на уровне платформы автоматизации (Zapier Filters, n8n If-условия). Сервер принимает любой валидный JSON. В roadmap добавлены серверные шаблоны (трансформация JSON перед доставкой) и условный роутинг (направление в разные папки по полям payload). Пока используйте логику фильтрации в источнике вебхука.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="border border-line">
+                        <input type="checkbox" id="faq5" class="faq-toggle hidden">
+                        <label for="faq5" class="flex items-center justify-between p-5 cursor-pointer hover:bg-paper-warm transition-colors">
+                            <span class="text-lg font-semibold text-ink pr-4">Работают ли рецепты с Obsidian на мобильном?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </label>
+                        <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                            <p>Да, но с ограничениями. Плагин работает на iOS/Android, но мобильные SSE-соединения менее стабильны. Рекомендуется: держите Obsidian открытым на десктопе для реалтайм-доставки, мобильное приложение получит синхронизированные заметки через Obsidian Sync/iCloud. Для критичных ко времени рецептов (например, уведомления календаря) используйте десктоп как основной endpoint.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие руководства</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/ru/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Как работает Obsidian Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Архитектура, настройка и примеры интеграций -- всё на одной странице.</p>
+                        <span class="text-xs text-ink-muted">8 мин</span>
+                    </a>
+                    <a href="/ru/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Как получать данные в Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Полное руководство по получению данных из внешних сервисов через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                    <a href="/ru/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted: руководство по установке</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Пошаговый туториал по настройке собственного webhook-сервера с Docker.</p>
+                        <span class="text-xs text-ink-muted">18 мин</span>
+                    </a>
+                    <a href="/ru/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">AI-агенты и Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Интеграция Claude, GPT и кастомных агентов с базой знаний через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">14 мин</span>
+                    </a>
+                    <a href="/ru/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Сравнение: когда использовать Local REST API, а когда Webhooks Server.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Руководства</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

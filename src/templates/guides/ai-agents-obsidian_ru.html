@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подключите AI-агенты к Obsidian через вебхуки — Obsidian Webhooks</title>
+    <meta name="description" content="Узнайте, как интегрировать AI-агенты с Obsidian через вебхуки. Автоматически сохраняйте результаты работы Claude, GPT и кастомных агентов в вашу персональную базу знаний с форматированным markdown и frontmatter.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Подключите AI-агенты к Obsidian через вебхуки — Obsidian Webhooks">
+    <meta property="og:description" content="Интеграция AI-агентов с Obsidian через вебхуки. Автоматическое сохранение результатов Claude, GPT и кастомных агентов в базу знаний.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="Подключите AI-агенты к Obsidian через вебхуки — Obsidian Webhooks">
+    <meta name="twitter:description" content="Интеграция AI-агентов с Obsidian через вебхуки. Автоматическое сохранение результатов Claude, GPT и кастомных агентов в базу знаний.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/ru/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/ru/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Войти</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <a href="/guides/ai-agents-obsidian" class="text-ink-muted hover:text-ink transition-colors">EN</a>
+                    <span class="text-line">|</span>
+                    <span class="text-ink font-semibold">RU</span>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Получить ключи</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Открыть меню" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/ru/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Войти</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <a href="/guides/ai-agents-obsidian" class="text-sm text-ink-muted hover:text-ink transition-colors">EN</a>
+                <span class="text-sm text-line">|</span>
+                <span class="text-sm text-ink font-semibold">RU</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все руководства</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Подключите AI-агенты к Obsidian через вебхуки</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Создайте автоматизированную базу знаний: результаты Claude, GPT и кастомных агентов сохраняются в ваш vault с форматированным markdown и frontmatter</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>Ваш AI-агент только что провел 20 минут за исследованием темы, анализом кода или обобщением встречи. Он выдал блестящие инсайты, структурированные рекомендации и практические решения. Затем сессия завершилась, и весь этот результат исчез в никуда.</p>
+
+                <p>Что если каждый инсайт, сгенерированный AI, автоматически попадал бы в ваше хранилище Obsidian? С тегами, временными метками и связью с вашим существующим графом знаний?</p>
+
+                <h2>Проблема AI-результатов: генерация с последующей потерей</h2>
+
+                <p>AI-инструменты вроде Claude, GPT и кастомные агенты становятся все лучше в создании ценных результатов. Обзоры исследований, ревью кода, логи решений, транскрипты встреч, конкурентный анализ. Но эти результаты живут в эфемерных окнах чата или API-ответах, которые исчезают после завершения сессии.</p>
+
+                <p>Текущий рабочий процесс выглядит так:</p>
+
+                <ol>
+                    <li>Запустить AI-агент на задаче</li>
+                    <li>Скопировать и вставить результаты в заметки</li>
+                    <li>Вручную добавить контекст, теги, даты</li>
+                    <li>Попытаться вспомнить, где вы это сохранили</li>
+                </ol>
+
+                <p>Это не масштабируется. Если вы запускаете агенты ежедневно, вы либо тонете в ручном создании заметок, либо теряете ценные AI-результаты.</p>
+
+                <p>Функции экспорта существуют, но они неудобны. Дампы обычного текста без структуры. JSON-блобы, которые нужно парсить. PDF-файлы, которые ломают ваш рабочий процесс. Ничто из этого не интегрируется с тем, как вы на самом деле организуете знания.</p>
+
+                <h2>Почему Obsidian -- ваша база знаний AI</h2>
+
+                <p>Obsidian стал основным инструментом для разработчиков, исследователей и работников умственного труда, которые хотят контроля над своими данными. Вот почему он идеален для захвата результатов работы AI-агентов:</p>
+
+                <p><strong>Local-first архитектура.</strong> Ваши данные живут в markdown-файлах на вашей машине, а не в чьем-то облаке. Когда AI-агенты отправляют результаты в Obsidian, вы контролируете, куда они идут и кто их видит.</p>
+
+                <p><strong>Markdown как универсальный формат.</strong> AI-агенты уже выдают текст. Markdown -- это текст со структурой. Не нужно конвертации, нет вендор-локина.</p>
+
+                <p><strong>Граф связывает все.</strong> Когда ваш исследовательский агент упоминает концепт, о котором вы писали месяц назад, Obsidian показывает связь. AI-результаты становятся частью вашего графа знаний, а не изолированными документами.</p>
+
+                <p><strong>Теги и поиск, которые масштабируются.</strong> Тегируйте AI-результаты по типу агента, теме или проекту. Ищите среди тысяч заметок, сгенерированных агентами, мгновенно.</p>
+
+                <p><strong>Плагины расширяют функциональность.</strong> Как только AI-результаты попадают в Obsidian, вы можете обрабатывать их через Dataview-запросы, шаблоны или кастомные скрипты.</p>
+
+                <h2>Как вебхуки связывают AI-агенты и Obsidian</h2>
+
+                <p>Недостающий элемент -- доставка. Как результаты работы AI-агента, выполняющегося в Python, облачной функции или запланированной задаче, попадают в ваше хранилище Obsidian?</p>
+
+                <p>Вебхуки решают это. Вот поток:</p>
+
+                <ol>
+                    <li>AI-агент завершает задачу</li>
+                    <li>Агент отправляет HTTP POST с результатами на вебхук-сервер</li>
+                    <li>Сервер доставляет в Obsidian через Server-Sent Events (SSE)</li>
+                    <li>Заметка появляется в хранилище с правильным frontmatter, тегами и расположением папки</li>
+                </ol>
+
+                <p>Это работает, даже если Obsidian был закрыт, когда агент выполнялся. Сервер ставит доставки в очередь и отправляет их, когда Obsidian переподключается. Подробнее об архитектуре -- в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
+
+                <p>Техническая реализация использует AES-256-GCM шифрование для данных в транзите и гарантии доставки ровно один раз. Ваши вебхук-ключи аутентифицируют запросы, и вы контролируете, какие агенты могут писать в какие папки.</p>
+
+                <h2>Кейсы интеграции Obsidian AI: что это дает</h2>
+
+                <p>Давайте рассмотрим конкретные примеры с реальными JSON-пейлоадами.</p>
+
+                <h3>Кейс 1: исследовательский агент</h3>
+
+                <p>Ваш агент исследует "retrieval augmented generation trends 2026" и отправляет структурированные находки:</p>
+
+                <pre><code>import requests
+
+def send_research_to_obsidian(topic, summary, sources):
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Research - {topic}",
+        "folder": "ai-research",
+        "content": f"## Summary\n{summary}\n\n## Sources\n" + "\n".join(f"- {s}" for s in sources),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["ai-research", "rag"],
+            "source": "research-agent",
+            "date": "2026-02-26",
+            "status": "completed"
+        }
+    })</code></pre>
+
+                <p>Результат в Obsidian:</p>
+
+                <pre><code>---
+tags: [ai-research, rag]
+source: research-agent
+date: 2026-02-26
+status: completed
+---
+## Summary
+Retrieval augmented generation is shifting toward...
+
+## Sources
+- https://arxiv.org/abs/...
+- https://www.anthropic.com/research/...</code></pre>
+
+                <h3>Кейс 2: транскрибер встреч</h3>
+
+                <p>Аудиофайл &#8594; транскрипт через Whisper &#8594; структурированные заметки через вебхук:</p>
+
+                <pre><code>def process_meeting(audio_path, attendees):
+    transcript = whisper_transcribe(audio_path)
+    action_items = extract_action_items(transcript)  # GPT-4 call
+
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Meeting - {datetime.now().strftime('%Y-%m-%d')}",
+        "folder": "meetings",
+        "content": f"## Attendees\n{', '.join(attendees)}\n\n## Transcript\n{transcript}\n\n## Action Items\n" +
+                   "\n".join(f"- [ ] {item}" for item in action_items),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["meeting"],
+            "attendees": attendees,
+            "date": datetime.now().isoformat()
+        }
+    })</code></pre>
+
+                <p>Заметка о встрече появляется в вашем хранилище с чекбоксами для action items, поисковым транскриптом и тегами участников.</p>
+
+                <h3>Кейс 3: агент ревью кода</h3>
+
+                <p>Агент проверяет pull request и логирует находки:</p>
+
+                <pre><code>def review_pr(pr_number, diff):
+    review = claude_review_code(diff)  # Claude API call
+
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"PR-{pr_number} Review",
+        "folder": "code-reviews",
+        "content": f"## Files Changed\n{diff[:500]}...\n\n## Review\n{review['summary']}\n\n## Issues Found\n" +
+                   "\n".join(f"- {issue}" for issue in review['issues']),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["code-review"],
+            "pr": pr_number,
+            "reviewer": "claude-agent",
+            "date": datetime.now().isoformat()
+        }
+    })</code></pre>
+
+                <h3>Кейс 4: агент ежедневного дайджеста</h3>
+
+                <p>Запланированный агент агрегирует новости и обновления каждое утро:</p>
+
+                <pre><code>def daily_digest():
+    news = fetch_hacker_news_top()
+    papers = fetch_arxiv_cs_ai()
+
+    content = "## Tech News\n" + "\n".join(f"- [{n['title']}]({n['url']})" for n in news)
+    content += "\n\n## Research Papers\n" + "\n".join(f"- [{p['title']}]({p['url']})" for p in papers)
+
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Daily Digest - {datetime.now().strftime('%Y-%m-%d')}",
+        "folder": "daily",
+        "content": content,
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["daily-digest"],
+            "date": datetime.now().isoformat()
+        }
+    })</code></pre>
+
+                <h3>Кейс 5: логгер решений</h3>
+
+                <p>Агент принимает решения и логирует рассуждения:</p>
+
+                <pre><code>def log_decision(decision, reasoning, alternatives):
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Decision - {decision[:50]}",
+        "folder": "decisions",
+        "content": f"## Decision\n{decision}\n\n## Reasoning\n{reasoning}\n\n## Alternatives Considered\n" +
+                   "\n".join(f"- {alt}" for alt in alternatives),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["decision-log"],
+            "date": datetime.now().isoformat(),
+            "status": "proposed"
+        }
+    })</code></pre>
+
+                <h2>Построение вашего пайплайна AI &#8594; Obsidian</h2>
+
+                <p>Вот как настроить полную интеграцию:</p>
+
+                <h3>Шаг 1: настройте вебхук-сервер</h3>
+
+                <p>Клонируйте и разверните вебхук-сервер. Подробная инструкция -- в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке Self-Hosted</a>:</p>
+
+                <pre><code>git clone https://github.com/khabaroff-studio/obsidian-webhooks-server
+cd obsidian-webhooks-server
+npm install
+npm start</code></pre>
+
+                <p>Или используйте хостинг-версию на <a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">obsidian-webhooks.khabaroff.studio</a>.</p>
+
+                <p>Настройте ваш вебхук-ключ в настройках сервера. Этот ключ аутентифицирует запросы агентов.</p>
+
+                <h3>Шаг 2: добавьте вызов вебхука в результаты работы агента</h3>
+
+                <p>В коде вашего агента добавьте функцию, которая отправляет результаты в Obsidian:</p>
+
+                <pre><code>import requests
+from datetime import datetime
+
+def send_to_obsidian(title, content, tags, folder="ai-logs"):
+    """Send AI agent output to Obsidian via webhook."""
+    payload = {
+        "filename": title,
+        "folder": folder,
+        "content": content,
+        "mode": "create",
+        "frontmatter": {
+            "tags": tags,
+            "source": "ai-agent",
+            "date": datetime.now().isoformat()
+        }
+    }
+
+    response = requests.post(
+        "https://your-server/api/webhook/YOUR_WEBHOOK_KEY",
+        json=payload,
+        headers={"Content-Type": "application/json"}
+    )
+
+    return response.status_code == 200</code></pre>
+
+                <p>Вызывайте эту функцию всякий раз, когда ваш агент создает результат:</p>
+
+                <pre><code># In your agent code
+result = run_agent_task(task)
+send_to_obsidian(
+    title=f"Agent Run - {task['name']}",
+    content=result['summary'],
+    tags=["ai", "agent-output"],
+    folder="agent-logs"
+)</code></pre>
+
+                <h3>Шаг 3: определите структуру папок хранилища</h3>
+
+                <p>Организуйте AI-результаты с четкой иерархией папок:</p>
+
+                <pre><code>obsidian-vault/
+├── ai-research/       # Research agent outputs
+├── meetings/          # Transcribed meetings
+├── code-reviews/      # Code review findings
+├── daily/             # Daily digests
+├── decisions/         # Decision logs
+└── agent-logs/        # General agent outputs</code></pre>
+
+                <p>Каждая папка получает специфичные теги и поля frontmatter. Это упрощает фильтрацию и запросы.</p>
+
+                <h3>Шаг 4: подключите AI-результаты к существующим знаниям</h3>
+
+                <p>Используйте функции Obsidian для интеграции AI-результатов:</p>
+
+                <p><strong>Backlinks:</strong> ссылайтесь на существующие заметки в AI-сгенерированном контенте. Если ваш исследовательский агент находит что-то о "retrieval augmented generation", сделайте ссылку на вашу существующую заметку <code>[[RAG]]</code>.</p>
+
+                <p><strong>Теги:</strong> используйте согласованные теги для заметок, созданных человеком и AI. <code>#ai-research</code> применяется как к вашим ручным исследовательским заметкам, так и к результатам агентов.</p>
+
+                <p><strong>Dataview-запросы:</strong> создайте дашборд-заметки, которые агрегируют AI-результаты:</p>
+
+                <pre><code>TABLE tags, source, date
+FROM "ai-research"
+WHERE source = "research-agent"
+SORT date DESC
+LIMIT 10</code></pre>
+
+                <p><strong>Граф:</strong> наблюдайте, как AI-результаты связываются с вашим графом знаний. Заметки, сгенерированные агентами, становятся узлами, которые связаны с концептами, проектами и решениями.</p>
+
+                <h2>Автоматизация Obsidian AI: продвинутые паттерны</h2>
+
+                <p>Как только базовый пайплайн работает, вы можете строить более сложные рабочие процессы. Больше примеров автоматизации -- в <a href="/ru/guides/webhook-recipes">10 рецептах автоматизации</a>.</p>
+
+                <p><strong>Режим append для продолжающихся задач:</strong> используйте <code>"mode": "append"</code> для добавления к существующим заметкам. Ежедневный standup-агент добавляет к сегодняшней заметке вместо создания дубликатов.</p>
+
+                <p><strong>Условная доставка:</strong> агент решает, стоит ли сохранять результат. Результаты с низкой уверенностью не замусоривают ваше хранилище.</p>
+
+                <p><strong>Маршрутизация с несколькими хранилищами:</strong> разные агенты пишут в разные хранилища Obsidian. Рабочие проекты -- в рабочее хранилище, личные исследования -- в личное хранилище.</p>
+
+                <p><strong>Пакетная обработка:</strong> ставьте несколько результатов агентов в очередь и доставляйте их вместе. Снижает шум уведомлений.</p>
+
+                <p><strong>Форматирование на основе шаблонов:</strong> храните markdown-шаблоны в вашем хранилище, ссылайтесь на них в вебхук-вызовах. Обеспечивает согласованную структуру заметок.</p>
+
+                <h2>Приватность и безопасность: ваши данные остаются вашими</h2>
+
+                <p>Подход с вебхуками держит ваши данные под контролем:</p>
+
+                <p><strong>AES-256-GCM шифрование:</strong> данные зашифрованы в транзите между агентом и сервером, сервером и Obsidian.</p>
+
+                <p><strong>Опция самостоятельного хостинга:</strong> запускайте вебхук-сервер на вашей собственной инфраструктуре. Никакая третья сторона не видит ваши AI-результаты. Подробности -- в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по Self-Hosted установке</a>.</p>
+
+                <p><strong>Аутентификация через вебхук-ключ:</strong> только агенты с вашим ключом могут писать в ваше хранилище.</p>
+
+                <p><strong>Local-first хранение:</strong> Obsidian хранит все как markdown-файлы на вашей машине. Нет зависимости от облака.</p>
+
+                <p><strong>Audit trail:</strong> сервер логирует все доставки. Вы можете видеть точно, что было отправлено и когда.</p>
+
+                <p>Это важно для чувствительных AI-результатов. Ревью кода с проприетарным кодом, исследования конфиденциальных тем, транскрипты встреч с приватными обсуждениями. Все остается под вашим контролем.</p>
+
+                <h2>Интеграция Obsidian Claude и другие AI-инструменты</h2>
+
+                <p>Подход с вебхуками работает с любым AI-инструментом, который может отправлять HTTP-запросы:</p>
+
+                <p><strong>Claude API:</strong> используйте API Anthropic в вашем агенте, отправляйте результаты через вебхук.</p>
+
+                <p><strong>OpenAI GPT:</strong> тот же паттерн. API-вызов &#8594; обработка результатов &#8594; доставка через вебхук.</p>
+
+                <p><strong>Open-source модели:</strong> запускайте Llama, Mistral или другие модели локально, отправляйте результаты в Obsidian.</p>
+
+                <p><strong>Langchain-агенты:</strong> добавьте вебхук-вызов к agent callbacks или шагу финального результата.</p>
+
+                <p><strong>n8n/Zapier рабочие процессы:</strong> используйте вебхук как финальный шаг в автоматизации. AI обрабатывает данные, вебхук доставляет в Obsidian. Смотрите <a href="/ru/guides/webhook-recipes">готовые рецепты</a>.</p>
+
+                <p><strong>Кастомные агенты:</strong> любой код, который делает HTTP-запросы, работает. Python, JavaScript, Go, Rust. Язык не имеет значения.</p>
+
+                <p>Пример с Claude:</p>
+
+                <pre><code>import anthropic
+import requests
+
+def claude_research_to_obsidian(topic):
+    client = anthropic.Anthropic(api_key="YOUR_KEY")
+
+    message = client.messages.create(
+        model="claude-sonnet-4-5-20250929",
+        max_tokens=2000,
+        messages=[{
+            "role": "user",
+            "content": f"Research {topic} and provide a structured summary with key points and sources."
+        }]
+    )
+
+    send_to_obsidian(
+        title=f"Claude Research - {topic}",
+        content=message.content[0].text,
+        tags=["claude", "ai-research"],
+        folder="ai-research"
+    )</code></pre>
+
+                <h2>Начало работы: разверните вашу первую интеграцию AI &#8594; Obsidian</h2>
+
+                <p>Готовы автоматизировать захват AI-знаний? Вот ваш чеклист:</p>
+
+                <ol>
+                    <li><strong>Настройте вебхук-сервер:</strong> посетите <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">github.com/khabaroff-studio/obsidian-webhooks-server</a> и следуйте гайду по настройке</li>
+                    <li><strong>Установите Obsidian-плагин:</strong> получите компаньон-плагин из community plugins Obsidian (поиск "Webhooks")</li>
+                    <li><strong>Протестируйте доставку:</strong> отправьте тестовый вебхук с помощью curl:
+                        <pre><code>curl -X POST https://your-server/api/webhook/YOUR_KEY \
+  -H "Content-Type: application/json" \
+  -d '{"filename":"Test Note","folder":"tests","content":"# Hello from AI","mode":"create"}'</code></pre>
+                    </li>
+                    <li><strong>Интегрируйте с вашим агентом:</strong> добавьте вызов вебхука в код вашего AI-агента</li>
+                    <li><strong>Определите структуру папок:</strong> создайте папки в вашем хранилище для разных типов агентов</li>
+                    <li><strong>Начните захватывать:</strong> запустите вашего агента, наблюдайте, как результаты появляются в Obsidian</li>
+                </ol>
+
+                <p>Полный гайд по настройке с опциями конфигурации и траблшутингом доступен на <a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">obsidian-webhooks.khabaroff.studio</a>. Также смотрите <a href="/ru/guides/receive-data-obsidian">руководство по получению данных в Obsidian</a>.</p>
+
+                <h2>Будущее AI-управления знаниями</h2>
+
+                <p>AI-агенты становятся более способными. Они будут работать дольше, принимать больше решений, генерировать больше инсайтов. Вопрос не в том, использовать ли AI-агенты, а в том, как захватывать их результаты, не утопая в неструктурированных данных.</p>
+
+                <p>Интеграция Obsidian AI через вебхуки дает вам структурированные, поисковые, взаимосвязанные AI-результаты. Каждый запуск агента строит вашу базу знаний вместо того, чтобы исчезать в истории чата.</p>
+
+                <p>Ваши AI-агенты должны работать на ваш граф знаний, а не против него. Начните с одного агента, одного вебхука, одной папки в Obsidian. Затем масштабируйте по мере добавления агентов и рабочих процессов.</p>
+
+                <p>Код в open source. Вебхук-сервер можно <a href="/ru/guides/self-hosted-webhooks-setup">хостить самостоятельно</a>. Ваши данные остаются вашими. Постройте AI-пайплайн знаний, который вам действительно нужен.</p>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto flex flex-col gap-8">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Часто задаваемые вопросы</h2>
+
+                <!-- FAQ 1 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Какие AI-фреймворки поддерживают отправку через вебхуки?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Любой фреймворк, способный делать HTTP POST-запросы. Langchain, LlamaIndex, AutoGPT, CrewAI и кастомные Python-скрипты работают одинаково. Добавьте <code>requests.post()</code> в колбек или финальный шаг обработки результатов агента.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Можно ли отправлять структурированные данные из AI-агентов?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Да, вебхук принимает JSON с полями <code>frontmatter</code>, где вы можете передавать массивы, объекты и метаданные. Например, список участников встречи, теги проектов или nested структуры данных сохраняются в YAML frontmatter заметки.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Как избежать дубликатов заметок от AI-агентов?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Используйте уникальные имена файлов с временными метками или идентификаторами задач. Например, <code>f"Research - {topic} - {datetime.now().isoformat()}"</code> или <code>f"PR-{pr_number} Review"</code>. Сервер создаст новый файл, если имя уже существует.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Поддерживает ли сервер пакетные операции?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Да, вы можете отправить несколько вебхуков последовательно, и сервер поставит их в очередь. Все заметки будут доставлены в Obsidian в одной SSE-сессии при следующем подключении плагина, что снижает количество уведомлений.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Могут ли AI-агенты читать заметки из Obsidian через вебхуки?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Нет, вебхуки работают только в направлении агент &#8594; Obsidian (push-модель). Для чтения заметок агентом используйте плагин Local REST API, который предоставляет GET-endpoints для программного доступа к контенту хранилища. Подробнее о разнице подходов -- в руководстве <a href="/ru/guides/rest-api-vs-webhooks">REST API vs Webhooks</a>.</p>
+                    </div>
+                </div>
+
+                <p class="text-lg text-ink-soft leading-[1.7]">Начните с одного агента и одного вебхука. Разверните сервер за 10 минут, подключите плагин -- и каждый AI-инсайт автоматически станет частью вашего графа знаний.</p>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие руководства</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/ru/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Как работает Obsidian Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Архитектура, настройка и примеры интеграций.</p>
+                        <span class="text-xs text-ink-muted">8 мин</span>
+                    </a>
+                    <a href="/ru/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Как получать данные в Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Полное руководство по получению данных из внешних сервисов через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                    <a href="/ru/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted: руководство по установке</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Пошаговый туториал по настройке собственного webhook-сервера с Docker.</p>
+                        <span class="text-xs text-ink-muted">18 мин</span>
+                    </a>
+                    <a href="/ru/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">10 рецептов автоматизации</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Готовые рецепты вебхуков для Zapier, Make, n8n, IFTTT с JSON-конфигурациями.</p>
+                        <span class="text-xs text-ink-muted">11 мин</span>
+                    </a>
+                    <a href="/ru/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Сравнение: когда использовать Local REST API, а когда Webhooks Server.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Руководства</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

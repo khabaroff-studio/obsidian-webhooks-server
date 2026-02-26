@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Как работает — Obsidian Webhooks</title>
     <meta name="description" content="Архитектура, настройка, примеры интеграций Obsidian Webhooks — всё на одной странице. Как доставляются события из внешних сервисов в ваш vault.">
-    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works">
-    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
-    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works">
-    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works">
 
     <!-- Open Graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Как работает — Obsidian Webhooks">
     <meta property="og:description" content="Архитектура, настройка и примеры интеграций Obsidian Webhooks.">
-    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works">
     <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
     <meta property="og:site_name" content="Obsidian Webhooks">
 
@@ -27,6 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -54,71 +55,24 @@
             },
         }
     </script>
-
-    <style>
-        html { scroll-behavior: smooth; }
-        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        ::selection { background: #7C3AED; color: white; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
-        .animate-delay-1 { animation-delay: 0.1s; }
-        .animate-delay-2 { animation-delay: 0.2s; }
-        .animate-delay-3 { animation-delay: 0.3s; }
-
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
-        .stagger-4 { transition-delay: 0.4s; }
-
-        .btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
-        .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-
-        .arrow-nudge { transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); display: inline-block; }
-        .btn-lift:hover .arrow-nudge,
-        a:hover .arrow-nudge { transform: translateX(4px); }
-
-        .card-hover:hover { border-color: #0a0a0a; }
-
-        .footer-link { position: relative; }
-        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #7C3AED; transition: width 0.3s ease; }
-        .footer-link:hover::after { width: 100%; }
-
-        code { font-family: 'SF Mono', 'Fira Code', monospace; }
-        pre { overflow-x: auto; position: relative; }
-        .copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 8px; font-size: 11px; font-family: inherit; border: none; border-radius: 4px; cursor: pointer; opacity: 0; transition: opacity 0.2s ease; }
-        pre:hover .copy-btn { opacity: 1; }
-        .copy-btn.light { background: #e5e5e5; color: #444; }
-        .copy-btn.light:hover { background: #d4d4d4; }
-        .copy-btn.dark { background: #333; color: #aaa; }
-        .copy-btn.dark:hover { background: #444; }
-
-        #mobileMenu { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.2s ease; }
-        #mobileMenu.open { max-height: 320px; opacity: 1; }
-    </style>
 </head>
 <body class="font-body text-ink bg-paper">
 
     <!-- ==================== HEADER ==================== -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
         <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
-            <a href="/ru" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+            <a href="/ru/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
                 Obsidian Webhooks
             </a>
             <nav class="flex items-center gap-4 md:gap-8">
-                <a href="/ru/how-it-works" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Как работает</a>
+                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Руководства</a>
                 <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
                 </a>
-                <a href="/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Войти</a>
+                <a href="/ru/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Войти</a>
                 <span class="hidden lg:flex items-center gap-1.5 text-xs">
-                    <a href="/" class="text-ink-muted hover:text-ink transition-colors">EN</a>
+                    <a href="/guides/how-it-works" class="text-ink-muted hover:text-ink transition-colors">EN</a>
                     <span class="text-line">|</span>
                     <span class="text-ink font-semibold">RU</span>
                 </span>
@@ -135,14 +89,14 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
         <div class="flex flex-col px-6 py-5 gap-4">
-            <a href="/ru/how-it-works" class="text-sm font-medium text-ink hover:text-accent transition-colors">Как работает</a>
+            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Руководства</a>
             <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                 GitHub
             </a>
-            <a href="/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Войти</a>
+            <a href="/ru/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Войти</a>
             <div class="flex items-center gap-2 pt-2 border-t border-line">
-                <a href="/" class="text-sm text-ink-muted hover:text-ink transition-colors">EN</a>
+                <a href="/guides/how-it-works" class="text-sm text-ink-muted hover:text-ink transition-colors">EN</a>
                 <span class="text-sm text-line">|</span>
                 <span class="text-sm text-ink font-semibold">RU</span>
             </div>
@@ -153,8 +107,9 @@
         <!-- ==================== HERO ==================== -->
         <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
             <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
-                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in">Как работает Obsidian Webhooks</h1>
-                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-1">Архитектура, настройка, примеры интеграций — всё на одной странице</p>
+                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все руководства</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Как работает Obsidian Webhooks</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Архитектура, настройка, примеры интеграций — всё на одной странице</p>
             </div>
         </section>
 
@@ -162,12 +117,8 @@
         <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
                 <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Архитектура</h2>
-
                 <img src="/assets/how.png" alt="Архитектура: Ваш сервис → Сервер → Очередь → Obsidian Plugin → Ваш Vault" class="w-full fade-in">
-
                 <p class="text-lg text-ink-muted italic fade-in">"Vault" — хранилище заметок в Obsidian. Папка на вашем диске, где лежат все .md файлы.</p>
-
-                <!-- Steps text -->
                 <div class="flex flex-col gap-4 text-lg text-ink-soft leading-[1.7] fade-in">
                     <p><strong class="text-ink">1. Ваш сервис</strong> — n8n, Make, скрипт или бот отправляет HTTP POST с контентом</p>
                     <p><strong class="text-ink">2. Сервер</strong> — проверяет webhook_key и сохраняет контент в очередь</p>
@@ -183,26 +134,22 @@
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
                 <div>
                     <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Quick Start</h2>
-                    <p class="text-lg text-ink-soft mt-3">От регистрации до первой заметки в vault — 5 минут</p>
+                    <p class="text-lg text-ink-soft mt-3">От регистрации до первой заметки в vault — 5 минут. Смотрите также: <a href="/ru/guides/self-hosted-webhooks-setup" class="text-accent hover:underline">Руководство по установке</a></p>
                 </div>
 
-                <!-- Step 1 -->
                 <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-1">
                     <span class="font-display text-5xl font-bold text-accent tracking-tight">01</span>
                     <h3 class="text-xl font-semibold text-ink">Зарегистрируйтесь</h3>
                     <a href="/login" class="btn-lift bg-ink text-white text-sm font-medium px-7 py-3 inline-flex items-center gap-2 hover:bg-accent self-start">
                         <span class="arrow-nudge">&#8594;</span> Получить ключи
                     </a>
-                    <p class="text-lg text-ink-soft leading-[1.7]">
-                        Проверьте почту &#8594; перейдите по ссылке из письма &#8594; откройте dashboard. Там два ключа:
-                    </p>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Проверьте почту &#8594; перейдите по ссылке из письма &#8594; откройте dashboard. Там два ключа:</p>
                     <ul class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-1 pl-1">
                         <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">webhook_key</code> — для отправки контента на сервер</li>
                         <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">client_key</code> — для подключения плагина в Obsidian</li>
                     </ul>
                 </div>
 
-                <!-- Step 2 -->
                 <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-2">
                     <span class="font-display text-5xl font-bold text-accent tracking-tight">02</span>
                     <h3 class="text-xl font-semibold text-ink">Установите плагин в Obsidian</h3>
@@ -217,16 +164,15 @@
                     </div>
                 </div>
 
-                <!-- Step 3 -->
                 <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-3">
                     <span class="font-display text-5xl font-bold text-accent tracking-tight">03</span>
                     <h3 class="text-xl font-semibold text-ink">Отправьте первый вебхук</h3>
-                    <p class="text-lg text-ink-soft leading-[1.7]">Самый быстрый способ проверить, что работает — curl:</p>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Самый быстрый способ проверить — curl:</p>
                     <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST \
   "https://obsidian-webhooks.khabaroff.studio/webhook/{ваш_webhook_key}?path=inbox/test.md" \
   -H "Content-Type: application/json" \
   -d '{"content": "# Первая заметка\n\nОтправлено через webhook!"}'</code></pre>
-                    <p class="text-lg text-ink-soft leading-[1.7]">Через 1-3 секунды в vault появится заметка <code class="bg-paper-warm px-1.5 py-0.5 font-mono">inbox/test.md</code>.</p>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Через 1-3 секунды в vault появится заметка <code class="bg-paper-warm px-1.5 py-0.5 font-mono">inbox/test.md</code>. Больше примеров — в <a href="/ru/guides/webhook-recipes" class="text-accent hover:underline">10 рецептах автоматизации</a>.</p>
                     <div class="flex flex-col gap-2 text-lg text-ink-muted">
                         <p class="text-ink-soft font-medium">Ответ сервера:</p>
                         <p><code class="text-ink bg-paper-warm px-1.5 py-0.5">200 OK</code> — контент принят и сохранён в очередь</p>
@@ -241,7 +187,6 @@
         <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
                 <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Два ключа для отправки и получения</h2>
-
                 <div class="flex flex-col gap-8">
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
                         <h3 class="font-body text-[22px] font-bold text-ink-dark">webhook_key</h3>
@@ -261,7 +206,6 @@ Content-Type: application/json
                             <p>Простой текст записывается как есть, без JSON-парсинга.</p>
                         </div>
                     </div>
-
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
                         <h3 class="font-body text-[22px] font-bold text-ink-dark">client_key</h3>
                         <p class="text-lg text-ink-soft leading-[1.7]">Вставьте в Obsidian: Settings &#8594; Obsidian Webhooks &#8594; Client Key.</p>
@@ -279,11 +223,9 @@ Content-Type: application/json
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
                 <div>
                     <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Примеры интеграций</h2>
-                    <p class="text-lg text-ink-soft mt-3">Подойдёт любой сервис с HTTP POST</p>
+                    <p class="text-lg text-ink-soft mt-3">Подойдёт любой сервис с HTTP POST. Смотрите <a href="/ru/guides/webhook-recipes" class="text-accent hover:underline">10 готовых рецептов</a> для Zapier, Make, n8n и других.</p>
                 </div>
-
                 <div class="flex flex-col gap-8">
-                    <!-- n8n -->
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">n8n</h3>
                         <div class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-2">
@@ -296,8 +238,6 @@ Content-Type: application/json
   "source": "n8n"
 }</code></pre>
                     </div>
-
-                    <!-- Make -->
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Make</h3>
                         <div class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-2">
@@ -310,8 +250,6 @@ Content-Type: application/json
   "source": "make"
 }</code></pre>
                     </div>
-
-                    <!-- Python -->
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Python</h3>
                         <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>import requests
@@ -325,8 +263,6 @@ response = requests.post(
 )
 print(response.status_code)  # 200</code></pre>
                     </div>
-
-                    <!-- Telegram bot -->
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Telegram-бот</h3>
                         <p class="text-lg text-ink-soft leading-[1.7]">Telegram не шлёт вебхуки на произвольные URL. Нужен бот — простой скрипт, который пересылает сообщения как HTTP POST.</p>
@@ -340,8 +276,6 @@ def handle_message(update, context):
     )</code></pre>
                         <p class="text-lg text-ink-muted">Токен: Telegram &#8594; @BotFather &#8594; /newbot</p>
                     </div>
-
-                    <!-- curl -->
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-3">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">cURL</h3>
                         <pre class="bg-ink-dark text-[#e5e5e5] p-4 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST \
@@ -360,7 +294,6 @@ def handle_message(update, context):
                     <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Dashboard</h2>
                     <p class="text-lg text-ink-soft mt-3">Ключи, статистика, формат запросов</p>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Ключи и статистика</h3>
@@ -368,8 +301,42 @@ def handle_message(update, context):
                     </div>
                     <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2">
                         <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">Quick start и формат запросов</h3>
-                        <p class="text-lg text-ink-soft leading-[1.7]">Пошаговая инструкция, ссылка на скачивание плагина, пример curl и полная таблица JSON-полей (<code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">content</code>, <code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">title</code>, <code class="bg-paper-warm px-1 py-0.5 font-mono text-ink">tags</code>, ...).</p>
+                        <p class="text-lg text-ink-soft leading-[1.7]">Пошаговая инструкция, ссылка на скачивание плагина, пример curl и полная таблица JSON-полей.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие руководства</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/ru/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Как получать данные в Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Полное руководство по получению данных из внешних сервисов через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                    <a href="/ru/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted: руководство по установке</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Пошаговый туториал по настройке собственного webhook-сервера с Docker.</p>
+                        <span class="text-xs text-ink-muted">18 мин</span>
+                    </a>
+                    <a href="/ru/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">10 рецептов автоматизации</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Готовые рецепты вебхуков для Zapier, Make, n8n, IFTTT с JSON-конфигурациями.</p>
+                        <span class="text-xs text-ink-muted">11 мин</span>
+                    </a>
+                    <a href="/ru/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">AI-агенты и Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Интеграция Claude, GPT и кастомных агентов с базой знаний через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">14 мин</span>
+                    </a>
+                    <a href="/ru/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Сравнение: когда использовать Local REST API, а когда Webhooks Server.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -391,7 +358,7 @@ def handle_message(update, context):
                     <div class="flex flex-col gap-4">
                         <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
                         <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
-                        <a href="/ru/how-it-works" class="footer-link text-sm text-white transition-colors">How it works</a>
+                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Руководства</a>
                         <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                             GitHub
@@ -436,7 +403,6 @@ def handle_message(update, context):
             });
             pre.appendChild(btn);
         });
-        // Mobile menu
         const burgerBtn = document.getElementById('burgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         burgerBtn.addEventListener('click', () => {

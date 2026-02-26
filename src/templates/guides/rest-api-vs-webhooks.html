@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API vs Webhooks for Obsidian — Which Should You Use?</title>
+    <meta name="description" content="Comparison guide for choosing between Local REST API plugin and Webhooks Server for Obsidian automation. Learn when to use pull vs push architecture for external integrations.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="REST API vs Webhooks for Obsidian — Which Should You Use?">
+    <meta property="og:description" content="Comparison guide for choosing between Local REST API plugin and Webhooks Server for Obsidian automation. Pull vs push architecture explained.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="REST API vs Webhooks for Obsidian — Which Should You Use?">
+    <meta name="twitter:description" content="Comparison guide: when to use Local REST API plugin vs Webhooks Server for Obsidian automation.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Guides</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Log In</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <span class="text-ink font-semibold">EN</span>
+                    <span class="text-line">|</span>
+                    <a href="/ru/guides/rest-api-vs-webhooks" class="text-ink-muted hover:text-ink transition-colors">RU</a>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Open menu" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Guides</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Log In</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <span class="text-sm text-ink font-semibold">EN</span>
+                <span class="text-sm text-line">|</span>
+                <a href="/ru/guides/rest-api-vs-webhooks" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; All Guides</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Obsidian REST API vs Webhooks</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Two tools, one goal: get external data into Obsidian. Which should you use?</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>Two tools, one goal: get external data into Obsidian. But they work in completely opposite ways. One turns Obsidian into a server you request data from. The other delivers data to Obsidian whether it's running or not.</p>
+
+                <p>If you're automating Obsidian or connecting it to external services, you've probably encountered both approaches. This guide breaks down when to use REST API, when to use webhooks, and when to use both together.</p>
+
+                <!-- ==================== QUICK COMPARISON ==================== -->
+                <h2>Quick Comparison</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Local REST API Plugin</th>
+                            <th>Webhooks Server</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Direction</strong></td>
+                            <td>Pull (you request data)</td>
+                            <td>Push (data arrives automatically)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Obsidian must be running?</strong></td>
+                            <td>Yes, always</td>
+                            <td>No (queues when offline)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Real-time updates?</strong></td>
+                            <td>On-demand only</td>
+                            <td>SSE streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Self-hosted?</strong></td>
+                            <td>Plugin only</td>
+                            <td>Full server + plugin</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operations</strong></td>
+                            <td>Full CRUD (create, read, update, delete, search)</td>
+                            <td>Create/Append/Overwrite</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Authentication</strong></td>
+                            <td>API key</td>
+                            <td>Magic links + AES-256-GCM encryption</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Network</strong></td>
+                            <td>Local network</td>
+                            <td>Internet (self-hosted server)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Best for</strong></td>
+                            <td>Reading notes from apps, full note control</td>
+                            <td>Receiving data from external services</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Maintenance</strong></td>
+                            <td>Active (2800+ stars)</td>
+                            <td>Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ==================== HOW REST API WORKS ==================== -->
+                <h2>How Obsidian Local REST API Works</h2>
+
+                <p>The <a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API plugin</a> by coddingtonbear turns your Obsidian desktop app into a web server. When Obsidian is running, it exposes HTTP endpoints you can call to:</p>
+
+                <ul>
+                    <li><strong>Create</strong> new notes</li>
+                    <li><strong>Read</strong> existing notes (get content, search)</li>
+                    <li><strong>Update</strong> note content</li>
+                    <li><strong>Delete</strong> notes</li>
+                    <li><strong>Search</strong> across your vault</li>
+                </ul>
+
+                <p>This is a <strong>request-response model</strong>. Your external application (a Python script, a mobile app, another service) makes HTTP requests to Obsidian, and Obsidian responds with data or confirms the action.</p>
+
+                <p><strong>Authentication</strong> uses an API key you configure in the plugin settings. For security, the plugin uses HTTPS with self-signed certificates.</p>
+
+                <p><strong>The key constraint:</strong> Obsidian must be running on your computer. If you close Obsidian, the API is unavailable, and external requests fail.</p>
+
+                <h3>Example Use Case: Dashboard Reading Obsidian</h3>
+
+                <p>You're building a web dashboard that displays your daily notes, task counts, and recent journal entries. The dashboard needs to:</p>
+
+                <ol>
+                    <li><strong>Read</strong> the current daily note</li>
+                    <li><strong>Search</strong> for incomplete tasks</li>
+                    <li><strong>Count</strong> entries by tag</li>
+                </ol>
+
+                <p>With the Local REST API plugin, your dashboard sends GET requests to Obsidian whenever it needs fresh data. Obsidian responds with note content, search results, or metadata.</p>
+
+                <p>This works perfectly because:</p>
+                <ul>
+                    <li>You need to <strong>read</strong> data (REST API's strength)</li>
+                    <li>Obsidian is running while you're using the dashboard</li>
+                    <li>You control when requests happen (on-demand)</li>
+                </ul>
+
+                <!-- ==================== HOW WEBHOOKS WORKS ==================== -->
+                <h2>How Obsidian Webhooks Server Works</h2>
+
+                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> is an event-driven architecture. External services send data to your self-hosted server via webhook POST requests. The server:</p>
+
+                <ol>
+                    <li><strong>Receives</strong> webhook payloads from any internet service</li>
+                    <li><strong>Queues</strong> them in PostgreSQL (persists even if Obsidian is closed)</li>
+                    <li><strong>Delivers</strong> via Server-Sent Events (SSE) to the Obsidian plugin when it connects</li>
+                    <li><strong>Confirms</strong> delivery with exactly-once semantics (ACK mechanism)</li>
+                    <li><strong>Encrypts</strong> sensitive content with AES-256-GCM</li>
+                </ol>
+
+                <p>This is a <strong>push model</strong>. You don't request data; data arrives and queues until Obsidian is ready to receive it.</p>
+
+                <p><strong>Authentication</strong> uses magic links generated by the server. No API keys in external service configs. Webhook URLs are signed and encrypted.</p>
+
+                <p><strong>The key advantage:</strong> Obsidian doesn't need to be running. Webhooks queue server-side and deliver automatically when you next open Obsidian. For a deeper look at the architecture, see <a href="/guides/how-it-works">How It Works</a>.</p>
+
+                <h3>Example Use Case: Capturing Ideas from Anywhere</h3>
+
+                <p>You use multiple services that should create notes in Obsidian:</p>
+
+                <ol>
+                    <li><strong>Telegram bot</strong> -- Forward messages to save ideas</li>
+                    <li><strong>Zapier</strong> -- Save starred emails to daily notes</li>
+                    <li><strong>n8n</strong> -- RSS feed summaries to reading inbox</li>
+                    <li><strong>GitHub Actions</strong> -- CI results as notes</li>
+                </ol>
+
+                <p>With Webhooks Server:</p>
+                <ul>
+                    <li>Each service sends a POST request to your webhook URL</li>
+                    <li>The server queues all incoming data</li>
+                    <li>When you open Obsidian (even hours later), the plugin connects via SSE</li>
+                    <li>All queued notes are delivered and created automatically</li>
+                    <li>You get delivery confirmations for each webhook</li>
+                </ul>
+
+                <p>This works because:</p>
+                <ul>
+                    <li>External services <strong>push</strong> data on their schedule</li>
+                    <li>No dependency on Obsidian being open</li>
+                    <li>Delivery is guaranteed even across restarts</li>
+                </ul>
+
+                <p>For step-by-step integration examples with Zapier, Make, n8n, and more, see <a href="/guides/webhook-recipes">10 Automation Recipes</a>.</p>
+
+                <!-- ==================== WHEN TO USE REST API ==================== -->
+                <h2>When to Use Local REST API Plugin</h2>
+
+                <p>Choose the REST API approach when:</p>
+
+                <h3>You Need to Read Notes from External Apps</h3>
+
+                <p>If your external application needs to <strong>fetch</strong> data from Obsidian, REST API is the only option. Webhooks can't serve note content to other applications -- they only deliver inbound data.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Mobile app displaying your notes</li>
+                    <li>Web dashboard showing vault statistics</li>
+                    <li>Python script analyzing your journal entries</li>
+                    <li>Desktop app syncing with Obsidian content</li>
+                </ul>
+
+                <h3>You Need Full CRUD Operations</h3>
+
+                <p>If you need to <strong>update</strong> existing notes, <strong>delete</strong> notes, or <strong>search</strong> the vault programmatically, REST API provides all these operations. Webhooks Server focuses on creating/appending new content, not modifying existing notes.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Task manager syncing completion status</li>
+                    <li>Note editor app modifying drafts</li>
+                    <li>Cleanup script deleting old daily notes</li>
+                    <li>Search tool indexing vault content</li>
+                </ul>
+
+                <h3>Obsidian Is Always Running</h3>
+
+                <p>If you work at a desktop where Obsidian stays open during work hours, REST API's requirement of a running app isn't a limitation.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Home office with always-on desktop</li>
+                    <li>Single-user setup with predictable hours</li>
+                    <li>Local network automation (no internet dependency)</li>
+                </ul>
+
+                <h3>You Want Plugin-Only Setup</h3>
+
+                <p>REST API requires only installing an Obsidian plugin. No external servers, no Docker, no PostgreSQL. If you prefer simplicity and don't need offline queuing, this is lighter infrastructure.</p>
+
+                <!-- ==================== WHEN TO USE WEBHOOKS ==================== -->
+                <h2>When to Use Obsidian Webhooks Server</h2>
+
+                <p>Choose the webhooks approach when:</p>
+
+                <h3>External Services Need to Push Data</h3>
+
+                <p>If automation platforms, APIs, or services generate data that should land in Obsidian, webhooks eliminate polling and provide immediate delivery.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li><strong>Zapier</strong> -- Save Gmail labels, Slack bookmarks, Twitter likes</li>
+                    <li><strong>Make (Integromat)</strong> -- RSS feeds, calendar events, form submissions</li>
+                    <li><strong>n8n</strong> -- Custom workflows, API monitoring, scheduled reports</li>
+                    <li><strong>IFTTT</strong> -- IoT triggers, location-based notes, social media archives</li>
+                </ul>
+
+                <h3>You're Not Always at Your Computer</h3>
+
+                <p>If you travel, work from multiple locations, or don't keep Obsidian running 24/7, webhooks queue data until you're back.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Mobile-first workflows</li>
+                    <li>Multi-device usage (laptop + desktop)</li>
+                    <li>Ideas captured on-the-go (Telegram, voice notes)</li>
+                    <li>Scheduled jobs running while you sleep</li>
+                </ul>
+
+                <h3>You Need Delivery Guarantees</h3>
+
+                <p>Webhooks Server provides exactly-once delivery with acknowledgment. If Obsidian crashes mid-delivery, the note is re-queued and retried. REST API requires your external app to handle retries.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Financial data (can't lose transactions)</li>
+                    <li>Customer feedback (critical business data)</li>
+                    <li>Research citations (must not drop sources)</li>
+                    <li>Compliance logging (audit requirements)</li>
+                </ul>
+
+                <h3>You Want Encrypted Storage</h3>
+
+                <p>If webhook payloads contain sensitive data (API keys, personal info, credentials), Webhooks Server encrypts them at rest with AES-256-GCM. REST API processes requests immediately but doesn't provide encrypted queueing.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Health data webhooks</li>
+                    <li>Financial API integrations</li>
+                    <li>Authentication tokens in notes</li>
+                    <li>Private journal entries from external apps</li>
+                </ul>
+
+                <h3>You Run Multiple Vaults or Devices</h3>
+
+                <p>Webhooks Server can route to different vaults on different devices using magic links. REST API serves one vault per Obsidian instance.</p>
+
+                <p><strong>Scenarios:</strong></p>
+                <ul>
+                    <li>Work vault + personal vault</li>
+                    <li>Desktop + laptop + tablet setups</li>
+                    <li>Team collaboration (separate vaults per user)</li>
+                </ul>
+
+                <!-- ==================== USING BOTH ==================== -->
+                <h2>Can You Use Both Together?</h2>
+
+                <p>Absolutely. REST API and Webhooks Server solve different problems and complement each other perfectly.</p>
+
+                <h3>Hybrid Architecture Example</h3>
+
+                <p><strong>Your setup:</strong></p>
+                <ul>
+                    <li><strong>Webhooks Server</strong> receives inbound data from Zapier, GitHub, Telegram</li>
+                    <li><strong>REST API plugin</strong> serves note content to your custom dashboard</li>
+                    <li><strong>Obsidian</strong> acts as both webhook consumer and REST API server</li>
+                </ul>
+
+                <p><strong>Data flows:</strong></p>
+
+                <p><strong>1. Inbound (Push)</strong></p>
+                <p>Zapier sends starred emails &#8594; Webhooks Server &#8594; Queued &#8594; Delivered to Obsidian &#8594; New notes in daily folder</p>
+
+                <p><strong>2. Outbound (Pull)</strong></p>
+                <ul>
+                    <li>Your dashboard sends GET request &#8594; REST API plugin &#8594; Returns daily note content</li>
+                    <li>Python script searches for <code>#task</code> &#8594; REST API plugin &#8594; Returns task list</li>
+                </ul>
+
+                <p><strong>Why this works:</strong></p>
+                <ul>
+                    <li>Webhooks handle "data arriving from outside"</li>
+                    <li>REST API handles "external apps reading Obsidian"</li>
+                    <li>No conflict; they operate on different directions</li>
+                </ul>
+
+                <h3>Real-World Hybrid Use Case</h3>
+
+                <p><strong>Morning workflow:</strong></p>
+                <ol>
+                    <li>Overnight, GitHub Actions finish CI runs &#8594; Send results via webhook &#8594; Queued</li>
+                    <li>Twitter bot archives your bookmarked threads &#8594; Webhook &#8594; Queued</li>
+                    <li>RSS aggregator sends article summaries &#8594; Webhook &#8594; Queued</li>
+                </ol>
+
+                <p><strong>You open Obsidian at 9 AM:</strong></p>
+                <ul>
+                    <li>All queued webhooks deliver instantly via SSE</li>
+                    <li>Notes appear in their target folders</li>
+                </ul>
+
+                <p><strong>At 10 AM, you open your custom dashboard:</strong></p>
+                <ul>
+                    <li>Dashboard calls REST API: <code>GET /vault/Daily/2026-02-26.md</code></li>
+                    <li>REST API returns today's note (including webhook-created content)</li>
+                    <li>Dashboard displays tasks, links, summaries</li>
+                </ul>
+
+                <p>Both systems working together: webhooks delivered the content, REST API served it back to another app.</p>
+
+                <!-- ==================== DECISION TREE ==================== -->
+                <h2>Decision Tree: Which Should You Use?</h2>
+
+                <p>Work through this decision tree to find your answer:</p>
+
+                <p><strong>Question 1: Do you need to READ notes from an external app?</strong></p>
+                <ul>
+                    <li><strong>Yes</strong> &#8594; You need REST API (webhooks can't serve content)</li>
+                    <li><strong>No</strong> &#8594; Continue to Question 2</li>
+                </ul>
+
+                <p><strong>Question 2: Do external services need to PUSH data to Obsidian?</strong></p>
+                <ul>
+                    <li><strong>Yes</strong> &#8594; Continue to Question 3</li>
+                    <li><strong>No</strong> &#8594; Use REST API for full control</li>
+                </ul>
+
+                <p><strong>Question 3: Is Obsidian always running when data arrives?</strong></p>
+                <ul>
+                    <li><strong>Yes</strong> &#8594; REST API can work; consider setup simplicity (plugin-only vs server)</li>
+                    <li><strong>No</strong> &#8594; Use Webhooks Server (queues when offline)</li>
+                </ul>
+
+                <p><strong>Question 4: Do you need full CRUD operations (update, delete, search)?</strong></p>
+                <ul>
+                    <li><strong>Yes</strong> &#8594; Use REST API (webhooks are create/append only)</li>
+                    <li><strong>No</strong> &#8594; Either works; consider offline requirements</li>
+                </ul>
+
+                <p><strong>Question 5: Do you need both inbound and outbound data flows?</strong></p>
+                <ul>
+                    <li><strong>Yes</strong> &#8594; Use both REST API + Webhooks Server</li>
+                    <li><strong>No</strong> &#8594; Choose based on direction (inbound = webhooks, outbound = REST API)</li>
+                </ul>
+
+                <h3>Quick Scenarios</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dashboard reading notes</td>
+                            <td>REST API only</td>
+                        </tr>
+                        <tr>
+                            <td>Telegram bot saving ideas</td>
+                            <td>Webhooks only</td>
+                        </tr>
+                        <tr>
+                            <td>Zapier + dashboard combo</td>
+                            <td>REST API + Webhooks</td>
+                        </tr>
+                        <tr>
+                            <td>Updating existing notes from app</td>
+                            <td>REST API only</td>
+                        </tr>
+                        <tr>
+                            <td>Receiving emails as notes</td>
+                            <td>Webhooks only</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile app modifying drafts</td>
+                            <td>REST API only</td>
+                        </tr>
+                        <tr>
+                            <td>RSS feeds creating notes</td>
+                            <td>Webhooks only</td>
+                        </tr>
+                        <tr>
+                            <td>Task sync with external manager</td>
+                            <td>REST API only</td>
+                        </tr>
+                        <tr>
+                            <td>Multi-device idea capture</td>
+                            <td>Webhooks only</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ==================== IMPLEMENTATION ==================== -->
+                <h2>Implementation Considerations</h2>
+
+                <h3>For REST API</h3>
+
+                <p><strong>Setup complexity:</strong> Low (plugin installation only)</p>
+
+                <p><strong>Network requirements:</strong> Local network access to Obsidian machine; port forwarding if remote</p>
+
+                <p><strong>Security:</strong> API key authentication, HTTPS with self-signed certs</p>
+
+                <p><strong>Reliability:</strong> Depends on Obsidian uptime; external app must handle failures</p>
+
+                <p><strong>Best practices:</strong></p>
+                <ul>
+                    <li>Use API key rotation</li>
+                    <li>Restrict network access (firewall rules)</li>
+                    <li>Implement retry logic in external apps</li>
+                    <li>Monitor Obsidian availability</li>
+                </ul>
+
+                <h3>For Webhooks Server</h3>
+
+                <p><strong>Setup complexity:</strong> Medium (Docker Compose, PostgreSQL, plugin installation). See the <a href="/guides/self-hosted-webhooks-setup">Self-Hosted Setup Guide</a> for a step-by-step walkthrough.</p>
+
+                <p><strong>Network requirements:</strong> Internet-accessible server (VPS, home server with domain)</p>
+
+                <p><strong>Security:</strong> Magic links, AES-256-GCM encryption, webhook signature verification</p>
+
+                <p><strong>Reliability:</strong> Queuing ensures delivery; survives Obsidian restarts</p>
+
+                <p><strong>Best practices:</strong></p>
+                <ul>
+                    <li>Run on reliable server (not laptop)</li>
+                    <li>Set up monitoring (queue depth alerts)</li>
+                    <li>Backup PostgreSQL database</li>
+                    <li>Use environment secrets for encryption keys</li>
+                </ul>
+
+                <!-- ==================== GETTING STARTED ==================== -->
+                <h2>Getting Started</h2>
+
+                <h3>Try Local REST API Plugin</h3>
+
+                <ol>
+                    <li>Install from Obsidian Community Plugins: "Local REST API"</li>
+                    <li>Enable plugin, set API key in settings</li>
+                    <li>Test with <code>curl</code>:</li>
+                </ol>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -H "Authorization: Bearer YOUR_API_KEY" \
+     https://127.0.0.1:27124/vault/</code></pre>
+
+                <ol start="4">
+                    <li>Build your integration using the <a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">API documentation</a></li>
+                </ol>
+
+                <p><strong>Best first project:</strong> Python script that searches for incomplete tasks and prints them to terminal.</p>
+
+                <h3>Try Obsidian Webhooks Server</h3>
+
+                <ol>
+                    <li>Deploy server: <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">GitHub deployment guide</a></li>
+                    <li>Install Obsidian plugin (companion repo)</li>
+                    <li>Generate magic link in server admin panel</li>
+                    <li>Test with webhook:</li>
+                </ol>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://your-server.com/w/YOUR_WEBHOOK_ID \
+     -H "Content-Type: application/json" \
+     -d '{"vault":"Default","path":"Test.md","content":"Hello"}'</code></pre>
+
+                <ol start="5">
+                    <li>Open Obsidian, see note appear</li>
+                </ol>
+
+                <p><strong>Best first project:</strong> Telegram bot that forwards messages to Obsidian via webhook. For more inspiration, check out <a href="/guides/receive-data-obsidian">How to Receive External Data in Obsidian</a>.</p>
+
+                <!-- ==================== CONCLUSION ==================== -->
+                <h2>Conclusion</h2>
+
+                <p>Obsidian Local REST API and Webhooks Server aren't competing solutions -- they're tools for different jobs.</p>
+
+                <p><strong>Choose REST API</strong> when you need to pull data out of Obsidian or modify notes from external apps. It's the right choice for dashboards, mobile apps, and bidirectional sync.</p>
+
+                <p><strong>Choose Webhooks</strong> when external services need to push data into Obsidian reliably, especially when Obsidian isn't always running. It's perfect for automation platforms, scheduled jobs, and multi-device workflows.</p>
+
+                <p><strong>Use both</strong> when you have complex integrations with data flowing in both directions.</p>
+
+                <p>The good news? You don't have to choose just one. Install both, and build the exact automation architecture your workflow needs.</p>
+
+                <hr>
+
+                <p><strong>Resources:</strong></p>
+                <ul>
+                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> -- GitHub repository</li>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> -- GitHub repository</li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio">Webhooks Server Landing Page</a> -- Documentation and examples</li>
+                </ul>
+
+                <p><strong>Related reading:</strong></p>
+                <ul>
+                    <li><a href="/guides/how-it-works">How Obsidian Webhooks Works</a> -- Architecture deep dive</li>
+                    <li><a href="/guides/receive-data-obsidian">How to Receive External Data in Obsidian</a> -- Complete integration guide</li>
+                    <li><a href="/guides/self-hosted-webhooks-setup">Self-Hosted Obsidian Webhooks Setup</a> -- Docker deployment tutorial</li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight mb-10">Frequently Asked Questions</h2>
+
+                <div class="flex flex-col border-t border-line">
+                    <!-- FAQ 1 -->
+                    <div class="border-b border-line">
+                        <label class="flex items-center justify-between py-5 cursor-pointer group">
+                            <span class="text-lg font-semibold text-ink group-hover:text-accent transition-colors pr-4">Can I use both REST API and webhooks with Obsidian?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                            <input type="checkbox" class="faq-toggle sr-only">
+                        </label>
+                        <div class="faq-answer text-ink-soft leading-[1.7] px-0">
+                            <p>Yes, they work together perfectly. Use REST API for outbound data (reading notes, searching, serving content to external apps) and webhooks for inbound data (receiving content from external services). Many users run both simultaneously -- webhooks collect incoming data throughout the day, while REST API serves that data to dashboards or mobile apps.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="border-b border-line">
+                        <label class="flex items-center justify-between py-5 cursor-pointer group">
+                            <span class="text-lg font-semibold text-ink group-hover:text-accent transition-colors pr-4">Which is faster: REST API or webhooks?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                            <input type="checkbox" class="faq-toggle sr-only">
+                        </label>
+                        <div class="faq-answer text-ink-soft leading-[1.7] px-0">
+                            <p>Webhooks are faster for delivery because they're push-based. REST API requires your external app to poll Obsidian, which introduces latency. With webhooks, data queues server-side and delivers instantly when Obsidian connects via SSE. However, REST API responds immediately when Obsidian is already running, making read operations faster than polling external sources.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="border-b border-line">
+                        <label class="flex items-center justify-between py-5 cursor-pointer group">
+                            <span class="text-lg font-semibold text-ink group-hover:text-accent transition-colors pr-4">Does the Local REST API plugin work on mobile?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                            <input type="checkbox" class="faq-toggle sr-only">
+                        </label>
+                        <div class="faq-answer text-ink-soft leading-[1.7] px-0">
+                            <p>No, the Local REST API plugin only works on Obsidian desktop (Windows, macOS, Linux). Mobile versions of Obsidian don't support community plugins that run local servers. If you need mobile access to your vault data, consider syncing your vault to a cloud service and using webhooks to collect data, or access desktop Obsidian remotely via VPN.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="border-b border-line">
+                        <label class="flex items-center justify-between py-5 cursor-pointer group">
+                            <span class="text-lg font-semibold text-ink group-hover:text-accent transition-colors pr-4">Can webhooks create notes in specific folders?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                            <input type="checkbox" class="faq-toggle sr-only">
+                        </label>
+                        <div class="faq-answer text-ink-soft leading-[1.7] px-0">
+                            <p>Yes, webhook payloads include a folder parameter that controls exactly where notes are created. You can route different webhook sources to different folders (e.g., Telegram bot to "inbox/telegram", GitHub Actions to "dev/ci-logs"). The folder path is relative to your vault root and created automatically if it doesn't exist.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="border-b border-line">
+                        <label class="flex items-center justify-between py-5 cursor-pointer group">
+                            <span class="text-lg font-semibold text-ink group-hover:text-accent transition-colors pr-4">Is there a way to read Obsidian notes via webhooks?</span>
+                            <svg class="w-5 h-5 text-ink-muted flex-shrink-0 transition-transform faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                            <input type="checkbox" class="faq-toggle sr-only">
+                        </label>
+                        <div class="faq-answer text-ink-soft leading-[1.7] px-0">
+                            <p>No, webhooks are one-directional (push only). They deliver data to Obsidian but can't serve content back to external apps. If you need to read notes programmatically, you must use the Local REST API plugin. For bidirectional workflows, run both systems: webhooks for incoming data, REST API for outbound queries.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Other Guides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">How It Works</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Architecture, setup, integration examples.</p>
+                        <span class="text-xs text-ink-muted">8 min read</span>
+                    </a>
+                    <a href="/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">How to Receive External Data in Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Complete guide to sending data to Obsidian.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                    <a href="/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted Obsidian Webhooks: Setup Guide</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Step-by-step tutorial with Docker.</p>
+                        <span class="text-xs text-ink-muted">18 min read</span>
+                    </a>
+                    <a href="/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">10 Automation Recipes</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Copy-paste webhook recipes for Zapier, Make, n8n, IFTTT.</p>
+                        <span class="text-xs text-ink-muted">11 min read</span>
+                    </a>
+                    <a href="/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Connect AI Agents to Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Integrate Claude, GPT, and custom agents.</p>
+                        <span class="text-xs text-ink-muted">14 min read</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/guides/" class="footer-link text-sm text-white transition-colors">Guides</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+        // FAQ accordion
+        document.querySelectorAll('.faq-toggle').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const chevron = this.closest('label').querySelector('.faq-chevron');
+                if (chevron) {
+                    chevron.style.transform = this.checked ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как получать данные в Obsidian из внешних сервисов (гайд 2026) — Obsidian Webhooks</title>
+    <meta name="description" content="Узнайте, как отправлять данные в Obsidian через вебхуки. Полное руководство по получению входящих данных в вашем хранилище Obsidian.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/receive-data-obsidian">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/receive-data-obsidian">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/receive-data-obsidian">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/receive-data-obsidian">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Как получать данные в Obsidian из внешних сервисов (гайд 2026) — Obsidian Webhooks">
+    <meta property="og:description" content="Узнайте, как отправлять данные в Obsidian через вебхуки. Полное руководство по получению входящих данных в вашем хранилище Obsidian.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/guides/receive-data-obsidian">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="Как получать данные в Obsidian из внешних сервисов (гайд 2026) — Obsidian Webhooks">
+    <meta name="twitter:description" content="Узнайте, как отправлять данные в Obsidian через вебхуки. Полное руководство по получению входящих данных в вашем хранилище Obsidian.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/ru/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/ru/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Войти</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <a href="/guides/receive-data-obsidian" class="text-ink-muted hover:text-ink transition-colors">EN</a>
+                    <span class="text-line">|</span>
+                    <span class="text-ink font-semibold">RU</span>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Получить ключи</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Открыть меню" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/ru/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Войти</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <a href="/guides/receive-data-obsidian" class="text-sm text-ink-muted hover:text-ink transition-colors">EN</a>
+                <span class="text-sm text-line">|</span>
+                <span class="text-sm text-ink font-semibold">RU</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все руководства</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Как получать данные в Obsidian из внешних сервисов</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Полное руководство по получению входящих данных в вашем хранилище Obsidian через вебхуки</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>В Obsidian более 2000 плагинов от комьюнити. Вы можете экспортировать заметки, синхронизировать с GitHub, отправлять данные в любой SaaS-инструмент. Но есть одна критическая проблема: вы не можете получать данные из внешних сервисов. Все течет наружу. Ничто не течет внутрь.</p>
+
+                <p>Это не было проблемой, когда Obsidian использовали только для личных заметок. Но в 2026 году люди управляют целыми системами работы со знаниями, трекерами проектов и <a href="/ru/guides/ai-agents-obsidian">AI-агентами</a> в своих хранилищах. Им нужно, чтобы внешние данные поступали автоматически, надежно, в реальном времени.</p>
+
+                <h2>Проблема: Obsidian не умеет получать данные</h2>
+
+                <p>Obsidian разработан как local-first инструмент. Ваше хранилище живет на вашей машине. Нет облачного бекенда, нет HTTP-сервера, нет API-эндпоинта. Это отлично для приватности и скорости, но создает фундаментальное ограничение: внешним сервисам некуда отправлять данные.</p>
+
+                <p>Допустим, вы хотите сохранять письма как заметки через Zapier. Или логировать GitHub issues в трекер проектов. Или сохранять выводы AI-агентов в базу знаний. Встроенного способа это сделать нет.</p>
+
+                <p>Комьюнити Obsidian просит это с 2021 года. <a href="https://forum.obsidian.md/t/integrating-zapier-to-automate-tasks-across-obsidian-and-all-other-common-workflow-apps/17641" target="_blank" rel="noopener">Тред на форуме про интеграцию с Zapier</a> собрал сотни апвотов, но официального решения нет. Архитектура просто не поддерживает это.</p>
+
+                <h2>Почему существующие решения не работают</h2>
+
+                <p>Люди пытались решить это разными хаками. Ни один не работает надежно. Для детального технического сравнения смотрите наше руководство <a href="/ru/guides/rest-api-vs-webhooks">REST API vs Webhooks</a>.</p>
+
+                <h3>Файловые синхронизаторы (Dropbox, iCloud)</h3>
+
+                <p>Можно настроить Zapier на запись в вашу папку Dropbox и надеяться, что Obsidian подхватит изменения. Но файловая синхронизация разработана для ручных правок, а не для автоматизации. Вы получаете:</p>
+
+                <ul>
+                    <li>Задержку распространения (от секунд до минут)</li>
+                    <li>Отсутствие гарантий доставки</li>
+                    <li>Конфликты синхронизации при одновременной записи из нескольких источников</li>
+                    <li>Отсутствие подтверждения доставки</li>
+                </ul>
+
+                <p>Это ломается в момент, когда у вас появляются чувствительные ко времени данные или несколько интеграций.</p>
+
+                <h3>Плагин trashhalo/obsidian-webhooks</h3>
+
+                <p>Этот плагин добавляет входящие вебхуки в Obsidian. Это было ближайшее к реальному решению. Но он полагается на сторонний relay-сервис (webhook.site или аналоги), и плагин не обновляется с 2023 года. Зависимость от relay означает, что вы доверяете свои данные внешнему сервису, который может исчезнуть в любой момент.</p>
+
+                <h3>Плагин obsidian-post-webhook</h3>
+
+                <p>Несмотря на название, этот плагин только отправляет данные <em>из</em> Obsidian на внешние вебхуки. Только исходящие. Проблему входящих данных вообще не решает.</p>
+
+                <h3>Плагин obsidian-local-rest-api</h3>
+
+                <p>Это экспонирует REST API, когда Obsidian запущен. Звучит идеально, но:</p>
+
+                <ul>
+                    <li>Obsidian должен быть запущен и сфокусирован на хранилище</li>
+                    <li>Не асинхронный — внешние сервисы должны ждать ответа</li>
+                    <li>Нет очереди, если Obsidian закрыт</li>
+                    <li>Нет шифрования или аутентификации по умолчанию</li>
+                </ul>
+
+                <p>Вы не можете использовать это для автоматизации "fire and forget", где сервис отправляет данные и идет дальше.</p>
+
+                <h2>Решение: самостоятельный webhook-сервер</h2>
+
+                <p>Недостающий элемент — постоянный webhook-эндпоинт, который ставит данные в очередь и доставляет их в Obsidian, когда хранилище онлайн. Именно это делает <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a>. Подробнее об архитектуре — в руководстве <a href="/ru/guides/how-it-works">Как работает</a>.</p>
+
+                <p>Вот поток:</p>
+
+                <ol>
+                    <li>Внешний сервис (Zapier, Make, AI-агент) отправляет POST-запрос на webhook-эндпоинт</li>
+                    <li>Go-сервер получает payload, шифрует его, сохраняет в очередь PostgreSQL</li>
+                    <li>Сервер отправляет данные в плагин Obsidian через SSE (Server-Sent Events)</li>
+                    <li>Плагин записывает заметку в хранилище, отправляет подтверждение ACK</li>
+                    <li>Сервер помечает вебхук как доставленный и удаляет из очереди</li>
+                </ol>
+
+                <p>Эта архитектура решает все проблемы:</p>
+
+                <ul>
+                    <li><strong>Постоянный эндпоинт</strong>: внешние сервисы всегда знают, куда отправлять данные</li>
+                    <li><strong>Exactly-once доставка</strong>: подтверждение ACK гарантирует отсутствие дубликатов или потерянных сообщений</li>
+                    <li><strong>Оффлайн-синхронизация</strong>: очередь хранит данные, если Obsidian закрыт, доставляет при переподключении</li>
+                    <li><strong>Реальное время</strong>: SSE держит соединение открытым, доставка за миллисекунды, когда онлайн</li>
+                    <li><strong>Шифрование</strong>: AES-256-GCM шифрование данных очереди в состоянии покоя</li>
+                    <li><strong>Мультихранилище</strong>: отдельные webhook-ключи на хранилище, один сервер поддерживает несколько хранилищ</li>
+                </ul>
+
+                <h2>Как отправить данные в Obsidian</h2>
+
+                <p>Сервер принимает JSON-payloads с тремя обязательными полями: <code>key</code> (ваш webhook-ключ), <code>path</code> (расположение заметки) и <code>content</code> (тело заметки). Опциональные поля управляют поведением. Готовые примеры для Zapier, Make, n8n и IFTTT — в руководстве <a href="/ru/guides/webhook-recipes">10 рецептов автоматизации</a>.</p>
+
+                <h3>Базовый пример: создать заметку</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://your-server.com/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "your-webhook-key",
+    "path": "inbox/new-note.md",
+    "content": "This is the note body",
+    "frontmatter": {
+      "tags": ["imported", "zapier"],
+      "source": "email"
+    }
+  }'</code></pre>
+
+                <p>Это создает <code>inbox/new-note.md</code> с YAML frontmatter и контентом. Если Obsidian оффлайн, сервер ставит это в очередь и доставляет, когда хранилище переподключится.</p>
+
+                <h3>Режим append: добавить к существующей заметке</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://your-server.com/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "your-webhook-key",
+    "path": "projects/project-log.md",
+    "content": "\n## 2026-02-26\n- New task from GitHub",
+    "mode": "append"
+  }'</code></pre>
+
+                <p>Используйте <code>"mode": "append"</code>, чтобы добавить контент к существующей заметке вместо перезаписи. Идеально для ежедневных логов, списков или агрегации данных из нескольких источников.</p>
+
+                <h3>Режим overwrite: заменить существующий контент</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://your-server.com/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "your-webhook-key",
+    "path": "dashboards/weekly-stats.md",
+    "content": "# Weekly Stats\n- Metric A: 42\n- Metric B: 17",
+    "mode": "overwrite"
+  }'</code></pre>
+
+                <p>Используйте <code>"mode": "overwrite"</code>, когда хотите заменить всю заметку. Полезно для дашбордов, которые регенерируются из внешних источников данных.</p>
+
+                <h2>Реальные кейсы использования входящих вебхуков Obsidian</h2>
+
+                <p>Когда вы можете пушить данные в Obsidian, становятся возможными целые классы автоматизации.</p>
+
+                <h3>Email в заметки через Zapier</h3>
+
+                <p>Настройте триггер Zapier "New Email in Gmail" (с фильтром по метке или отправителю). Действие — обращение к вашему вебхуку с темой письма, телом и метаданными. Каждое письмо становится заметкой с меткой времени в папке inbox. Теперь у вас есть поисковый, линкуемый архив писем внутри Obsidian.</p>
+
+                <h3>GitHub Issues в трекер проектов</h3>
+
+                <p>Используйте GitHub webhooks для отправки событий issue (created, closed, commented) в ваше хранилище. Каждая issue становится заметкой с автоматическими обратными ссылками на связанные issues. Ваша проектная документация живет в том же хранилище, что и трекинг проектов.</p>
+
+                <h3>Выводы AI-агентов в базу знаний</h3>
+
+                <p>Когда ваши <a href="/ru/guides/ai-agents-obsidian">AI-агенты</a> генерируют исследовательские саммари, документацию кода или заметки встреч, они отправляют результаты через POST в Obsidian. Вы получаете версионируемую, поисковую базу знаний, которая растет автоматически. Никакого ручного copy-paste, никакой задержки синхронизации.</p>
+
+                <h3>Агрегатор RSS-лент</h3>
+
+                <p>Запустите cron-задачу, которая фетчит RSS-ленты и отправляет интересные статьи в ваше хранилище. Тегируйте их по темам, добавляйте в список чтения или подавайте в систему spaced repetition. Ваша очередь чтения теперь внутри Obsidian вместе с вашими заметками.</p>
+
+                <h3>Сообщения Slack в архив</h3>
+
+                <p>Интеграция webhook со Slack отправляет отмеченные звездой сообщения или определенные треды каналов в Obsidian. Важные разговоры становятся заметками, на которые вы можете ссылаться, аннотировать и искать спустя годы.</p>
+
+                <h3>События календаря в ежедневные заметки</h3>
+
+                <p>Синхронизируйте события календаря с ежедневными заметками в Obsidian. Заметка каждого дня обновляется встречами, дедлайнами и контекстом. Ваш календарь и ваша система знаний наконец в одном месте.</p>
+
+                <h2>Начало работы с Obsidian Webhooks</h2>
+
+                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> — опенсорсный (MIT license) и разработан для самостоятельного хостинга.</p>
+
+                <h3>Вариант 1: самостоятельный хостинг с Docker</h3>
+
+                <p>Репозиторий включает <code>docker-compose.yml</code> для полной настройки. Пошаговое руководство — в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке</a>:</p>
+
+                <ol>
+                    <li>Клонируйте репо</li>
+                    <li>Установите переменные окружения (database URL, encryption key)</li>
+                    <li>Запустите <code>docker-compose up -d</code></li>
+                    <li>Сервер запустится на порту 8080, PostgreSQL на 5432</li>
+                </ol>
+
+                <p>Вы получаете полный контроль над данными и инфраструктурой. Сервер легковесный (Go binary) и может работать на VPS за $5/месяц.</p>
+
+                <h3>Вариант 2: использовать хостинговую версию</h3>
+
+                <p>Если не хотите управлять серверами, есть бесплатная хостинговая версия на <a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">obsidian-webhooks.khabaroff.studio</a>. Данные зашифрованы в состоянии покоя и хостятся на EU-серверах (Германия, через Supabase). Регистрация через passwordless email auth (magic links).</p>
+
+                <p>Хостинговая версия имеет те же функции, что и самостоятельная: exactly-once доставка, поддержка мультихранилища, оффлайн-синхронизация и лимит 10 МБ на заметку.</p>
+
+                <h3>Установите плагин Obsidian</h3>
+
+                <p>После настройки сервера (самостоятельный или хостинговый), установите плагин-компаньон:</p>
+
+                <ol>
+                    <li>Откройте Obsidian Settings &#8594; Community Plugins</li>
+                    <li>Найдите "obsidian-webhooks-2025"</li>
+                    <li>Установите и активируйте</li>
+                    <li>Введите ваш webhook-ключ в настройках плагина</li>
+                    <li>Введите URL вашего сервера (или используйте дефолтный для хостинговой версии)</li>
+                </ol>
+
+                <p>Плагин обрабатывает SSE-соединение, создание заметок и подтверждения ACK автоматически.</p>
+
+                <h2>Технический дайв: как работает получение данных в Obsidian</h2>
+
+                <p>Для разработчиков, интегрирующихся с webhook-сервером, вот что происходит под капотом. Смотрите также: <a href="/ru/guides/how-it-works">Как работает</a> — полная диаграмма архитектуры.</p>
+
+                <h3>Поток запроса</h3>
+
+                <ol>
+                    <li><strong>POST на /webhook</strong>: сервер валидирует структуру JSON, проверяет существование webhook-ключа в базе данных</li>
+                    <li><strong>Шифрование</strong>: payload шифруется с помощью AES-256-GCM, сохраняется в очередь PostgreSQL</li>
+                    <li><strong>SSE Push</strong>: если хранилище онлайн (SSE-соединение активно), сервер дешифрует и отправляет payload через SSE</li>
+                    <li><strong>Обработка плагином</strong>: плагин получает JSON, записывает заметку в файловую систему хранилища</li>
+                    <li><strong>ACK-ответ</strong>: плагин отправляет ACK со статусом доставки через HTTP POST на сервер</li>
+                    <li><strong>Очистка очереди</strong>: сервер помечает вебхук как доставленный, удаляет из очереди</li>
+                </ol>
+
+                <h3>Поведение в оффлайне</h3>
+
+                <p>Если Obsidian закрыт, когда приходит вебхук:</p>
+
+                <ol>
+                    <li>Сервер сохраняет зашифрованный payload в очередь</li>
+                    <li>Когда плагин переподключается, он поллит эндпоинт <code>/pending</code></li>
+                    <li>Сервер отправляет все вебхуки из очереди через SSE</li>
+                    <li>Плагин обрабатывает каждый, отправляет индивидуальные ACK</li>
+                    <li>Сервер удаляет из очереди только после получения ACK</li>
+                </ol>
+
+                <p>Это гарантирует exactly-once доставку даже при прерываниях сети или перезапусках хранилища.</p>
+
+                <h3>Модель безопасности</h3>
+
+                <ul>
+                    <li>Webhook-ключи — UUID v4 (128-bit энтропия)</li>
+                    <li>Данные очереди зашифрованы в состоянии покоя с AES-256-GCM</li>
+                    <li>SSE-соединение через HTTPS (TLS 1.3)</li>
+                    <li>Никаких payload-данных в логах или метриках</li>
+                    <li>Каждое хранилище имеет отдельный ключ, нет кросс-хранилищного доступа</li>
+                </ul>
+
+                <p>Самостоятельные развертывания могут добавить дополнительные слои (IP whitelisting, кастомная аутентификация, доступ только через VPN).</p>
+
+                <h2>Ограничения и roadmap</h2>
+
+                <p>Текущая версия (v1.0) имеет несколько ограничений:</p>
+
+                <ul>
+                    <li><strong>10 МБ на заметку</strong>: большие файлы (видео, PDF) должны хоститься извне и линковаться</li>
+                    <li><strong>Нет батчинга</strong>: каждый вебхук — одна заметка. Чтобы создать несколько заметок, отправьте несколько вебхуков</li>
+                    <li><strong>Только текст</strong>: бинарные вложения не поддерживаются (используйте base64 + декодирование в Obsidian)</li>
+                </ul>
+
+                <p>Запланировано для будущих релизов:</p>
+
+                <ul>
+                    <li>Шаблоны вебхуков (трансформация JSON перед записью в хранилище)</li>
+                    <li>Условный роутинг (отправка в разные папки на основе полей payload)</li>
+                    <li>История вебхуков и replay</li>
+                    <li>REST API для запроса статуса очереди</li>
+                </ul>
+
+                <p>Смотрите <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/issues" target="_blank" rel="noopener">GitHub issues</a> для запросов функций и дискуссий.</p>
+
+                <h2>Заключение: внешняя интеграция Obsidian решена</h2>
+
+                <p>Пять лет пользователи Obsidian хотели способ получать данные из внешних сервисов. Файловая синхронизация была слишком ненадежной. Существующие плагины зависели от сторонних сервисов или требовали запущенный Obsidian. Архитектура просто не поддерживала это.</p>
+
+                <p>Obsidian Webhooks Server меняет это. Вы получаете постоянный webhook-эндпоинт, exactly-once доставку, оффлайн-синхронизацию и шифрование — все, что нужно для продакшн-автоматизации. Это опенсорс, самостоятельно хостится и работает с любым сервисом, который может отправлять HTTP POST-запросы.</p>
+
+                <p>Если вы строите воркфлоу, которые нужно отправлять данные в Obsidian — будь то из Zapier, <a href="/ru/guides/ai-agents-obsidian">AI-агентов</a> или кастомных скриптов — это тот инфраструктурный слой, которого вам не хватало.</p>
+
+                <h2>Ресурсы</h2>
+
+                <ul>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server на GitHub</a></li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">Хостинговая версия</a></li>
+                    <li><a href="https://forum.obsidian.md/t/integrating-zapier-to-automate-tasks-across-obsidian-and-all-other-common-workflow-apps/17641" target="_blank" rel="noopener">Тред на форуме Obsidian про интеграцию с Zapier</a></li>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-2025" target="_blank" rel="noopener">Плагин obsidian-webhooks-2025</a></li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto flex flex-col gap-8">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Часто задаваемые вопросы</h2>
+
+                <!-- FAQ 1 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Может ли Obsidian принимать вебхуки без плагинов?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Нет, стандартный Obsidian не имеет встроенной возможности принимать HTTP-запросы или вебхуки. Требуется внешний сервер (например, Obsidian Webhooks Server) и плагин-компаньон для обработки входящих данных. Это связано с архитектурой Obsidian как local-first приложения без собственного бекенда.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Obsidian Webhooks Server бесплатный?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Да, сервер распространяется под MIT лицензией — полностью опенсорс и бесплатный для самостоятельного хостинга. Хостинговая версия на obsidian-webhooks.khabaroff.studio также бесплатна с лимитом 10 МБ на заметку и неограниченным количеством вебхуков. Вы платите только за инфраструктуру (VPS), если выбираете self-hosted вариант.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Что происходит с вебхуками, когда Obsidian закрыт?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Сервер сохраняет все входящие вебхуки в зашифрованную очередь PostgreSQL. Когда вы открываете Obsidian и плагин переподключается, сервер автоматически доставляет все накопленные сообщения через SSE. Exactly-once доставка гарантирует, что каждый вебхук попадет в хранилище ровно один раз — даже если Obsidian был оффлайн несколько дней.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Хранит ли сервер содержимое моих заметок?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Сервер хранит только зашифрованные payload вебхуков в очереди до момента доставки. После получения подтверждения ACK от плагина данные немедленно удаляются из базы. Сам контент ваших заметок никогда не покидает локальное хранилище — сервер только передает новые данные в одну сторону.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Работают ли вебхуки с Obsidian на мобильном?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Плагин поддерживает мобильные платформы (iOS/Android), но SSE-соединения менее стабильны на мобильных сетях. Плагин автоматически переключается на polling-режим при нестабильном соединении. Для оптимальной производительности рекомендуется держать Obsidian открытым на десктопе, где хранилище синхронизируется через Obsidian Sync или Git.</p>
+                    </div>
+                </div>
+
+                <p class="text-lg text-ink-soft leading-[1.7]">Начните отправлять данные в ваше хранилище Obsidian сегодня. Разверните сервер за 10 минут, подключите плагин, и каждая автоматизация, которую вы хотели, внезапно становится возможной.</p>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие руководства</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/ru/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Как работает Obsidian Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Архитектура, настройка, примеры интеграций.</p>
+                        <span class="text-xs text-ink-muted">8 мин</span>
+                    </a>
+                    <a href="/ru/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted: руководство по установке</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Пошаговый туториал по настройке собственного webhook-сервера с Docker.</p>
+                        <span class="text-xs text-ink-muted">18 мин</span>
+                    </a>
+                    <a href="/ru/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">10 рецептов автоматизации</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Готовые рецепты для Zapier, Make, n8n, IFTTT.</p>
+                        <span class="text-xs text-ink-muted">11 мин</span>
+                    </a>
+                    <a href="/ru/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">AI-агенты и Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Интеграция Claude, GPT и кастомных агентов с базой знаний через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">14 мин</span>
+                    </a>
+                    <a href="/ru/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Когда использовать pull vs push архитектуру.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Руководства</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

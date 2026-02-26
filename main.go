@@ -236,8 +236,31 @@ func setupRoutes(router *gin.Engine, db *database.Database, keyService *services
 	router.GET("/", func(c *gin.Context) {
 		c.File("./src/templates/index.html")
 	})
-	router.GET("/how-it-works", func(c *gin.Context) {
-		c.File("./src/templates/how-it-works.html")
+
+	// Guides (English)
+	router.GET("/guides/", func(c *gin.Context) {
+		c.File("./src/templates/guides/index.html")
+	})
+	router.GET("/guides", func(c *gin.Context) {
+		c.Redirect(301, "/guides/")
+	})
+	router.GET("/guides/how-it-works", func(c *gin.Context) {
+		c.File("./src/templates/guides/how-it-works.html")
+	})
+	router.GET("/guides/receive-data-obsidian", func(c *gin.Context) {
+		c.File("./src/templates/guides/receive-data-obsidian.html")
+	})
+	router.GET("/guides/self-hosted-webhooks-setup", func(c *gin.Context) {
+		c.File("./src/templates/guides/self-hosted-webhooks-setup.html")
+	})
+	router.GET("/guides/webhook-recipes", func(c *gin.Context) {
+		c.File("./src/templates/guides/webhook-recipes.html")
+	})
+	router.GET("/guides/ai-agents-obsidian", func(c *gin.Context) {
+		c.File("./src/templates/guides/ai-agents-obsidian.html")
+	})
+	router.GET("/guides/rest-api-vs-webhooks", func(c *gin.Context) {
+		c.File("./src/templates/guides/rest-api-vs-webhooks.html")
 	})
 
 	// Landing pages (Russian)
@@ -247,8 +270,31 @@ func setupRoutes(router *gin.Engine, db *database.Database, keyService *services
 	router.GET("/ru", func(c *gin.Context) {
 		c.Redirect(301, "/ru/")
 	})
-	router.GET("/ru/how-it-works", func(c *gin.Context) {
-		c.File("./src/templates/how-it-works_ru.html")
+
+	// Guides (Russian)
+	router.GET("/ru/guides/", func(c *gin.Context) {
+		c.File("./src/templates/guides/index_ru.html")
+	})
+	router.GET("/ru/guides", func(c *gin.Context) {
+		c.Redirect(301, "/ru/guides/")
+	})
+	router.GET("/ru/guides/how-it-works", func(c *gin.Context) {
+		c.File("./src/templates/guides/how-it-works_ru.html")
+	})
+	router.GET("/ru/guides/receive-data-obsidian", func(c *gin.Context) {
+		c.File("./src/templates/guides/receive-data-obsidian_ru.html")
+	})
+	router.GET("/ru/guides/self-hosted-webhooks-setup", func(c *gin.Context) {
+		c.File("./src/templates/guides/self-hosted-webhooks-setup_ru.html")
+	})
+	router.GET("/ru/guides/webhook-recipes", func(c *gin.Context) {
+		c.File("./src/templates/guides/webhook-recipes_ru.html")
+	})
+	router.GET("/ru/guides/ai-agents-obsidian", func(c *gin.Context) {
+		c.File("./src/templates/guides/ai-agents-obsidian_ru.html")
+	})
+	router.GET("/ru/guides/rest-api-vs-webhooks", func(c *gin.Context) {
+		c.File("./src/templates/guides/rest-api-vs-webhooks_ru.html")
 	})
 	router.GET("/ru/login", func(c *gin.Context) {
 		c.File("./src/templates/user_login_ru.html")

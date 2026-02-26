@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian REST API vs Webhooks: что выбрать? — Obsidian Webhooks</title>
+    <meta name="description" content="Руководство по выбору между плагином Local REST API и Webhooks Server для автоматизации Obsidian. Узнайте, когда использовать pull и push архитектуру для внешних интеграций.">
+    <meta name="keywords" content="obsidian webhook vs rest api, obsidian api интеграция, obsidian local rest api, obsidian автоматизация архитектура, obsidian локальный сервер, obsidian программный доступ">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Obsidian REST API vs Webhooks: что выбрать? — Obsidian Webhooks">
+    <meta property="og:description" content="Руководство по выбору между плагином Local REST API и Webhooks Server для автоматизации Obsidian.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="Obsidian REST API vs Webhooks: что выбрать? — Obsidian Webhooks">
+    <meta name="twitter:description" content="Руководство по выбору между плагином Local REST API и Webhooks Server для автоматизации Obsidian.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/ru/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/ru/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/ru/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Войти</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <a href="/guides/rest-api-vs-webhooks" class="text-ink-muted hover:text-ink transition-colors">EN</a>
+                    <span class="text-line">|</span>
+                    <span class="text-ink font-semibold">RU</span>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Получить ключи</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Открыть меню" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/ru/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Руководства</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/ru/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Войти</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <a href="/guides/rest-api-vs-webhooks" class="text-sm text-ink-muted hover:text-ink transition-colors">EN</a>
+                <span class="text-sm text-line">|</span>
+                <span class="text-sm text-ink font-semibold">RU</span>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/ru/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; Все руководства</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Obsidian REST API vs Webhooks: что выбрать?</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Руководство по выбору между плагином Local REST API и Webhooks Server для автоматизации Obsidian</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>Два инструмента, одна цель: получить внешние данные в Obsidian. Но они работают совершенно противоположными способами. Один превращает Obsidian в сервер, у которого вы запрашиваете данные. Другой доставляет данные в Obsidian независимо от того, запущен он или нет.</p>
+
+                <p>Если вы автоматизируете Obsidian или подключаете его к внешним сервисам, вы наверняка сталкивались с обоими подходами. Это руководство объясняет, когда использовать REST API, когда webhooks, а когда оба вместе.</p>
+
+                <h2>Краткое сравнение</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Характеристика</th>
+                            <th>Local REST API Plugin</th>
+                            <th>Webhooks Server</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Направление</strong></td>
+                            <td>Pull (вы запрашиваете данные)</td>
+                            <td>Push (данные приходят автоматически)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Obsidian должен быть запущен?</strong></td>
+                            <td>Да, всегда</td>
+                            <td>Нет (очередь при офлайне)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Обновления в реальном времени?</strong></td>
+                            <td>Только по запросу</td>
+                            <td>SSE streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Self-hosted?</strong></td>
+                            <td>Только plugin</td>
+                            <td>Полный server + plugin</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Операции</strong></td>
+                            <td>Полный CRUD (create, read, update, delete, search)</td>
+                            <td>Create/Append/Overwrite</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Аутентификация</strong></td>
+                            <td>API key</td>
+                            <td>Magic links + AES-256-GCM шифрование</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Сеть</strong></td>
+                            <td>Локальная сеть</td>
+                            <td>Интернет (self-hosted server)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Лучше всего для</strong></td>
+                            <td>Чтение заметок из приложений, полный контроль</td>
+                            <td>Получение данных от внешних сервисов</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Поддержка</strong></td>
+                            <td>Активный (2800+ stars)</td>
+                            <td>Активный</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Как работает Obsidian Local REST API</h2>
+
+                <p><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API plugin</a> от coddingtonbear превращает десктопное приложение Obsidian в веб-сервер. Когда Obsidian запущен, он предоставляет HTTP endpoints, которые вы можете вызывать для:</p>
+
+                <ul>
+                    <li><strong>Create</strong> -- создание новых заметок</li>
+                    <li><strong>Read</strong> -- чтение существующих заметок (получение контента, поиск)</li>
+                    <li><strong>Update</strong> -- обновление содержимого заметок</li>
+                    <li><strong>Delete</strong> -- удаление заметок</li>
+                    <li><strong>Search</strong> -- поиск по хранилищу</li>
+                </ul>
+
+                <p>Это <strong>модель запрос-ответ</strong>. Ваше внешнее приложение (Python-скрипт, мобильное приложение, другой сервис) отправляет HTTP-запросы в Obsidian, и Obsidian отвечает данными или подтверждает действие.</p>
+
+                <p><strong>Аутентификация</strong> использует API key, который вы настраиваете в параметрах плагина. Для безопасности плагин использует HTTPS с самоподписанными сертификатами.</p>
+
+                <p><strong>Ключевое ограничение:</strong> Obsidian должен быть запущен на вашем компьютере. Если вы закрываете Obsidian, API становится недоступен, и внешние запросы не работают.</p>
+
+                <h3>Пример использования: панель мониторинга читает Obsidian</h3>
+
+                <p>Вы создаете веб-панель, которая отображает ваши ежедневные заметки, количество задач и недавние записи в журнале. Панель должна:</p>
+
+                <ol>
+                    <li><strong>Читать</strong> текущую ежедневную заметку</li>
+                    <li><strong>Искать</strong> незавершенные задачи</li>
+                    <li><strong>Считать</strong> записи по тегам</li>
+                </ol>
+
+                <p>С плагином Local REST API ваша панель отправляет GET-запросы в Obsidian всякий раз, когда ей нужны свежие данные. Obsidian отвечает содержимым заметки, результатами поиска или метаданными.</p>
+
+                <p>Это работает идеально, потому что:</p>
+                <ul>
+                    <li>Вам нужно <strong>читать</strong> данные (сильная сторона REST API)</li>
+                    <li>Obsidian запущен, пока вы используете панель</li>
+                    <li>Вы контролируете, когда происходят запросы (по требованию)</li>
+                </ul>
+
+                <h2>Как работает Obsidian Webhooks Server</h2>
+
+                <p><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> -- это событийно-ориентированная архитектура. Внешние сервисы отправляют данные на ваш self-hosted сервер через webhook POST-запросы. Сервер:</p>
+
+                <ol>
+                    <li><strong>Получает</strong> webhook-нагрузку от любого интернет-сервиса</li>
+                    <li><strong>Ставит в очередь</strong> в PostgreSQL (сохраняется, даже если Obsidian закрыт)</li>
+                    <li><strong>Доставляет</strong> через Server-Sent Events (SSE) в плагин Obsidian, когда он подключается</li>
+                    <li><strong>Подтверждает</strong> доставку с exactly-once семантикой (ACK-механизм)</li>
+                    <li><strong>Шифрует</strong> чувствительный контент с помощью AES-256-GCM</li>
+                </ol>
+
+                <p>Это <strong>push-модель</strong>. Вы не запрашиваете данные; данные приходят и стоят в очереди, пока Obsidian не будет готов их получить. Подробнее об архитектуре -- в руководстве <a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a>.</p>
+
+                <p><strong>Аутентификация</strong> использует magic links, генерируемые сервером. Никаких API keys в конфигах внешних сервисов. Webhook URL подписаны и зашифрованы.</p>
+
+                <p><strong>Ключевое преимущество:</strong> Obsidian не обязан быть запущенным. Webhooks стоят в очереди на стороне сервера и доставляются автоматически, когда вы в следующий раз откроете Obsidian.</p>
+
+                <h3>Пример использования: захват идей отовсюду</h3>
+
+                <p>Вы используете несколько сервисов, которые должны создавать заметки в Obsidian:</p>
+
+                <ol>
+                    <li><strong>Telegram bot</strong> -- пересылка сообщений для сохранения идей</li>
+                    <li><strong>Zapier</strong> -- сохранение помеченных писем в ежедневные заметки</li>
+                    <li><strong>n8n</strong> -- сводки RSS-лент в inbox для чтения</li>
+                    <li><strong>GitHub Actions</strong> -- результаты CI в виде заметок</li>
+                </ol>
+
+                <p>С Webhooks Server:</p>
+                <ul>
+                    <li>Каждый сервис отправляет POST-запрос на ваш webhook URL</li>
+                    <li>Сервер ставит все входящие данные в очередь</li>
+                    <li>Когда вы открываете Obsidian (даже через несколько часов), плагин подключается через SSE</li>
+                    <li>Все заметки из очереди доставляются и создаются автоматически</li>
+                    <li>Вы получаете подтверждения доставки для каждого webhook</li>
+                </ul>
+
+                <p>Это работает, потому что:</p>
+                <ul>
+                    <li>Внешние сервисы <strong>проталкивают</strong> данные по своему расписанию</li>
+                    <li>Нет зависимости от того, открыт ли Obsidian</li>
+                    <li>Доставка гарантирована даже после перезагрузок</li>
+                </ul>
+
+                <p>Готовые конфигурации для Zapier, Make, n8n и IFTTT смотрите в <a href="/ru/guides/webhook-recipes">10 рецептах автоматизации</a>.</p>
+
+                <h2>Когда использовать Local REST API Plugin</h2>
+
+                <p>Выбирайте подход REST API, когда:</p>
+
+                <h3>Вам нужно читать заметки из внешних приложений</h3>
+
+                <p>Если вашему внешнему приложению нужно <strong>получать</strong> данные из Obsidian, REST API -- единственный вариант. Webhooks не могут отдавать содержимое заметок другим приложениям -- они только доставляют входящие данные.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Мобильное приложение, отображающее ваши заметки</li>
+                    <li>Веб-панель, показывающая статистику хранилища</li>
+                    <li>Python-скрипт, анализирующий ваши записи в журнале</li>
+                    <li>Десктопное приложение, синхронизирующееся с контентом Obsidian</li>
+                </ul>
+
+                <h3>Вам нужны полные CRUD-операции</h3>
+
+                <p>Если вам нужно <strong>обновлять</strong> существующие заметки, <strong>удалять</strong> заметки или <strong>искать</strong> по хранилищу программно, REST API предоставляет все эти операции. Webhooks Server фокусируется на создании/добавлении нового контента, а не на изменении существующих заметок.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Менеджер задач, синхронизирующий статус завершения</li>
+                    <li>Редактор заметок, изменяющий черновики</li>
+                    <li>Скрипт очистки, удаляющий старые ежедневные заметки</li>
+                    <li>Инструмент поиска, индексирующий контент хранилища</li>
+                </ul>
+
+                <h3>Obsidian всегда запущен</h3>
+
+                <p>Если вы работаете за компьютером, где Obsidian остается открытым в рабочие часы, требование REST API о запущенном приложении не является ограничением.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Домашний офис с настольным компьютером, который всегда включен</li>
+                    <li>Настройка для одного пользователя с предсказуемым графиком</li>
+                    <li>Автоматизация локальной сети (без зависимости от интернета)</li>
+                </ul>
+
+                <h3>Вы хотите установку только с plugin</h3>
+
+                <p>REST API требует только установки плагина Obsidian. Никаких внешних серверов, Docker, PostgreSQL. Если вы предпочитаете простоту и вам не нужна очередь в офлайне, это более легкая инфраструктура.</p>
+
+                <h2>Когда использовать Obsidian Webhooks Server</h2>
+
+                <p>Выбирайте подход webhooks, когда:</p>
+
+                <h3>Внешние сервисы должны проталкивать данные</h3>
+
+                <p>Если платформы автоматизации, API или сервисы генерируют данные, которые должны попасть в Obsidian, webhooks устраняют необходимость в polling и обеспечивают немедленную доставку.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li><strong>Zapier</strong> -- сохранение меток Gmail, закладок Slack, лайков Twitter</li>
+                    <li><strong>Make (Integromat)</strong> -- RSS-ленты, события календаря, формы</li>
+                    <li><strong>n8n</strong> -- кастомные workflow, мониторинг API, запланированные отчеты</li>
+                    <li><strong>IFTTT</strong> -- IoT-триггеры, заметки на основе местоположения, архивы соцсетей</li>
+                </ul>
+
+                <h3>Вы не всегда за компьютером</h3>
+
+                <p>Если вы путешествуете, работаете из нескольких мест или не держите Obsidian запущенным 24/7, webhooks ставят данные в очередь, пока вы не вернетесь.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Workflow с приоритетом на мобильных устройствах</li>
+                    <li>Использование нескольких устройств (ноутбук + настольный ПК)</li>
+                    <li>Идеи, захваченные на ходу (Telegram, голосовые заметки)</li>
+                    <li>Запланированные задания, выполняющиеся, пока вы спите</li>
+                </ul>
+
+                <h3>Вам нужны гарантии доставки</h3>
+
+                <p>Webhooks Server обеспечивает exactly-once доставку с подтверждением. Если Obsidian падает во время доставки, заметка возвращается в очередь и повторяется. REST API требует, чтобы ваше внешнее приложение обрабатывало повторы.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Финансовые данные (нельзя потерять транзакции)</li>
+                    <li>Отзывы клиентов (критичные бизнес-данные)</li>
+                    <li>Исследовательские цитаты (нельзя потерять источники)</li>
+                    <li>Логирование для соответствия требованиям (аудит)</li>
+                </ul>
+
+                <h3>Вам нужно зашифрованное хранение</h3>
+
+                <p>Если webhook-нагрузка содержит чувствительные данные (API keys, персональная информация, учетные данные), Webhooks Server шифрует их в состоянии покоя с помощью AES-256-GCM. REST API обрабатывает запросы немедленно, но не обеспечивает зашифрованную постановку в очередь.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Webhooks с данными о здоровье</li>
+                    <li>Интеграции с финансовыми API</li>
+                    <li>Токены аутентификации в заметках</li>
+                    <li>Личные записи в журнале из внешних приложений</li>
+                </ul>
+
+                <h3>Вы используете несколько хранилищ или устройств</h3>
+
+                <p>Webhooks Server может направлять данные в разные хранилища на разных устройствах, используя magic links. REST API обслуживает одно хранилище на экземпляр Obsidian.</p>
+
+                <p><strong>Сценарии:</strong></p>
+                <ul>
+                    <li>Рабочее хранилище + личное хранилище</li>
+                    <li>Настольный ПК + ноутбук + планшет</li>
+                    <li>Командная совместная работа (отдельные хранилища для каждого пользователя)</li>
+                </ul>
+
+                <h2>Можно ли использовать оба вместе?</h2>
+
+                <p>Абсолютно. REST API и Webhooks Server решают разные проблемы и идеально дополняют друг друга.</p>
+
+                <h3>Пример гибридной архитектуры</h3>
+
+                <p><strong>Ваша настройка:</strong></p>
+                <ul>
+                    <li><strong>Webhooks Server</strong> получает входящие данные от Zapier, GitHub, Telegram</li>
+                    <li><strong>REST API plugin</strong> отдает содержимое заметок вашей кастомной панели</li>
+                    <li><strong>Obsidian</strong> действует и как потребитель webhook, и как сервер REST API</li>
+                </ul>
+
+                <p><strong>Потоки данных:</strong></p>
+
+                <p><strong>1. Входящие (Push)</strong></p>
+                <p>Zapier отправляет помеченные письма &#8594; Webhooks Server &#8594; В очереди &#8594; Доставлено в Obsidian &#8594; Новые заметки в папке ежедневных</p>
+
+                <p><strong>2. Исходящие (Pull)</strong></p>
+                <ul>
+                    <li>Ваша панель отправляет GET-запрос &#8594; REST API plugin &#8594; Возвращает содержимое ежедневной заметки</li>
+                    <li>Python-скрипт ищет <code>#task</code> &#8594; REST API plugin &#8594; Возвращает список задач</li>
+                </ul>
+
+                <p><strong>Почему это работает:</strong></p>
+                <ul>
+                    <li>Webhooks обрабатывают "данные, приходящие извне"</li>
+                    <li>REST API обрабатывает "внешние приложения, читающие Obsidian"</li>
+                    <li>Нет конфликта; они работают в разных направлениях</li>
+                </ul>
+
+                <h3>Реальный пример гибридного использования</h3>
+
+                <p><strong>Утренний workflow:</strong></p>
+                <ol>
+                    <li>Ночью GitHub Actions завершает CI-прогоны &#8594; Отправляет результаты через webhook &#8594; В очереди</li>
+                    <li>Twitter-бот архивирует ваши сохраненные треды &#8594; Webhook &#8594; В очереди</li>
+                    <li>Агрегатор RSS отправляет сводки статей &#8594; Webhook &#8594; В очереди</li>
+                </ol>
+
+                <p><strong>Вы открываете Obsidian в 9 утра:</strong></p>
+                <ul>
+                    <li>Все webhooks из очереди доставляются мгновенно через SSE</li>
+                    <li>Заметки появляются в целевых папках</li>
+                </ul>
+
+                <p><strong>В 10 утра вы открываете свою кастомную панель:</strong></p>
+                <ul>
+                    <li>Панель вызывает REST API: <code>GET /vault/Daily/2026-02-26.md</code></li>
+                    <li>REST API возвращает сегодняшнюю заметку (включая контент, созданный webhook)</li>
+                    <li>Панель отображает задачи, ссылки, сводки</li>
+                </ul>
+
+                <p>Обе системы работают вместе: webhooks доставили контент, REST API отдал его обратно другому приложению.</p>
+
+                <h2>Дерево решений: что использовать?</h2>
+
+                <p>Пройдите через это дерево решений, чтобы найти ответ:</p>
+
+                <p><strong>Вопрос 1: Нужно ли вам ЧИТАТЬ заметки из внешнего приложения?</strong></p>
+                <ul>
+                    <li><strong>Да</strong> &#8594; Вам нужен REST API (webhooks не могут отдавать контент)</li>
+                    <li><strong>Нет</strong> &#8594; Переходите к Вопросу 2</li>
+                </ul>
+
+                <p><strong>Вопрос 2: Должны ли внешние сервисы ПРОТАЛКИВАТЬ данные в Obsidian?</strong></p>
+                <ul>
+                    <li><strong>Да</strong> &#8594; Переходите к Вопросу 3</li>
+                    <li><strong>Нет</strong> &#8594; Используйте REST API для полного контроля</li>
+                </ul>
+
+                <p><strong>Вопрос 3: Всегда ли запущен Obsidian, когда приходят данные?</strong></p>
+                <ul>
+                    <li><strong>Да</strong> &#8594; REST API может работать; подумайте о простоте настройки (только plugin vs сервер)</li>
+                    <li><strong>Нет</strong> &#8594; Используйте Webhooks Server (очередь при офлайне)</li>
+                </ul>
+
+                <p><strong>Вопрос 4: Нужны ли вам полные CRUD-операции (update, delete, search)?</strong></p>
+                <ul>
+                    <li><strong>Да</strong> &#8594; Используйте REST API (webhooks только create/append)</li>
+                    <li><strong>Нет</strong> &#8594; Подходит любой вариант; учитывайте требования к офлайну</li>
+                </ul>
+
+                <p><strong>Вопрос 5: Нужны ли вам потоки данных в обоих направлениях?</strong></p>
+                <ul>
+                    <li><strong>Да</strong> &#8594; Используйте REST API + Webhooks Server</li>
+                    <li><strong>Нет</strong> &#8594; Выбирайте на основе направления (входящие = webhooks, исходящие = REST API)</li>
+                </ul>
+
+                <h3>Быстрые сценарии</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Сценарий</th>
+                            <th>Решение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Панель, читающая заметки</td>
+                            <td>Только REST API</td>
+                        </tr>
+                        <tr>
+                            <td>Telegram-бот, сохраняющий идеи</td>
+                            <td>Только Webhooks</td>
+                        </tr>
+                        <tr>
+                            <td>Zapier + панель вместе</td>
+                            <td>REST API + Webhooks</td>
+                        </tr>
+                        <tr>
+                            <td>Обновление заметок из приложения</td>
+                            <td>Только REST API</td>
+                        </tr>
+                        <tr>
+                            <td>Получение писем как заметок</td>
+                            <td>Только Webhooks</td>
+                        </tr>
+                        <tr>
+                            <td>Мобильное приложение для черновиков</td>
+                            <td>Только REST API</td>
+                        </tr>
+                        <tr>
+                            <td>RSS-ленты в заметки</td>
+                            <td>Только Webhooks</td>
+                        </tr>
+                        <tr>
+                            <td>Синхронизация задач с менеджером</td>
+                            <td>Только REST API</td>
+                        </tr>
+                        <tr>
+                            <td>Захват идей с нескольких устройств</td>
+                            <td>Только Webhooks</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Вопросы реализации</h2>
+
+                <h3>Для REST API</h3>
+
+                <p><strong>Сложность настройки:</strong> Низкая (только установка plugin)</p>
+
+                <p><strong>Сетевые требования:</strong> Доступ к локальной сети до машины с Obsidian; перенаправление портов для удаленного доступа</p>
+
+                <p><strong>Безопасность:</strong> Аутентификация по API key, HTTPS с самоподписанными сертификатами</p>
+
+                <p><strong>Надежность:</strong> Зависит от uptime Obsidian; внешнее приложение должно обрабатывать отказы</p>
+
+                <p><strong>Лучшие практики:</strong></p>
+                <ul>
+                    <li>Используйте ротацию API key</li>
+                    <li>Ограничивайте сетевой доступ (правила firewall)</li>
+                    <li>Реализуйте логику повторов во внешних приложениях</li>
+                    <li>Мониторьте доступность Obsidian</li>
+                </ul>
+
+                <h3>Для Webhooks Server</h3>
+
+                <p><strong>Сложность настройки:</strong> Средняя (Docker Compose, PostgreSQL, установка plugin). Пошаговая инструкция -- в <a href="/ru/guides/self-hosted-webhooks-setup">руководстве по установке</a>.</p>
+
+                <p><strong>Сетевые требования:</strong> Сервер с доступом из интернета (VPS, домашний сервер с доменом)</p>
+
+                <p><strong>Безопасность:</strong> Magic links, AES-256-GCM шифрование, проверка подписи webhook</p>
+
+                <p><strong>Надежность:</strong> Очередь обеспечивает доставку; переживает перезапуски Obsidian</p>
+
+                <p><strong>Лучшие практики:</strong></p>
+                <ul>
+                    <li>Запускайте на надежном сервере (не ноутбук)</li>
+                    <li>Настройте мониторинг (алерты о глубине очереди)</li>
+                    <li>Делайте бэкап базы данных PostgreSQL</li>
+                    <li>Используйте секреты окружения для ключей шифрования</li>
+                </ul>
+
+                <h2>Начало работы</h2>
+
+                <h3>Попробуйте Local REST API Plugin</h3>
+
+                <ol>
+                    <li>Установите из Obsidian Community Plugins: "Local REST API"</li>
+                    <li>Включите plugin, установите API key в настройках</li>
+                    <li>Протестируйте с помощью <code>curl</code>:</li>
+                </ol>
+
+                <pre><code>curl -H "Authorization: Bearer YOUR_API_KEY" \
+     https://127.0.0.1:27124/vault/</code></pre>
+
+                <ol start="4">
+                    <li>Постройте интеграцию, используя <a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">документацию API</a></li>
+                </ol>
+
+                <p><strong>Лучший первый проект:</strong> Python-скрипт, который ищет незавершенные задачи и выводит их в терминал.</p>
+
+                <h3>Попробуйте Obsidian Webhooks Server</h3>
+
+                <ol>
+                    <li>Разверните сервер: <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">руководство по развертыванию на GitHub</a></li>
+                    <li>Установите плагин Obsidian (companion repo)</li>
+                    <li>Сгенерируйте magic link в админ-панели сервера</li>
+                    <li>Протестируйте с помощью webhook:</li>
+                </ol>
+
+                <pre><code>curl -X POST https://your-server.com/w/YOUR_WEBHOOK_ID \
+     -H "Content-Type: application/json" \
+     -d '{"vault":"Default","path":"Test.md","content":"Hello"}'</code></pre>
+
+                <ol start="5">
+                    <li>Откройте Obsidian, увидите, как появляется заметка</li>
+                </ol>
+
+                <p><strong>Лучший первый проект:</strong> Telegram-бот, который пересылает сообщения в Obsidian через webhook.</p>
+
+                <h2>Заключение</h2>
+
+                <p>Obsidian Local REST API и Webhooks Server -- это не конкурирующие решения, а инструменты для разных задач.</p>
+
+                <p><strong>Выбирайте REST API</strong>, когда вам нужно вытягивать данные из Obsidian или изменять заметки из внешних приложений. Это правильный выбор для панелей, мобильных приложений и двунаправленной синхронизации.</p>
+
+                <p><strong>Выбирайте Webhooks</strong>, когда внешние сервисы должны надежно проталкивать данные в Obsidian, особенно когда Obsidian не всегда запущен. Идеально для платформ автоматизации, запланированных заданий и multi-device workflow.</p>
+
+                <p><strong>Используйте оба</strong>, когда у вас сложные интеграции с данными, текущими в обоих направлениях.</p>
+
+                <p>Хорошая новость? Вам не обязательно выбирать только один. Установите оба и постройте именно ту архитектуру автоматизации, которая нужна вашему workflow.</p>
+
+                <hr>
+
+                <h2>Ресурсы</h2>
+
+                <ul>
+                    <li><a href="https://github.com/coddingtonbear/obsidian-local-rest-api" target="_blank" rel="noopener">Local REST API Plugin</a> -- репозиторий на GitHub</li>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener">Obsidian Webhooks Server</a> -- репозиторий на GitHub</li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio" target="_blank" rel="noopener">Webhooks Server Landing Page</a> -- документация и примеры</li>
+                </ul>
+
+                <p><strong>Связанное чтение:</strong></p>
+                <ul>
+                    <li><a href="/ru/guides/how-it-works">Как работает Obsidian Webhooks</a> -- архитектура и настройка</li>
+                    <li><a href="/ru/guides/receive-data-obsidian">Как получать данные в Obsidian</a> -- полное руководство по входящим данным</li>
+                    <li><a href="/ru/guides/self-hosted-webhooks-setup">Self-Hosted: руководство по установке</a> -- Docker, PostgreSQL, Nginx</li>
+                    <li><a href="/ru/guides/webhook-recipes">10 рецептов автоматизации</a> -- готовые конфигурации</li>
+                    <li><a href="/ru/guides/ai-agents-obsidian">AI-агенты и Obsidian</a> -- интеграция Claude, GPT и кастомных агентов</li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto flex flex-col gap-8">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Часто задаваемые вопросы</h2>
+
+                <!-- FAQ 1 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Можно ли использовать REST API и вебхуки одновременно?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Да, это распространенный паттерн. REST API обрабатывает чтение и модификацию существующих заметок, а вебхуки принимают новый контент от внешних сервисов. Оба плагина работают независимо и не конфликтуют друг с другом.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Что быстрее: REST API или вебхуки?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>REST API быстрее для немедленных операций, так как данные передаются напрямую без промежуточной очереди. Вебхуки добавляют задержку из-за постановки в очередь и SSE-доставки, но это компенсируется надежностью при офлайн-сценариях.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Работает ли Local REST API плагин на мобильном Obsidian?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Нет, Local REST API работает только на десктопных версиях (Windows, macOS, Linux). Мобильные версии Obsidian не поддерживают запуск локального сервера, поэтому API endpoints недоступны на iOS и Android.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Могут ли вебхуки создавать заметки в конкретных папках?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Да, вебхук-пейлоад включает поле <code>folder</code>, которое определяет целевую папку в хранилище. Вы можете указать любую существующую папку, и сервер создаст заметку в указанном месте автоматически.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Можно ли читать заметки Obsidian через вебхуки?</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <input type="checkbox" class="faq-toggle hidden">
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        <p>Нет, вебхуки -- это односторонний механизм доставки (push-модель). Они только создают или добавляют контент в Obsidian. Для чтения заметок из внешних приложений используйте Local REST API плагин с GET-запросами.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Другие руководства</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/ru/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Как работает Obsidian Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Архитектура, настройка, примеры интеграций.</p>
+                        <span class="text-xs text-ink-muted">8 мин</span>
+                    </a>
+                    <a href="/ru/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Как получать данные в Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Полное руководство по получению данных из внешних сервисов через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">12 мин</span>
+                    </a>
+                    <a href="/ru/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted: руководство по установке</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Пошаговый туториал по настройке собственного webhook-сервера с Docker.</p>
+                        <span class="text-xs text-ink-muted">18 мин</span>
+                    </a>
+                    <a href="/ru/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">10 рецептов автоматизации</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Готовые рецепты вебхуков для Zapier, Make, n8n, IFTTT с JSON-конфигурациями.</p>
+                        <span class="text-xs text-ink-muted">11 мин</span>
+                    </a>
+                    <a href="/ru/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">AI-агенты и Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Интеграция Claude, GPT и кастомных агентов с базой знаний через вебхуки.</p>
+                        <span class="text-xs text-ink-muted">14 мин</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/ru/guides/" class="footer-link text-sm text-white transition-colors">Руководства</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

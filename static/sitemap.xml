@@ -14,15 +14,87 @@
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://obsidian-webhooks.khabaroff.studio/how-it-works</loc>
-        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/how-it-works"/>
-        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works"/>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/"/>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/"/>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://obsidian-webhooks.khabaroff.studio/ru/how-it-works</loc>
-        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/how-it-works"/>
-        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works"/>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/how-it-works</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works"/>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works"/>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/receive-data-obsidian</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/receive-data-obsidian"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/receive-data-obsidian"/>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/receive-data-obsidian</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/receive-data-obsidian"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/receive-data-obsidian"/>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/self-hosted-webhooks-setup"/>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/self-hosted-webhooks-setup</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/self-hosted-webhooks-setup"/>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes"/>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes"/>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian"/>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian"/>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks"/>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/rest-api-vs-webhooks"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/rest-api-vs-webhooks"/>
         <priority>0.7</priority>
     </url>
 </urlset>

@@ -1,0 +1,74 @@
+/* Shared styles for all guide pages */
+
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+::selection { background: #7C3AED; color: white; }
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+
+.fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+
+/* Buttons */
+.btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
+.btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+.arrow-nudge { transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); display: inline-block; }
+.btn-lift:hover .arrow-nudge,
+a:hover .arrow-nudge { transform: translateX(4px); }
+
+/* Cards */
+.card-hover { transition: border-color 0.2s ease; }
+.card-hover:hover { border-color: #0a0a0a; }
+
+/* Footer links */
+.footer-link { position: relative; }
+.footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #7C3AED; transition: width 0.3s ease; }
+.footer-link:hover::after { width: 100%; }
+
+/* Code blocks */
+code { font-family: 'SF Mono', 'Fira Code', monospace; }
+pre { overflow-x: auto; position: relative; }
+.copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 8px; font-size: 11px; font-family: inherit; border: none; border-radius: 4px; cursor: pointer; opacity: 0; transition: opacity 0.2s ease; }
+pre:hover .copy-btn { opacity: 1; }
+.copy-btn.light { background: #e5e5e5; color: #444; }
+.copy-btn.light:hover { background: #d4d4d4; }
+.copy-btn.dark { background: #333; color: #aaa; }
+.copy-btn.dark:hover { background: #444; }
+
+/* Mobile menu */
+#mobileMenu { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.2s ease; }
+#mobileMenu.open { max-height: 320px; opacity: 1; }
+
+/* Article prose */
+.guide-prose h2 { font-size: 1.75rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem; color: #0a0a0a; }
+.guide-prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #1a1a1a; }
+.guide-prose p { margin-bottom: 1.25rem; line-height: 1.8; color: #444444; }
+.guide-prose ul, .guide-prose ol { margin-bottom: 1.25rem; padding-left: 1.5rem; color: #444444; }
+.guide-prose li { margin-bottom: 0.5rem; line-height: 1.7; }
+.guide-prose a { color: #7C3AED; text-decoration: underline; text-underline-offset: 2px; }
+.guide-prose a:hover { color: #0a0a0a; }
+.guide-prose blockquote { border-left: 3px solid #7C3AED; padding-left: 1rem; margin: 1.5rem 0; color: #444444; font-style: italic; }
+.guide-prose img { max-width: 100%; border-radius: 8px; margin: 1.5rem 0; }
+.guide-prose pre { background: #1a1a1a; color: #e5e5e5; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0; font-size: 0.875rem; line-height: 1.6; }
+.guide-prose code:not(pre code) { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-size: 0.875em; color: #0a0a0a; }
+.guide-prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+.guide-prose th { text-align: left; padding: 0.75rem 1rem; border-bottom: 2px solid #e5e5e5; font-weight: 600; color: #0a0a0a; }
+.guide-prose td { padding: 0.75rem 1rem; border-bottom: 1px solid #e5e5e5; color: #444444; }
+.guide-prose hr { border: none; border-top: 1px solid #e5e5e5; margin: 2rem 0; }
+
+/* FAQ accordion */
+.faq-toggle:checked + .faq-answer { max-height: 500px; opacity: 1; padding-top: 8px; padding-bottom: 16px; }
+.faq-answer { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease; }

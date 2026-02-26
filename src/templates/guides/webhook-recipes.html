@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Obsidian Webhook Automation Recipes: Zapier, Make, n8n, IFTTT</title>
+    <meta name="description" content="Copy-paste webhook recipes to automate your Obsidian vault with 5000+ apps. Includes JSON payloads for email, GitHub, Slack, RSS, calendar, and more.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/webhook-recipes">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="10 Obsidian Webhook Automation Recipes: Zapier, Make, n8n, IFTTT">
+    <meta property="og:description" content="Copy-paste webhook recipes to automate your Obsidian vault with 5000+ apps. Includes JSON payloads for email, GitHub, Slack, RSS, calendar, and more.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/guides/webhook-recipes">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="10 Obsidian Webhook Automation Recipes: Zapier, Make, n8n, IFTTT">
+    <meta name="twitter:description" content="Copy-paste webhook recipes to automate your Obsidian vault with 5000+ apps. JSON payloads for email, GitHub, Slack, RSS, calendar, and more.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Guides</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Log In</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <span class="text-ink font-semibold">EN</span>
+                    <span class="text-line">|</span>
+                    <a href="/ru/guides/webhook-recipes" class="text-ink-muted hover:text-ink transition-colors">RU</a>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Open menu" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Guides</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Log In</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <span class="text-sm text-ink font-semibold">EN</span>
+                <span class="text-sm text-line">|</span>
+                <a href="/ru/guides/webhook-recipes" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; All Guides</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">10 Obsidian Webhook Automation Recipes</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Copy-paste webhook recipes for Zapier, Make, n8n, IFTTT with JSON payloads for 5000+ apps</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p class="text-lg text-ink-soft leading-[1.7]">Your Obsidian vault doesn't have to be an isolated island. With webhook automation, you can pipe data from email, Slack, GitHub, RSS feeds, calendar events, and 5000+ other apps directly into your notes — no manual copy-paste required.</p>
+
+                <p class="text-lg text-ink-soft leading-[1.7] mt-4">This guide gives you 10 ready-to-use webhook recipes for popular automation platforms. Each recipe includes the exact JSON payload format and explains where the data lands in your vault.</p>
+
+                <!-- ==================== HOW WEBHOOK AUTOMATION WORKS ==================== -->
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight mt-16 mb-6">How Webhook Automation Works</h2>
+
+                <p class="text-lg text-ink-soft leading-[1.7] mb-4">Here's the flow:</p>
+                <ol class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-2 pl-1 list-none">
+                    <li class="flex gap-2"><span class="text-accent font-semibold">1.</span> <strong class="text-ink">External service</strong> (Zapier, Make, IFTTT, etc.) detects a trigger event</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">2.</span> <strong class="text-ink">Webhook POST</strong> sends JSON data to your webhook URL</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">3.</span> <strong class="text-ink">Obsidian Webhooks Server</strong> receives the payload</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">4.</span> <strong class="text-ink">Server-Sent Events (SSE)</strong> push data to the plugin</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">5.</span> <strong class="text-ink">Plugin creates/updates files</strong> in your vault</li>
+                </ol>
+
+                <p class="text-lg text-ink-soft leading-[1.7] mt-6">The server parses JSON into YAML frontmatter and Markdown content. You control the filename, folder, and whether to create a new file, append to an existing one, or overwrite.</p>
+
+                <p class="text-lg text-ink-soft leading-[1.7] mt-4"><strong class="text-ink">Setup:</strong> For installation and configuration details, see the <a href="/guides/self-hosted-webhooks-setup" class="text-accent hover:underline">setup guide</a> or the <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="text-accent hover:underline">GitHub repository</a>.</p>
+
+                <!-- ==================== THE 10 RECIPES ==================== -->
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight mt-16 mb-10">The 10 Recipes</h2>
+
+                <!-- ===== RECIPE 1: Save Important Emails ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-1 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">01</span>
+                    <h3 class="text-xl font-semibold text-ink">Save Important Emails as Notes</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Creates a note in your vault whenever you star/flag an email.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> Zapier</p>
+                        <p><strong class="text-ink">Trigger:</strong> Gmail &mdash; New Starred Email</p>
+                        <p><strong class="text-ink">Action:</strong> Webhooks by Zapier &mdash; POST</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">inbox/emails/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Email - {{subject}} - {{date}}",
+  "folder": "inbox/emails",
+  "mode": "create",
+  "content": "# {{subject}}\n\nFrom: {{from_email}}\nDate: {{date}}\n\n{{body_plain}}",
+  "frontmatter": {
+    "date": "{{date}}",
+    "from": "{{from_email}}",
+    "tags": ["email", "inbox"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Capture important client emails, newsletter highlights, or receipts without switching contexts.</p>
+                </div>
+
+                <!-- ===== RECIPE 2: GitHub Issues ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-2 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">02</span>
+                    <h3 class="text-xl font-semibold text-ink">GitHub Issues to Project Tracking</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Creates a note for every new GitHub issue in your repository.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> GitHub native webhook (or Zapier)</p>
+                        <p><strong class="text-ink">Trigger:</strong> GitHub &mdash; New Issue Created</p>
+                        <p><strong class="text-ink">Action:</strong> POST to webhook URL</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">projects/github-issues/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Issue #{{issue_number}} - {{issue_title}}",
+  "folder": "projects/github-issues",
+  "mode": "create",
+  "content": "# {{issue_title}}\n\n**Status:** {{state}}\n**Labels:** {{labels}}\n**Assignee:** {{assignee}}\n\n## Description\n{{body}}\n\n**URL:** {{html_url}}",
+  "frontmatter": {
+    "date": "{{created_at}}",
+    "status": "{{state}}",
+    "repo": "{{repository_name}}",
+    "issue_number": {{issue_number}},
+    "tags": ["github", "issue"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Track feature requests, bugs, or sprint backlog items in Obsidian alongside your project notes.</p>
+                </div>
+
+                <!-- ===== RECIPE 3: Daily Weather Briefing ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-3 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">03</span>
+                    <h3 class="text-xl font-semibold text-ink">Daily Weather Briefing</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Appends today's weather forecast to your daily note.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> IFTTT</p>
+                        <p><strong class="text-ink">Trigger:</strong> Weather Underground &mdash; Today's Weather Report</p>
+                        <p><strong class="text-ink">Action:</strong> Webhooks &mdash; Make a Web Request</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">daily-notes/{{today}}.md</code> (append mode)</p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "2026-02-26",
+  "folder": "daily-notes",
+  "mode": "append",
+  "content": "\n## Weather\n- **Temp:** {{temperature}}&deg;C\n- **Condition:** {{condition}}\n- **Precipitation:** {{precip_chance}}%\n- **Wind:** {{wind_speed}} km/h"
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Add weather context to your daily planning. Useful for outdoor work, travel, or fitness tracking.</p>
+                </div>
+
+                <!-- ===== RECIPE 4: Slack Saved Messages ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-1 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">04</span>
+                    <h3 class="text-xl font-semibold text-ink">Slack Saved Messages to Reading List</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Saves Slack messages you star/bookmark to a reading list in Obsidian.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> Zapier</p>
+                        <p><strong class="text-ink">Trigger:</strong> Slack &mdash; New Saved Message</p>
+                        <p><strong class="text-ink">Action:</strong> Webhooks by Zapier &mdash; POST</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">inbox/slack/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Slack - {{channel}} - {{timestamp}}",
+  "folder": "inbox/slack",
+  "mode": "create",
+  "content": "# {{channel}}\n\n**From:** {{user_name}}\n**Date:** {{timestamp}}\n\n{{message_text}}\n\n**Link:** {{message_link}}",
+  "frontmatter": {
+    "date": "{{timestamp}}",
+    "channel": "{{channel}}",
+    "author": "{{user_name}}",
+    "tags": ["slack", "reference"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Archive important team discussions, technical explanations, or decision logs.</p>
+                </div>
+
+                <!-- ===== RECIPE 5: RSS Feed Articles ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-2 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">05</span>
+                    <h3 class="text-xl font-semibold text-ink">RSS Feed Articles to Reading List</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Creates a note for each new article from your favorite RSS feeds.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> n8n</p>
+                        <p><strong class="text-ink">Trigger:</strong> RSS Feed Trigger (poll interval: 1 hour)</p>
+                        <p><strong class="text-ink">Action:</strong> HTTP Request &mdash; POST webhook</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">reading-list/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Article - {{title}}",
+  "folder": "reading-list",
+  "mode": "create",
+  "content": "# {{title}}\n\n**Source:** {{feed_name}}\n**Author:** {{author}}\n**Published:** {{pub_date}}\n\n{{description}}\n\n**Read article:** [Link]({{link}})",
+  "frontmatter": {
+    "date": "{{pub_date}}",
+    "source": "{{feed_name}}",
+    "url": "{{link}}",
+    "tags": ["article", "reading-list"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Aggregate long reads from multiple sources (blogs, newsletters, news sites) in one place.</p>
+                </div>
+
+                <!-- ===== RECIPE 6: Google Calendar Events ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-3 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">06</span>
+                    <h3 class="text-xl font-semibold text-ink">Google Calendar Events to Daily Notes</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Adds new calendar events to your daily note automatically.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> Make (Integromat)</p>
+                        <p><strong class="text-ink">Trigger:</strong> Google Calendar &mdash; Watch Events (webhook)</p>
+                        <p><strong class="text-ink">Action:</strong> HTTP &mdash; Make a Request</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">daily-notes/{{event_date}}.md</code> (append mode)</p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "2026-02-26",
+  "folder": "daily-notes",
+  "mode": "append",
+  "content": "\n## Event: {{event_summary}}\n- **Time:** {{start_time}} - {{end_time}}\n- **Location:** {{location}}\n- **Attendees:** {{attendees}}\n- **Description:** {{description}}"
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Sync meetings, deadlines, and appointments to your Obsidian planning system.</p>
+                </div>
+
+                <!-- ===== RECIPE 7: Twitter/X Bookmarks ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-1 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">07</span>
+                    <h3 class="text-xl font-semibold text-ink">Twitter/X Bookmarks to Research Notes</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Saves bookmarked tweets as individual notes.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> Zapier</p>
+                        <p><strong class="text-ink">Trigger:</strong> Twitter &mdash; New Bookmarked Tweet</p>
+                        <p><strong class="text-ink">Action:</strong> Webhooks by Zapier &mdash; POST</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">research/bookmarks/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Tweet - @{{username}} - {{tweet_id}}",
+  "folder": "research/bookmarks",
+  "mode": "create",
+  "content": "# @{{username}}\n\n**Date:** {{created_at}}\n\n{{tweet_text}}\n\n**Link:** {{tweet_url}}",
+  "frontmatter": {
+    "date": "{{created_at}}",
+    "author": "@{{username}}",
+    "url": "{{tweet_url}}",
+    "tags": ["twitter", "bookmark"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Curate insights, threads, or research material from Twitter/X without losing track of sources.</p>
+                </div>
+
+                <!-- ===== RECIPE 8: Stripe Payment Notifications ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-2 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">08</span>
+                    <h3 class="text-xl font-semibold text-ink">Stripe Payment Notifications</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Logs successful payments from Stripe to a client tracking note.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> Stripe native webhook (or Zapier)</p>
+                        <p><strong class="text-ink">Trigger:</strong> Stripe &mdash; charge.succeeded event</p>
+                        <p><strong class="text-ink">Action:</strong> POST to webhook URL</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">clients/payments/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Payment - {{customer_name}} - {{invoice_id}}",
+  "folder": "clients/payments",
+  "mode": "create",
+  "content": "# Payment Received\n\n**Customer:** {{customer_name}}\n**Email:** {{customer_email}}\n**Amount:** ${{amount}} {{currency}}\n**Invoice:** {{invoice_id}}\n**Date:** {{created_at}}\n\n**Status:** {{status}}",
+  "frontmatter": {
+    "date": "{{created_at}}",
+    "customer": "{{customer_name}}",
+    "amount": {{amount}},
+    "currency": "{{currency}}",
+    "invoice_id": "{{invoice_id}}",
+    "tags": ["payment", "stripe", "client"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Maintain a payment ledger in Obsidian alongside client project notes and invoices.</p>
+                </div>
+
+                <!-- ===== RECIPE 9: AI Agent Output Logging ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-3 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">09</span>
+                    <h3 class="text-xl font-semibold text-ink">AI Agent Output Logging</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Captures responses from Claude, ChatGPT, or custom AI agents for later review.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> Custom script (Python, Node.js, etc.)</p>
+                        <p><strong class="text-ink">Trigger:</strong> AI API response received</p>
+                        <p><strong class="text-ink">Action:</strong> POST JSON to webhook</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">ai-logs/{{model}}/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "AI Log - {{timestamp}} - {{model}}",
+  "folder": "ai-logs/{{model}}",
+  "mode": "create",
+  "content": "# AI Interaction\n\n**Model:** {{model}}\n**Timestamp:** {{timestamp}}\n**Tokens:** {{tokens_used}}\n\n## Prompt\n{{prompt}}\n\n## Response\n{{response}}",
+  "frontmatter": {
+    "date": "{{timestamp}}",
+    "model": "{{model}}",
+    "tokens": {{tokens_used}},
+    "cost": {{cost_usd}},
+    "tags": ["ai", "log"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Archive AI-assisted research, coding sessions, or writing drafts for auditing and refinement. See also: <a href="/guides/ai-agents-obsidian" class="text-accent hover:underline">Connect AI Agents to Obsidian</a>.</p>
+                </div>
+
+                <!-- ===== RECIPE 10: Voice Notes via Google Assistant ===== -->
+                <div class="card-hover border border-line p-8 md:p-10 flex flex-col gap-5 fade-in stagger-1 mb-8">
+                    <span class="font-display text-5xl font-bold text-accent tracking-tight">10</span>
+                    <h3 class="text-xl font-semibold text-ink">Voice Notes via Google Assistant</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Creates a quick-capture note from a voice command to Google Assistant.</p>
+                    <div class="flex flex-col gap-1.5 text-lg text-ink-muted">
+                        <p><strong class="text-ink">Platform:</strong> IFTTT</p>
+                        <p><strong class="text-ink">Trigger:</strong> Google Assistant &mdash; Say a phrase with a text ingredient ("Add note $")</p>
+                        <p><strong class="text-ink">Action:</strong> Webhooks &mdash; Make a Web Request</p>
+                        <p><strong class="text-ink">Destination:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">quick-capture/</code></p>
+                    </div>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "filename": "Voice Note - {{timestamp}}",
+  "folder": "quick-capture",
+  "mode": "create",
+  "content": "{{TextField}}\n\n---\nCaptured: {{CreatedAt}}",
+  "frontmatter": {
+    "date": "{{CreatedAt}}",
+    "source": "google-assistant",
+    "tags": ["voice", "inbox"]
+  }
+}</code></pre>
+                    <p class="text-lg text-ink-muted"><strong class="text-ink">Use case:</strong> Capture ideas, reminders, or meeting notes hands-free while driving, cooking, or walking.</p>
+                </div>
+
+                <!-- ==================== TIPS FOR BUILDING YOUR OWN ==================== -->
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight mt-16 mb-10">Tips for Building Your Own Recipes</h2>
+
+                <!-- Tip 1: Choosing the Right Mode -->
+                <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1 mb-6">
+                    <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">1. Choosing the Right Mode</h3>
+                    <ul class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-1 pl-1">
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">create</code> &mdash; New file for each trigger (emails, issues, bookmarks)</li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">append</code> &mdash; Add to existing file (daily notes, logs, running lists)</li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">overwrite</code> &mdash; Replace file content (dashboards, status pages)</li>
+                    </ul>
+                </div>
+
+                <!-- Tip 2: Formatting JSON Payloads -->
+                <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2 mb-6">
+                    <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">2. Formatting JSON Payloads</h3>
+                    <ul class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-1 pl-1">
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> Use <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">\n</code> for line breaks in the <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">content</code> field</li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> Wrap Markdown headings in content: <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">"# Title\n\nBody text"</code></li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> Include <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">frontmatter</code> for searchability and metadata queries</li>
+                    </ul>
+                </div>
+
+                <!-- Tip 3: Folder Organization Strategies -->
+                <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-3 mb-6">
+                    <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">3. Folder Organization Strategies</h3>
+                    <ul class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-1 pl-1">
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <strong class="text-ink">By source:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">inbox/slack/</code>, <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">inbox/email/</code>, <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">inbox/github/</code></li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <strong class="text-ink">By project:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">projects/website/</code>, <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">projects/app/</code></li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> <strong class="text-ink">By type:</strong> <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">reading-list/</code>, <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">meeting-notes/</code>, <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">quick-capture/</code></li>
+                    </ul>
+                </div>
+
+                <!-- Tip 4: Dynamic Filenames -->
+                <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-1 mb-6">
+                    <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">4. Dynamic Filenames</h3>
+                    <ul class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-1 pl-1">
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> Use timestamps: <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">"Note - {{timestamp}}"</code></li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> Include key identifiers: <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">"Issue #{{number}} - {{title}}"</code></li>
+                        <li class="flex gap-2"><span class="text-accent">&#8226;</span> Avoid special characters: <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">/ : * ? &lt; &gt; |</code></li>
+                    </ul>
+                </div>
+
+                <!-- Tip 5: Testing Webhooks -->
+                <div class="card-hover border border-line p-8 flex flex-col gap-4 fade-in stagger-2 mb-6">
+                    <h3 class="font-body text-lg font-bold text-ink-dark tracking-wider">5. Testing Webhooks</h3>
+                    <p class="text-lg text-ink-soft leading-[1.7]">Use <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">curl</code> to test payloads before setting up automation:</p>
+                    <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://your-webhook-url.com/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filename": "Test Note",
+    "folder": "inbox",
+    "mode": "create",
+    "content": "# Test\n\nThis is a test."
+  }'</code></pre>
+                </div>
+
+                <!-- ==================== GETTING STARTED ==================== -->
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight mt-16 mb-6">Getting Started</h2>
+
+                <ol class="text-lg text-ink-soft leading-[1.7] flex flex-col gap-3 pl-1 list-none">
+                    <li class="flex gap-2"><span class="text-accent font-semibold">1.</span> <strong class="text-ink">Install the server:</strong> Follow the <a href="/guides/self-hosted-webhooks-setup" class="text-accent hover:underline">setup guide</a> to self-host or use the hosted version.</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">2.</span> <strong class="text-ink">Install the plugin:</strong> Search "Webhooks Server" in Obsidian Community Plugins.</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">3.</span> <strong class="text-ink">Pick a recipe:</strong> Start with email or RSS &mdash; they're the easiest to test.</li>
+                    <li class="flex gap-2"><span class="text-accent font-semibold">4.</span> <strong class="text-ink">Customize:</strong> Adjust folder paths, filename patterns, and frontmatter fields to match your vault structure.</li>
+                </ol>
+
+                <p class="text-lg text-ink-soft leading-[1.7] mt-6">Webhook automation turns Obsidian into a universal inbox for your digital life. Whether you're tracking GitHub issues, archiving Slack conversations, or logging AI interactions, these recipes give you a starting point to build your own automation workflows.</p>
+
+                <div class="mt-8">
+                    <a href="/login" class="btn-lift bg-ink text-white text-sm font-medium px-7 py-3 inline-flex items-center gap-2 hover:bg-accent">
+                        <span class="arrow-nudge">&#8594;</span> Get API Keys
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto flex flex-col gap-8">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Frequently Asked Questions</h2>
+
+                <div class="flex flex-col gap-4">
+                    <!-- FAQ 1 -->
+                    <div class="border border-line">
+                        <button class="faq-toggle w-full flex items-center justify-between p-5 text-left text-lg font-semibold text-ink hover:text-accent transition-colors" aria-expanded="false">
+                            <span>Can I use multiple automation platforms at once?</span>
+                            <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer px-5 pb-5">
+                            <p class="text-lg text-ink-soft leading-[1.7]">Yes. Each platform sends webhooks to the same server endpoint using your vault key. You can have Zapier handling emails, Make managing calendar events, and n8n processing RSS feeds &mdash; all writing to the same vault simultaneously without conflicts.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="border border-line">
+                        <button class="faq-toggle w-full flex items-center justify-between p-5 text-left text-lg font-semibold text-ink hover:text-accent transition-colors" aria-expanded="false">
+                            <span>What happens if a webhook payload is malformed?</span>
+                            <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer px-5 pb-5">
+                            <p class="text-lg text-ink-soft leading-[1.7]">The server validates JSON structure before queuing. Malformed payloads return a 400 error with details about what's wrong (missing required fields, invalid JSON syntax). The external service receives the error immediately and can retry with corrected data.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="border border-line">
+                        <button class="faq-toggle w-full flex items-center justify-between p-5 text-left text-lg font-semibold text-ink hover:text-accent transition-colors" aria-expanded="false">
+                            <span>Is there a limit on how many webhooks I can receive?</span>
+                            <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer px-5 pb-5">
+                            <p class="text-lg text-ink-soft leading-[1.7]">The self-hosted version has no limits beyond your server capacity (typical VPS handles 1000+ per hour). The hosted version currently has no rate limits, though fair-use policies may apply for extreme usage (10,000+ webhooks per day).</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="border border-line">
+                        <button class="faq-toggle w-full flex items-center justify-between p-5 text-left text-lg font-semibold text-ink hover:text-accent transition-colors" aria-expanded="false">
+                            <span>Can I filter or transform data before it reaches Obsidian?</span>
+                            <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer px-5 pb-5">
+                            <p class="text-lg text-ink-soft leading-[1.7]">Yes, but transformation happens in your automation platform (Zapier, Make, n8n), not in the webhook server. Use their built-in filters and data mappers to format JSON before sending. The server accepts and delivers exactly what you POST.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="border border-line">
+                        <button class="faq-toggle w-full flex items-center justify-between p-5 text-left text-lg font-semibold text-ink hover:text-accent transition-colors" aria-expanded="false">
+                            <span>Do webhook recipes work with Obsidian mobile?</span>
+                            <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer px-5 pb-5">
+                            <p class="text-lg text-ink-soft leading-[1.7]">Yes. The server queues webhooks regardless of which device you're using. Mobile uses polling instead of SSE, so delivery takes 30-60 seconds instead of being instant. All recipes work identically once data reaches the plugin.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Other Guides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">How It Works</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Architecture, setup, integration examples.</p>
+                        <span class="text-xs text-ink-muted">8 min read</span>
+                    </a>
+                    <a href="/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">How to Receive External Data in Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Complete guide to sending data to Obsidian.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                    <a href="/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted Obsidian Webhooks: Setup Guide</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Step-by-step tutorial with Docker.</p>
+                        <span class="text-xs text-ink-muted">18 min read</span>
+                    </a>
+                    <a href="/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Connect AI Agents to Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Integrate Claude, GPT, and custom agents.</p>
+                        <span class="text-xs text-ink-muted">14 min read</span>
+                    </a>
+                    <a href="/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">When to use pull vs push architecture.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/guides/" class="footer-link text-sm text-white transition-colors">Guides</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-toggle').forEach(btn => {
+            const answer = btn.nextElementSibling;
+            answer.style.display = 'none';
+            btn.addEventListener('click', () => {
+                const isOpen = answer.style.display !== 'none';
+                answer.style.display = isOpen ? 'none' : 'block';
+                btn.setAttribute('aria-expanded', !isOpen);
+                btn.querySelector('svg').style.transform = isOpen ? '' : 'rotate(180deg)';
+            });
+        });
+
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

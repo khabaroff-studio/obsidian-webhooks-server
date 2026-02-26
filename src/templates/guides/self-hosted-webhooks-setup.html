@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Hosted Obsidian Webhooks: Complete Setup Guide — Obsidian Webhooks</title>
+    <meta name="description" content="Step-by-step tutorial for setting up your own Obsidian webhook server with Docker. Learn how to configure self-hosted webhooks for Obsidian automation in under 10 minutes.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/self-hosted-webhooks-setup">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Self-Hosted Obsidian Webhooks: Complete Setup Guide — Obsidian Webhooks">
+    <meta property="og:description" content="Step-by-step tutorial for setting up your own Obsidian webhook server with Docker. Learn how to configure self-hosted webhooks for Obsidian automation in under 10 minutes.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/guides/self-hosted-webhooks-setup">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="Self-Hosted Obsidian Webhooks: Complete Setup Guide — Obsidian Webhooks">
+    <meta name="twitter:description" content="Step-by-step tutorial for setting up your own Obsidian webhook server with Docker. Hosted and self-hosted options covered.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Guides</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Log In</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <span class="text-ink font-semibold">EN</span>
+                    <span class="text-line">|</span>
+                    <a href="/ru/guides/self-hosted-webhooks-setup" class="text-ink-muted hover:text-ink transition-colors">RU</a>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Open menu" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Guides</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Log In</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <span class="text-sm text-ink font-semibold">EN</span>
+                <span class="text-sm text-line">|</span>
+                <a href="/ru/guides/self-hosted-webhooks-setup" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; All Guides</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Self-Hosted Obsidian Webhooks: Complete Setup Guide</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Step-by-step tutorial for hosted and self-hosted webhook setup with Docker — 18 min read</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>You can set up a private webhook server for Obsidian in under 10 minutes. This complete tutorial walks you through both the hosted and self-hosted options, with step-by-step instructions for getting your first webhook delivered to your vault.</p>
+
+                <h2 id="what-are-obsidian-webhooks">What Are Obsidian Webhooks?</h2>
+
+                <p>Obsidian Webhooks Server is a self-hosted webhook delivery system that lets you push content from any external service directly into your Obsidian vault. Whether you're automating note creation from Zapier, capturing data from custom scripts, or building your own integrations, this setup gives you a reliable bridge between the web and your notes. For a deeper look at the architecture, see <a href="/guides/how-it-works">How Obsidian Webhooks Works</a>.</p>
+
+                <p>The system uses Server-Sent Events (SSE) for real-time delivery, PostgreSQL for persistent queuing, and AES-256-GCM encryption to protect your data in transit.</p>
+
+                <h2 id="prerequisites">Prerequisites</h2>
+
+                <p>Before you start, make sure you have:</p>
+
+                <ul>
+                    <li><strong>Obsidian Desktop</strong> (Windows, macOS, or Linux)</li>
+                    <li><strong>Docker and Docker Compose</strong> (for self-hosted option)</li>
+                    <li><strong>Basic terminal knowledge</strong> (running commands, editing files)</li>
+                    <li><strong>Optional</strong>: A domain with HTTPS for production deployment</li>
+                </ul>
+
+                <h2 id="option-a-hosted-version">Option A: Hosted Version (Fastest Start)</h2>
+
+                <p>The fastest way to try Obsidian webhooks is using the free hosted version on EU servers (Germany, Supabase infrastructure). This section covers the hosted option before diving into self-hosting.</p>
+
+                <h3 id="hosted-step-1">Step 1: Create Your Account</h3>
+
+                <ol>
+                    <li>Visit <a href="https://obsidian-webhooks.khabaroff.studio">obsidian-webhooks.khabaroff.studio</a></li>
+                    <li>Enter your email address</li>
+                    <li>Click the magic link sent to your inbox</li>
+                    <li>You'll land on the dashboard with your webhook URL and vault key</li>
+                </ol>
+
+                <h3 id="hosted-step-2">Step 2: Install the Obsidian Plugin</h3>
+
+                <ol>
+                    <li>Open Obsidian Settings &#8594; Community Plugins</li>
+                    <li>Browse and search for "obsidian-webhooks-2025"</li>
+                    <li>Click Install, then Enable</li>
+                    <li>Open the plugin settings</li>
+                    <li>Enter your server URL: <code>https://obsidian-webhooks.khabaroff.studio</code></li>
+                    <li>Paste your vault key (from the dashboard)</li>
+                    <li>Click "Test Connection" to verify</li>
+                </ol>
+
+                <h3 id="hosted-step-3">Step 3: Send Your First Webhook</h3>
+
+                <p>Open your terminal and send a test webhook:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://obsidian-webhooks.khabaroff.studio/api/webhook \
+  -H "Content-Type: application/json" \
+  -H "X-Vault-Key: your-vault-key-here" \
+  -d '{
+    "path": "Inbox/Test Note.md",
+    "mode": "create",
+    "frontmatter": {
+      "date": "2026-02-26",
+      "source": "curl-test"
+    },
+    "content": "This is my first webhook-delivered note!"
+  }'</code></pre>
+
+                <p>Within seconds, you should see <code>Test Note.md</code> appear in your vault's <code>Inbox</code> folder with this content:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>---
+date: 2026-02-26
+source: curl-test
+---
+This is my first webhook-delivered note!</code></pre>
+
+                <p>The hosted version handles all infrastructure, encryption, and delivery. For most users, this is enough. If you need full control over your data, continue to Option B.</p>
+
+                <h2 id="option-b-self-hosted">Option B: Self-Hosted Obsidian Webhook Server</h2>
+
+                <p>This Docker-based setup gives you complete control over your data and infrastructure.</p>
+
+                <h3 id="self-hosted-step-1">Step 1: Clone the Repository</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>git clone https://github.com/khabaroff-studio/obsidian-webhooks-server.git
+cd obsidian-webhooks-server</code></pre>
+
+                <h3 id="self-hosted-step-2">Step 2: Configure Environment Variables</h3>
+
+                <p>Copy the example environment file:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>cp .env.example .env</code></pre>
+
+                <p>Edit <code>.env</code> with your text editor:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code># Database (PostgreSQL)
+DATABASE_URL=postgresql://webhooks:your-secure-password@postgres:5432/webhooks?sslmode=disable
+
+# Encryption (generate with: openssl rand -hex 32)
+ENCRYPTION_KEY=your-64-character-hex-key-here
+
+# Server
+PORT=8080
+HOST=0.0.0.0
+
+# Email (for magic link authentication)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+FROM_EMAIL=noreply@yourdomain.com
+
+# Base URL (change for production)
+BASE_URL=http://localhost:8080</code></pre>
+
+                <p><strong>Important configurations:</strong></p>
+
+                <ul>
+                    <li><code>ENCRYPTION_KEY</code>: Generate with <code>openssl rand -hex 32</code>. This encrypts queue data at rest.</li>
+                    <li><code>DATABASE_URL</code>: Update the password to something secure.</li>
+                    <li><code>SMTP_*</code>: Required for passwordless auth. Use Gmail app passwords or your SMTP provider.</li>
+                    <li><code>BASE_URL</code>: Must match your domain in production (e.g., <code>https://webhooks.yourdomain.com</code>).</li>
+                </ul>
+
+                <h3 id="self-hosted-step-3">Step 3: Launch with Docker Compose</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>docker-compose up -d</code></pre>
+
+                <p>This starts two containers:</p>
+
+                <ul>
+                    <li><strong>postgres</strong>: PostgreSQL 15 database</li>
+                    <li><strong>server</strong>: Go application with webhook API and SSE delivery</li>
+                </ul>
+
+                <p>Verify they're running:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>docker-compose ps</code></pre>
+
+                <p>You should see both containers with status "Up".</p>
+
+                <h3 id="self-hosted-step-4">Step 4: Verify Server Health</h3>
+
+                <p>Check the API is responding:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl http://localhost:8080/health</code></pre>
+
+                <p>Expected response:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "status": "ok",
+  "timestamp": "2026-02-26T10:30:00Z"
+}</code></pre>
+
+                <h3 id="self-hosted-step-5">Step 5: Create Your First Vault Key</h3>
+
+                <ol>
+                    <li>Open <code>http://localhost:8080</code> in your browser</li>
+                    <li>Enter your email address</li>
+                    <li>Click the magic link in your inbox</li>
+                    <li>On the dashboard, click "Create Vault Key"</li>
+                    <li>Give it a name (e.g., "Personal Vault")</li>
+                    <li>Copy the generated key (you'll need it for the plugin)</li>
+                </ol>
+
+                <h2 id="install-the-obsidian-plugin">Install the Obsidian Plugin</h2>
+
+                <p>Whether you chose hosted or self-hosted, the plugin setup is identical.</p>
+
+                <h3 id="plugin-step-1">Step 1: Install from Community Plugins</h3>
+
+                <ol>
+                    <li>Obsidian Settings &#8594; Community Plugins</li>
+                    <li>Turn off Restricted Mode if needed</li>
+                    <li>Browse &#8594; Search "obsidian-webhooks-2025"</li>
+                    <li>Install and Enable</li>
+                </ol>
+
+                <h3 id="plugin-step-2">Step 2: Configure Connection</h3>
+
+                <ol>
+                    <li>Open plugin settings</li>
+                    <li><strong>Server URL</strong>:
+                        <ul>
+                            <li>Hosted: <code>https://obsidian-webhooks.khabaroff.studio</code></li>
+                            <li>Self-hosted: <code>http://localhost:8080</code> (or your domain)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Vault Key</strong>: Paste the key from your dashboard</li>
+                    <li>Click "Test Connection"</li>
+                </ol>
+
+                <p>You should see: "Connection successful. SSE stream is active."</p>
+
+                <h3 id="plugin-step-3">Step 3: Configure Delivery Options</h3>
+
+                <p>In plugin settings, you can adjust:</p>
+
+                <ul>
+                    <li><strong>Default folder</strong>: Where webhooks create notes (default: <code>Inbox/</code>)</li>
+                    <li><strong>Auto-create folders</strong>: Automatically create parent folders</li>
+                    <li><strong>Reconnect on offline</strong>: Poll for missed webhooks after network drops</li>
+                    <li><strong>Log level</strong>: Useful for debugging webhook delivery</li>
+                </ul>
+
+                <h2 id="send-your-first-webhook">Send Your First Webhook</h2>
+
+                <p>Now for the fun part. Let's send data from any external source into your vault. For more ready-to-use examples, see <a href="/guides/webhook-recipes">10 Automation Recipes</a>.</p>
+
+                <h3 id="basic-webhook-structure">Basic Webhook Structure</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST http://localhost:8080/api/webhook \
+  -H "Content-Type: application/json" \
+  -H "X-Vault-Key: your-vault-key-here" \
+  -d '{
+    "path": "Inbox/My Note.md",
+    "mode": "create",
+    "frontmatter": {
+      "date": "2026-02-26",
+      "tags": ["automation", "test"]
+    },
+    "content": "# My First Webhook\n\nThis note was created via webhook."
+  }'</code></pre>
+
+                <h3 id="understanding-delivery-modes">Understanding Delivery Modes</h3>
+
+                <p>The <code>mode</code> field controls how content is handled:</p>
+
+                <h3 id="create-mode">1. Create Mode (Default)</h3>
+
+                <p>Creates a new note. If file exists, adds a number suffix.</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "path": "Inbox/Daily Log.md",
+  "mode": "create",
+  "content": "Today's entry"
+}</code></pre>
+
+                <p>If <code>Daily Log.md</code> exists, creates <code>Daily Log 2.md</code>.</p>
+
+                <h3 id="append-mode">2. Append Mode</h3>
+
+                <p>Adds content to the end of an existing note.</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "path": "Inbox/Daily Log.md",
+  "mode": "append",
+  "content": "\n\n---\n\nNew entry at 10:30 AM"
+}</code></pre>
+
+                <p>Creates the file if it doesn't exist.</p>
+
+                <h3 id="overwrite-mode">3. Overwrite Mode</h3>
+
+                <p>Replaces entire file content.</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "path": "Inbox/Daily Log.md",
+  "mode": "overwrite",
+  "frontmatter": {
+    "updated": "2026-02-26"
+  },
+  "content": "This replaces everything"
+}</code></pre>
+
+                <h3 id="frontmatter-handling">Frontmatter Handling</h3>
+
+                <p>The server converts JSON to YAML frontmatter automatically:</p>
+
+                <p><strong>Webhook payload:</strong></p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "frontmatter": {
+    "date": "2026-02-26",
+    "tags": ["work", "project-x"],
+    "priority": 1,
+    "metadata": {
+      "source": "api",
+      "user_id": "abc123"
+    }
+  },
+  "content": "Note content here"
+}</code></pre>
+
+                <p><strong>Result in vault:</strong></p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>---
+date: 2026-02-26
+tags:
+  - work
+  - project-x
+priority: 1
+metadata:
+  source: api
+  user_id: abc123
+---
+Note content here</code></pre>
+
+                <h2 id="configure-multi-vault-support">Configure Multi-Vault Support</h2>
+
+                <p>If you have multiple vaults (e.g., Personal, Work), create separate vault keys.</p>
+
+                <h3 id="multi-vault-step-1">Step 1: Create Additional Keys</h3>
+
+                <ol>
+                    <li>Dashboard &#8594; "Create Vault Key"</li>
+                    <li>Name: "Work Vault"</li>
+                    <li>Copy the key</li>
+                </ol>
+
+                <h3 id="multi-vault-step-2">Step 2: Configure Second Vault</h3>
+
+                <ol>
+                    <li>Open your second vault in Obsidian</li>
+                    <li>Install the same plugin</li>
+                    <li>Enter the same server URL</li>
+                    <li>Paste the second vault key</li>
+                </ol>
+
+                <p>Each vault receives only webhooks sent to its specific key.</p>
+
+                <h3 id="multi-vault-step-3">Step 3: Send to Specific Vault</h3>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code># Send to personal vault
+curl -X POST http://localhost:8080/api/webhook \
+  -H "X-Vault-Key: personal-vault-key" \
+  -d '{"path": "Personal/Note.md", "content": "Personal note"}'
+
+# Send to work vault
+curl -X POST http://localhost:8080/api/webhook \
+  -H "X-Vault-Key: work-vault-key" \
+  -d '{"path": "Work/Note.md", "content": "Work note"}'</code></pre>
+
+                <h2 id="security-checklist">Security Checklist</h2>
+
+                <p>Follow these best practices for production webhook server deployments.</p>
+
+                <h3 id="use-https">1. Use HTTPS in Production</h3>
+
+                <p>Never run webhooks over HTTP on the internet. Configure TLS:</p>
+
+                <p><strong>Option A: Reverse Proxy (Recommended)</strong></p>
+
+                <p>Use Caddy or nginx with automatic Let's Encrypt:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code># docker-compose.yml addition
+  caddy:
+    image: caddy:2
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data</code></pre>
+
+                <p><strong>Caddyfile:</strong></p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>webhooks.yourdomain.com {
+    reverse_proxy server:8080
+}</code></pre>
+
+                <p><strong>Option B: Cloudflare Tunnel</strong></p>
+
+                <p>Zero-config HTTPS via Cloudflare:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>cloudflared tunnel --url http://localhost:8080</code></pre>
+
+                <h3 id="verify-encryption">2. Verify Encryption Is Active</h3>
+
+                <p>The server uses AES-256-GCM encryption for all queued data. Verify your <code>ENCRYPTION_KEY</code> is set:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>docker-compose exec server env | grep ENCRYPTION_KEY</code></pre>
+
+                <p>Should output a 64-character hex string.</p>
+
+                <h3 id="rotate-vault-keys">3. Rotate Vault Keys</h3>
+
+                <p>If a key is compromised:</p>
+
+                <ol>
+                    <li>Dashboard &#8594; Revoke key</li>
+                    <li>Create new key</li>
+                    <li>Update plugin settings in Obsidian</li>
+                    <li>Update any external services sending webhooks</li>
+                </ol>
+
+                <h3 id="secure-database">4. Secure Your Database</h3>
+
+                <p>Change the default PostgreSQL password in <code>.env</code>:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>DATABASE_URL=postgresql://webhooks:use-strong-random-password-here@postgres:5432/webhooks</code></pre>
+
+                <h3 id="monitor-deliveries">5. Monitor Failed Deliveries</h3>
+
+                <p>Check server logs for issues:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>docker-compose logs -f server</code></pre>
+
+                <p>Look for <code>[ERROR]</code> lines related to delivery failures.</p>
+
+                <h2 id="troubleshooting">Troubleshooting Common Issues</h2>
+
+                <h3 id="webhook-not-arriving">Webhook Not Arriving in Vault</h3>
+
+                <p><strong>Check 1: SSE Connection</strong></p>
+
+                <p>Plugin settings &#8594; Connection Status should show "Connected". If it says "Disconnected":</p>
+
+                <ol>
+                    <li>Verify server URL is correct</li>
+                    <li>Check firewall/network allows SSE connections</li>
+                    <li>Look for errors in Obsidian Developer Console (Ctrl+Shift+I)</li>
+                </ol>
+
+                <p><strong>Check 2: Vault Key</strong></p>
+
+                <p>Ensure the <code>X-Vault-Key</code> header in your webhook matches the key in plugin settings. Case-sensitive.</p>
+
+                <p><strong>Check 3: Server Logs</strong></p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>docker-compose logs -f server | grep webhook</code></pre>
+
+                <p>Look for the webhook ID and delivery status.</p>
+
+                <h3 id="duplicate-notes">Duplicate Notes Appearing</h3>
+
+                <p>The system uses ACK (acknowledgment) confirmation to prevent duplicates. If you see duplicates:</p>
+
+                <ol>
+                    <li>Check network stability (drops can cause retries)</li>
+                    <li>Verify plugin version is up-to-date</li>
+                    <li>Enable debug logging in plugin settings</li>
+                </ol>
+
+                <p>The ACK system works like this:</p>
+
+                <ol>
+                    <li>Server sends webhook via SSE</li>
+                    <li>Plugin writes file to vault</li>
+                    <li>Plugin sends ACK back to server</li>
+                    <li>Server deletes webhook from queue</li>
+                </ol>
+
+                <p>If step 3 fails, the server retries (causing duplicates). The plugin has built-in deduplication based on webhook ID. For a detailed look at this flow, see <a href="/guides/how-it-works">How Obsidian Webhooks Works</a>.</p>
+
+                <h3 id="large-payloads">Large Payloads Failing</h3>
+
+                <p>The server has a 10 MB limit per note. If you're hitting this:</p>
+
+                <p><strong>Solution 1: Split Large Content</strong></p>
+
+                <p>Send multiple webhooks with append mode:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code># Part 1
+curl -X POST http://localhost:8080/api/webhook \
+  -H "X-Vault-Key: your-key" \
+  -d '{"path": "Large Note.md", "mode": "create", "content": "Part 1..."}'
+
+# Part 2
+curl -X POST http://localhost:8080/api/webhook \
+  -H "X-Vault-Key: your-key" \
+  -d '{"path": "Large Note.md", "mode": "append", "content": "\nPart 2..."}'</code></pre>
+
+                <p><strong>Solution 2: Link to External Files</strong></p>
+
+                <p>Store large content elsewhere and link:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "path": "Index.md",
+  "content": "See attached: [Report](https://yourdomain.com/report.pdf)"
+}</code></pre>
+
+                <h3 id="sse-connection-dropping">SSE Connection Keeps Dropping</h3>
+
+                <p>If the SSE stream disconnects frequently:</p>
+
+                <ol>
+                    <li><strong>Check reverse proxy timeouts</strong>: Caddy/nginx may close long-lived connections</li>
+                    <li><strong>Mobile sync</strong>: SSE doesn't work on mobile. Use the polling fallback in plugin settings.</li>
+                    <li><strong>Corporate networks</strong>: Some block SSE. Try a different network to test.</li>
+                </ol>
+
+                <p>The plugin automatically reconnects and polls for missed webhooks, so this is usually transparent to the user. For understanding the full pull vs push architecture, see <a href="/guides/rest-api-vs-webhooks">REST API vs Webhooks</a>.</p>
+
+                <h2 id="real-world-examples">Real-World Webhook Examples</h2>
+
+                <h3 id="example-zapier">Example 1: Zapier Integration</h3>
+
+                <p>Create a note from Gmail:</p>
+
+                <ol>
+                    <li>Zapier trigger: New Email in Gmail</li>
+                    <li>Zapier action: Webhooks by Zapier &#8594; POST</li>
+                    <li>URL: <code>http://localhost:8080/api/webhook</code></li>
+                    <li>Headers: <code>X-Vault-Key: your-key</code></li>
+                    <li>Payload:</li>
+                </ol>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>{
+  "path": "Inbox/Email - {{subject}}.md",
+  "mode": "create",
+  "frontmatter": {
+    "date": "{{received_date}}",
+    "from": "{{from_email}}",
+    "tags": ["email"]
+  },
+  "content": "# {{subject}}\n\n{{body_plain}}"
+}</code></pre>
+
+                <h3 id="example-cron">Example 2: Daily Log from Cron</h3>
+
+                <p>Append to a daily note every hour:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>#!/bin/bash
+# cron-log.sh
+
+DATE=$(date +%Y-%m-%d)
+TIME=$(date +%H:%M)
+
+curl -X POST http://localhost:8080/api/webhook \
+  -H "Content-Type: application/json" \
+  -H "X-Vault-Key: your-key" \
+  -d "{
+    \"path\": \"Daily/${DATE}.md\",
+    \"mode\": \"append\",
+    \"content\": \"\\n- ${TIME}: System check completed\"
+  }"</code></pre>
+
+                <p>Add to crontab:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>0 * * * * /path/to/cron-log.sh</code></pre>
+
+                <h3 id="example-readwise">Example 3: Readwise Highlights</h3>
+
+                <p>Forward Readwise exports:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST http://localhost:8080/api/webhook \
+  -H "X-Vault-Key: your-key" \
+  -d '{
+    "path": "Books/{{book_title}}.md",
+    "mode": "append",
+    "content": "\n> {{highlight_text}}\n\n[[{{book_title}}]] - Page {{page_number}}"
+  }'</code></pre>
+
+                <p>For more integration patterns including n8n, Make, Python, and Telegram bots, see the full <a href="/guides/webhook-recipes">10 Automation Recipes</a> guide. If you're integrating with AI tools like Claude or GPT, check out <a href="/guides/ai-agents-obsidian">Connect AI Agents to Obsidian</a>.</p>
+
+                <h2 id="next-steps">Next Steps</h2>
+
+                <p>You now have a working Obsidian webhook setup. Here's what to explore next:</p>
+
+                <ol>
+                    <li><strong>Automation Recipes</strong>: Check the <a href="/guides/webhook-recipes">10 Automation Recipes</a> for pre-built integrations with Zapier, Make, n8n, and IFTTT.</li>
+                    <li><strong>Receive Data Guide</strong>: Read <a href="/guides/receive-data-obsidian">How to Receive External Data in Obsidian</a> for a comprehensive overview of all data ingestion methods.</li>
+                    <li><strong>API Reference</strong>: Read the full <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server#api-reference">API docs</a> for advanced features.</li>
+                    <li><strong>Community</strong>: Join the GitHub Discussions to share your automations.</li>
+                </ol>
+
+                <h3 id="performance-tips">Performance Tips</h3>
+
+                <ul>
+                    <li><strong>Batch webhooks</strong>: Send multiple notes in quick succession (SSE handles concurrent delivery)</li>
+                    <li><strong>Use append mode</strong>: More efficient than creating many small files</li>
+                    <li><strong>Monitor queue size</strong>: Dashboard shows pending webhooks count</li>
+                </ul>
+
+                <h3 id="backup-strategy">Backup Strategy</h3>
+
+                <p>Your vault is already in sync (via Obsidian Sync or Git). The webhook server stores minimal state:</p>
+
+                <ul>
+                    <li><strong>Database</strong>: Backup PostgreSQL with <code>pg_dump</code></li>
+                    <li><strong>Vault keys</strong>: Export from dashboard before major changes</li>
+                </ul>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code># Backup database
+docker-compose exec postgres pg_dump -U webhooks webhooks > backup.sql
+
+# Restore
+docker-compose exec -T postgres psql -U webhooks webhooks < backup.sql</code></pre>
+
+                <h2 id="conclusion">Conclusion</h2>
+
+                <p>This tutorial covered both hosted and self-hosted setups, from initial installation to production security. The Docker-based configuration gives you a reliable automation bridge that delivers webhooks in under a second, with exactly-once guarantees and offline sync.</p>
+
+                <p>Whether you're capturing emails, syncing highlights, or building custom integrations, this setup scales from a single vault to multi-vault teams.</p>
+
+                <p>The self-hosted option (MIT license) means you control your data completely, while the hosted version (free on EU servers) gets you started in 60 seconds.</p>
+
+                <p>Start automating your Obsidian vault today at <a href="https://obsidian-webhooks.khabaroff.studio">obsidian-webhooks.khabaroff.studio</a> or clone the <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server">GitHub repo</a> for self-hosting.</p>
+
+                <hr>
+
+                <p><strong>Additional Resources:</strong></p>
+
+                <ul>
+                    <li><a href="https://github.com/khabaroff-studio/obsidian-webhooks-server">GitHub Repository</a> — Source code and API docs</li>
+                    <li><a href="https://obsidian.md/plugins?id=obsidian-webhooks-2025">Plugin Page</a> — Install the companion plugin</li>
+                    <li><a href="https://obsidian-webhooks.khabaroff.studio">Landing Page</a> — Hosted version signup</li>
+                    <li><a href="/guides/webhook-recipes">Recipes Collection</a> — Pre-built automation templates</li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto flex flex-col gap-8">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Frequently Asked Questions</h2>
+
+                <!-- FAQ 1 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>How long does it take to set up Obsidian Webhooks?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-relaxed">
+                        The hosted version takes under 2 minutes (sign up, install plugin, test connection). Self-hosted setup with Docker takes 5-10 minutes including environment configuration and vault key creation.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Do I need to know Go or PostgreSQL to self-host?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-relaxed">
+                        No. The Docker Compose setup handles everything automatically. You only need to edit environment variables in the .env file. No database management or Go knowledge required for basic operation.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Can I run the webhook server on a Raspberry Pi?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-relaxed">
+                        Yes. The Go server is lightweight (under 50 MB RAM) and works on ARM64 architecture. Use the ARM-compatible PostgreSQL image in docker-compose.yml. A Raspberry Pi 4 with 2GB RAM can handle hundreds of webhooks per day.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Is the hosted version as secure as self-hosted?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-relaxed">
+                        Both use identical encryption (AES-256-GCM) and HTTPS transport. The hosted version adds Supabase's security layer and EU GDPR compliance. Self-hosted gives you physical control over servers, while hosted removes infrastructure management burden. Security depends on your threat model.
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-line bg-white">
+                    <label class="flex items-center justify-between cursor-pointer p-5 text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>How do I update the server to a new version?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-relaxed">
+                        For self-hosted: run <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink text-sm">git pull</code>, then <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink text-sm">docker-compose pull && docker-compose up -d</code>. The server automatically migrates database schema on startup. For hosted version, updates are automatic with zero downtime.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Other Guides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">How Obsidian Webhooks Works</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Architecture, setup, integration examples — all on one page.</p>
+                        <span class="text-xs text-ink-muted">8 min read</span>
+                    </a>
+                    <a href="/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">How to Receive External Data in Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Complete guide to sending data to Obsidian from external services using webhooks.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                    <a href="/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">10 Automation Recipes</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Copy-paste webhook recipes for Zapier, Make, n8n, IFTTT with JSON payloads.</p>
+                        <span class="text-xs text-ink-muted">11 min read</span>
+                    </a>
+                    <a href="/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Connect AI Agents to Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Integrate Claude, GPT, and custom agents with your knowledge base via webhooks.</p>
+                        <span class="text-xs text-ink-muted">14 min read</span>
+                    </a>
+                    <a href="/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">When to use pull vs push architecture for Obsidian automation.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/guides/" class="footer-link text-sm text-white transition-colors">Guides</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

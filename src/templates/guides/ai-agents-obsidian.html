@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect AI Agents to Obsidian via Webhooks — Obsidian Webhooks</title>
+    <meta name="description" content="Learn how to integrate AI agents with Obsidian using webhooks. Automatically capture Claude, GPT, and custom agent outputs into your personal knowledge base with structured markdown and frontmatter.">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/ai-agents-obsidian">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Connect AI Agents to Obsidian via Webhooks — Obsidian Webhooks">
+    <meta property="og:description" content="Integrate AI agents with Obsidian using webhooks. Capture Claude, GPT, and custom agent outputs into your knowledge base automatically.">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/guides/ai-agents-obsidian">
+    <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta property="og:site_name" content="Obsidian Webhooks">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
+    <meta name="twitter:title" content="Connect AI Agents to Obsidian via Webhooks — Obsidian Webhooks">
+    <meta name="twitter:description" content="Integrate AI agents with Obsidian using webhooks. Capture Claude, GPT, and custom agent outputs automatically.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0a0a0a',
+                        'ink-soft': '#444444',
+                        'ink-muted': '#777777',
+                        'ink-dark': '#1a1a1a',
+                        accent: '#7C3AED',
+                        line: '#e5e5e5',
+                        paper: '#FFFFFF',
+                        'paper-warm': '#f5f5f5',
+                        'paper-cta': '#f7f7f7',
+                        github: '#24292e',
+                        status: '#22c55e',
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body text-ink bg-paper">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-line px-6 md:px-16 lg:px-[120px]">
+        <div class="max-w-[1440px] mx-auto flex items-center justify-between h-[72px]">
+            <a href="/" class="font-display text-xs font-bold tracking-wide uppercase text-ink hover:text-accent transition-colors">
+                Obsidian Webhooks
+            </a>
+            <nav class="flex items-center gap-4 md:gap-8">
+                <a href="/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Guides</a>
+                <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="/login" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Log In</a>
+                <span class="hidden lg:flex items-center gap-1.5 text-xs">
+                    <span class="text-ink font-semibold">EN</span>
+                    <span class="text-line">|</span>
+                    <a href="/ru/guides/ai-agents-obsidian" class="text-ink-muted hover:text-ink transition-colors">RU</a>
+                </span>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                    <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
+                </a>
+                <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Open menu" aria-expanded="false">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
+        <div class="flex flex-col px-6 py-5 gap-4">
+            <a href="/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Guides</a>
+            <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="/login" class="text-sm font-medium text-ink hover:text-accent transition-colors">Log In</a>
+            <div class="flex items-center gap-2 pt-2 border-t border-line">
+                <span class="text-sm text-ink font-semibold">EN</span>
+                <span class="text-sm text-line">|</span>
+                <a href="/ru/guides/ai-agents-obsidian" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- ==================== HERO ==================== -->
+        <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
+                <a href="/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; All Guides</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">Connect AI Agents to Obsidian via Webhooks</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Build an automated knowledge base that captures every AI-generated insight</p>
+            </div>
+        </section>
+
+        <!-- ==================== ARTICLE CONTENT ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto guide-prose">
+
+                <p>Your AI agent just spent 20 minutes researching a topic, analyzing code, or summarizing a meeting. It produced brilliant insights, structured recommendations, and actionable decisions. Then the session ended, and all that output disappeared into the void.</p>
+
+                <p>What if every AI-generated insight automatically landed in your Obsidian vault instead? Tagged, timestamped, and connected to your existing knowledge graph?</p>
+
+                <h2>The AI Output Problem: Generate, Then Lose</h2>
+
+                <p>AI tools like Claude, GPT, and custom agents are getting better at producing valuable outputs. Research summaries, code reviews, decision logs, meeting transcripts, competitive analysis. But these outputs live in ephemeral chat windows or API responses that vanish after the session.</p>
+
+                <p>The current workflow looks like this:</p>
+
+                <ol>
+                    <li>Run AI agent on a task</li>
+                    <li>Copy-paste results into notes</li>
+                    <li>Manually add context, tags, dates</li>
+                    <li>Try to remember where you saved it</li>
+                </ol>
+
+                <p>This doesn't scale. If you're running agents daily, you're either drowning in manual note-taking or losing valuable AI outputs.</p>
+
+                <p>Export features exist, but they're messy. Plain text dumps without structure. JSON blobs that need parsing. PDFs that break your workflow. None of these integrate with how you actually organize knowledge.</p>
+
+                <h2>Why Obsidian as Your AI Knowledge Base</h2>
+
+                <p>Obsidian has become the go-to tool for developers, researchers, and knowledge workers who want control over their data. Here's why it's ideal for capturing AI agent outputs:</p>
+
+                <p><strong>Local-first architecture</strong>. Your data lives in markdown files on your machine, not in someone else's cloud. When AI agents send output to Obsidian, you control where it goes and who sees it.</p>
+
+                <p><strong>Markdown as universal format</strong>. AI agents already output text. Markdown is text with structure. No conversion needed, no vendor lock-in.</p>
+
+                <p><strong>Graph view connects everything</strong>. When your research agent mentions a concept you wrote about last month, Obsidian shows the connection. AI outputs become part of your knowledge graph, not isolated documents.</p>
+
+                <p><strong>Tagging and search that scales</strong>. Tag AI outputs by agent type, topic, or project. Search across thousands of agent-generated notes instantly.</p>
+
+                <p><strong>Plugins extend functionality</strong>. Once AI outputs land in Obsidian, you can process them with Dataview queries, templates, or custom scripts.</p>
+
+                <h2>How Webhooks Bridge AI Agents and Obsidian</h2>
+
+                <p>The missing piece is delivery. How does output from an AI agent running in Python, a cloud function, or a scheduled job land in your Obsidian vault?</p>
+
+                <p>Webhooks solve this. Here's the flow:</p>
+
+                <ol>
+                    <li>AI agent completes a task</li>
+                    <li>Agent sends HTTP POST with results to webhook server</li>
+                    <li>Server delivers to Obsidian via Server-Sent Events (SSE)</li>
+                    <li>Note appears in vault with proper frontmatter, tags, and folder location</li>
+                </ol>
+
+                <p>This works even if Obsidian was closed when the agent ran. The server queues deliveries and sends them when Obsidian reconnects.</p>
+
+                <p>The technical implementation uses AES-256-GCM encryption for data in transit and exactly-once delivery guarantees. Your webhook keys authenticate requests, and you control which agents can write to which folders. For more details on the architecture, see our <a href="/guides/how-it-works">How It Works</a> guide.</p>
+
+                <h2>Obsidian AI Integration Use Cases: What This Enables</h2>
+
+                <p>Let's look at concrete examples with actual code payloads.</p>
+
+                <h3>Use Case 1: Research Agent</h3>
+
+                <p>Your agent researches "retrieval augmented generation trends 2026" and sends structured findings:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>import requests
+
+def send_research_to_obsidian(topic, summary, sources):
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Research - {topic}",
+        "folder": "ai-research",
+        "content": f"## Summary\n{summary}\n\n## Sources\n" + "\n".join(f"- {s}" for s in sources),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["ai-research", "rag"],
+            "source": "research-agent",
+            "date": "2026-02-26",
+            "status": "completed"
+        }
+    })</code></pre>
+
+                <p>Result in Obsidian:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>---
+tags: [ai-research, rag]
+source: research-agent
+date: 2026-02-26
+status: completed
+---
+## Summary
+Retrieval augmented generation is shifting toward...
+
+## Sources
+- https://arxiv.org/abs/...
+- https://www.anthropic.com/research/...</code></pre>
+
+                <h3>Use Case 2: Meeting Transcriber</h3>
+
+                <p>Audio file to transcript via Whisper, then structured notes via webhook:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>def process_meeting(audio_path, attendees):
+    transcript = whisper_transcribe(audio_path)
+    action_items = extract_action_items(transcript)  # GPT-4 call
+
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Meeting - {datetime.now().strftime('%Y-%m-%d')}",
+        "folder": "meetings",
+        "content": f"## Attendees\n{', '.join(attendees)}\n\n## Transcript\n{transcript}\n\n## Action Items\n" +
+                   "\n".join(f"- [ ] {item}" for item in action_items),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["meeting"],
+            "attendees": attendees,
+            "date": datetime.now().isoformat()
+        }
+    })</code></pre>
+
+                <p>The meeting note appears in your vault with checkboxes for action items, searchable transcript, and attendee tags.</p>
+
+                <h3>Use Case 3: Code Review Agent</h3>
+
+                <p>Agent reviews a pull request and logs findings:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>def review_pr(pr_number, diff):
+    review = claude_review_code(diff)  # Claude API call
+
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"PR-{pr_number} Review",
+        "folder": "code-reviews",
+        "content": f"## Files Changed\n{diff[:500]}...\n\n## Review\n{review['summary']}\n\n## Issues Found\n" +
+                   "\n".join(f"- {issue}" for issue in review['issues']),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["code-review"],
+            "pr": pr_number,
+            "reviewer": "claude-agent",
+            "date": datetime.now().isoformat()
+        }
+    })</code></pre>
+
+                <h3>Use Case 4: Daily Digest Agent</h3>
+
+                <p>Scheduled agent aggregates news and updates every morning:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>def daily_digest():
+    news = fetch_hacker_news_top()
+    papers = fetch_arxiv_cs_ai()
+
+    content = "## Tech News\n" + "\n".join(f"- [{n['title']}]({n['url']})" for n in news)
+    content += "\n\n## Research Papers\n" + "\n".join(f"- [{p['title']}]({p['url']})" for p in papers)
+
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Daily Digest - {datetime.now().strftime('%Y-%m-%d')}",
+        "folder": "daily",
+        "content": content,
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["daily-digest"],
+            "date": datetime.now().isoformat()
+        }
+    })</code></pre>
+
+                <h3>Use Case 5: Decision Logger</h3>
+
+                <p>Agent makes decisions and logs reasoning:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>def log_decision(decision, reasoning, alternatives):
+    requests.post("https://your-server/api/webhook/YOUR_KEY", json={
+        "filename": f"Decision - {decision[:50]}",
+        "folder": "decisions",
+        "content": f"## Decision\n{decision}\n\n## Reasoning\n{reasoning}\n\n## Alternatives Considered\n" +
+                   "\n".join(f"- {alt}" for alt in alternatives),
+        "mode": "create",
+        "frontmatter": {
+            "tags": ["decision-log"],
+            "date": datetime.now().isoformat(),
+            "status": "proposed"
+        }
+    })</code></pre>
+
+                <h2>Building Your AI to Obsidian Pipeline</h2>
+
+                <p>Here's how to set up the full integration:</p>
+
+                <h3>Step 1: Set Up Webhook Server</h3>
+
+                <p>Clone and deploy the webhook server:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>git clone https://github.com/khabaroff-studio/obsidian-webhooks-server
+cd obsidian-webhooks-server
+npm install
+npm start</code></pre>
+
+                <p>Or use the hosted version at <a href="https://obsidian-webhooks.khabaroff.studio">obsidian-webhooks.khabaroff.studio</a>.</p>
+
+                <p>Configure your webhook key in the server settings. This key authenticates agent requests. For a detailed walkthrough, see the <a href="/guides/self-hosted-webhooks-setup">Self-Hosted Setup Guide</a>.</p>
+
+                <h3>Step 2: Add Webhook Call to Agent Output</h3>
+
+                <p>In your agent code, add a function that sends results to Obsidian:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>import requests
+from datetime import datetime
+
+def send_to_obsidian(title, content, tags, folder="ai-logs"):
+    """Send AI agent output to Obsidian via webhook."""
+    payload = {
+        "filename": title,
+        "folder": folder,
+        "content": content,
+        "mode": "create",
+        "frontmatter": {
+            "tags": tags,
+            "source": "ai-agent",
+            "date": datetime.now().isoformat()
+        }
+    }
+
+    response = requests.post(
+        "https://your-server/api/webhook/YOUR_WEBHOOK_KEY",
+        json=payload,
+        headers={"Content-Type": "application/json"}
+    )
+
+    return response.status_code == 200</code></pre>
+
+                <p>Call this function whenever your agent produces output:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code># In your agent code
+result = run_agent_task(task)
+send_to_obsidian(
+    title=f"Agent Run - {task['name']}",
+    content=result['summary'],
+    tags=["ai", "agent-output"],
+    folder="agent-logs"
+)</code></pre>
+
+                <h3>Step 3: Define Vault Folder Structure</h3>
+
+                <p>Organize AI outputs with a clear folder hierarchy:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>obsidian-vault/
+├── ai-research/       # Research agent outputs
+├── meetings/          # Transcribed meetings
+├── code-reviews/      # Code review findings
+├── daily/             # Daily digests
+├── decisions/         # Decision logs
+└── agent-logs/        # General agent outputs</code></pre>
+
+                <p>Each folder gets specific tags and frontmatter fields. This makes filtering and querying easy.</p>
+
+                <h3>Step 4: Connect AI Output to Existing Knowledge</h3>
+
+                <p>Use Obsidian features to integrate AI outputs:</p>
+
+                <p><strong>Backlinks</strong>: Reference existing notes in AI-generated content. If your research agent finds something about "retrieval augmented generation", link to your existing <code>[[RAG]]</code> note.</p>
+
+                <p><strong>Tags</strong>: Use consistent tags across human and AI notes. <code>#ai-research</code> applies to both your manual research notes and agent outputs.</p>
+
+                <p><strong>Dataview queries</strong>: Create dashboard notes that aggregate AI outputs:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>TABLE tags, source, date
+FROM "ai-research"
+WHERE source = "research-agent"
+SORT date DESC
+LIMIT 10</code></pre>
+
+                <p><strong>Graph view</strong>: Watch how AI outputs connect to your knowledge graph. Agent-generated notes become nodes that link to concepts, projects, and decisions.</p>
+
+                <h2>Obsidian AI Automation: Advanced Patterns</h2>
+
+                <p>Once the basic pipeline works, you can build more sophisticated workflows:</p>
+
+                <p><strong>Append mode for ongoing tasks</strong>: Use <code>"mode": "append"</code> to add to existing notes. Daily standup agent appends to today's note instead of creating duplicates.</p>
+
+                <p><strong>Conditional delivery</strong>: Agent decides whether output is worth saving. Low-confidence results don't clutter your vault.</p>
+
+                <p><strong>Multi-vault routing</strong>: Different agents write to different Obsidian vaults. Work projects to work vault, personal research to personal vault.</p>
+
+                <p><strong>Batch processing</strong>: Queue multiple agent outputs and deliver them together. Reduces notification noise.</p>
+
+                <p><strong>Template-based formatting</strong>: Store markdown templates in your vault, reference them in webhook calls. Ensures consistent note structure.</p>
+
+                <p>For more automation ideas and ready-to-use configurations, check out our <a href="/guides/webhook-recipes">10 Automation Recipes</a>.</p>
+
+                <h2>Privacy and Security: Your Data Stays Yours</h2>
+
+                <p>The webhook approach keeps your data under control:</p>
+
+                <p><strong>AES-256-GCM encryption</strong>: Data encrypted in transit between agent and server, server and Obsidian.</p>
+
+                <p><strong>Self-hosted option</strong>: Run webhook server on your own infrastructure. No third-party sees your AI outputs.</p>
+
+                <p><strong>Webhook key authentication</strong>: Only agents with your key can write to your vault.</p>
+
+                <p><strong>Local-first storage</strong>: Obsidian stores everything as markdown files on your machine. No cloud dependency.</p>
+
+                <p><strong>Audit trail</strong>: Server logs all deliveries. You can see exactly what was sent and when.</p>
+
+                <p>This matters for sensitive AI outputs. Code reviews with proprietary code, research on confidential topics, meeting transcripts with private discussions. Everything stays in your control.</p>
+
+                <h2>Obsidian Claude Integration and Other AI Tools</h2>
+
+                <p>The webhook approach works with any AI tool that can send HTTP requests:</p>
+
+                <p><strong>Claude API</strong>: Use Anthropic's API in your agent, send results via webhook.</p>
+
+                <p><strong>OpenAI GPT</strong>: Same pattern. API call, process results, webhook delivery.</p>
+
+                <p><strong>Open-source models</strong>: Run Llama, Mistral, or other models locally, send outputs to Obsidian.</p>
+
+                <p><strong>Langchain agents</strong>: Add webhook call to agent callbacks or final output step.</p>
+
+                <p><strong>n8n/Zapier workflows</strong>: Use webhook as final step in automation. AI processes data, webhook delivers to Obsidian. See <a href="/guides/webhook-recipes">10 Automation Recipes</a> for ready-to-use examples.</p>
+
+                <p><strong>Custom agents</strong>: Any code that makes HTTP requests works. Python, JavaScript, Go, Rust. Language doesn't matter.</p>
+
+                <p>Example with Claude:</p>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>import anthropic
+import requests
+
+def claude_research_to_obsidian(topic):
+    client = anthropic.Anthropic(api_key="YOUR_KEY")
+
+    message = client.messages.create(
+        model="claude-sonnet-4-5-20250929",
+        max_tokens=2000,
+        messages=[{
+            "role": "user",
+            "content": f"Research {topic} and provide a structured summary with key points and sources."
+        }]
+    )
+
+    send_to_obsidian(
+        title=f"Claude Research - {topic}",
+        content=message.content[0].text,
+        tags=["claude", "ai-research"],
+        folder="ai-research"
+    )</code></pre>
+
+                <h2>Getting Started: Deploy Your First AI to Obsidian Integration</h2>
+
+                <p>Ready to automate your AI knowledge capture? Here's your checklist:</p>
+
+                <ol>
+                    <li><strong>Set up webhook server</strong>: Visit <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server">github.com/khabaroff-studio/obsidian-webhooks-server</a> and follow the setup guide</li>
+                    <li><strong>Install Obsidian plugin</strong>: Get the companion plugin from Obsidian community plugins (search "Webhooks")</li>
+                    <li><strong>Test delivery</strong>: Send a test webhook with <code>curl</code>:</li>
+                </ol>
+
+                <pre class="bg-ink-dark text-[#e5e5e5] p-5 text-sm leading-relaxed overflow-x-auto"><code>curl -X POST https://your-server/api/webhook/YOUR_KEY \
+  -H "Content-Type: application/json" \
+  -d '{"filename":"Test Note","folder":"tests","content":"# Hello from AI","mode":"create"}'</code></pre>
+
+                <ol start="4">
+                    <li><strong>Integrate with your agent</strong>: Add webhook call to your AI agent code</li>
+                    <li><strong>Define folder structure</strong>: Create folders in your vault for different agent types</li>
+                    <li><strong>Start capturing</strong>: Run your agent, watch output appear in Obsidian</li>
+                </ol>
+
+                <p>The full setup guide with configuration options and troubleshooting is available at <a href="https://obsidian-webhooks.khabaroff.studio">obsidian-webhooks.khabaroff.studio</a>. For step-by-step Docker deployment, see the <a href="/guides/self-hosted-webhooks-setup">Self-Hosted Setup Guide</a>.</p>
+
+                <h2>The Future of AI Knowledge Management</h2>
+
+                <p>AI agents are getting more capable. They'll run longer, make more decisions, generate more insights. The question isn't whether to use AI agents, it's how to capture their outputs without drowning in unstructured data.</p>
+
+                <p>Obsidian AI integration via webhooks gives you structured, searchable, interconnected AI outputs. Every agent run builds your knowledge base instead of vanishing into chat history.</p>
+
+                <p>Your AI agents should work for your knowledge graph, not against it. Start with one agent, one webhook, one folder in Obsidian. Then scale as you add more agents and workflows.</p>
+
+                <p>The code is open source. The webhook server is self-hostable. Your data stays yours. Build the AI knowledge pipeline you actually need.</p>
+
+            </div>
+        </section>
+
+        <!-- ==================== FAQ ==================== -->
+        <section class="border-t border-line bg-white py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-3xl mx-auto flex flex-col gap-8">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Frequently Asked Questions</h2>
+
+                <!-- FAQ 1 -->
+                <div class="border border-line fade-in stagger-1">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Which AI frameworks support webhook output?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        All major frameworks support webhooks through standard HTTP requests. Langchain has callback handlers where you add webhook calls. Llama Index provides output processors. Anthropic Claude and OpenAI GPT work with simple <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">requests.post()</code> after API responses. Even low-code tools like n8n and Zapier have built-in webhook nodes. Any agent that can execute HTTP POST requests can integrate with Obsidian webhooks.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-line fade-in stagger-2">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Can I send structured data (not just text) from AI agents?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        Yes, webhook payloads accept JSON objects with structured frontmatter. Your agent can send arrays (lists of tags, attendees), nested objects (metadata hierarchies), and boolean flags. These become YAML frontmatter in Obsidian notes. For example, research agents send <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">{"tags": ["ai", "rag"], "confidence": 0.87, "sources": [...]}</code> and it maps directly to queryable frontmatter fields.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-line fade-in stagger-3">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>How do I prevent duplicate notes from AI agents?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        Use consistent filename patterns and check before sending. For daily digests, use date-based filenames like "Daily Digest - 2026-02-26". For task-based agents, include unique identifiers ("PR-1234 Review"). The webhook server supports <code class="bg-paper-warm px-1.5 py-0.5 font-mono text-ink">mode: "append"</code> to add content to existing notes instead of creating duplicates. You can also query your vault via REST API before sending webhooks to check if a note exists.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-line fade-in stagger-4">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Does the webhook server support batch operations?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        Yes, send multiple webhook payloads in sequence or implement batch endpoints in your agent code. The server queues all incoming webhooks in PostgreSQL and delivers them efficiently when Obsidian connects. For large batches (100+ notes), consider rate limiting your agent to avoid overwhelming the queue. The server handles concurrent requests and guarantees delivery order.
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-line fade-in stagger-1">
+                    <label class="flex items-center justify-between p-5 cursor-pointer text-lg font-semibold text-ink hover:text-accent transition-colors">
+                        <span>Can AI agents read notes from Obsidian via webhooks?</span>
+                        <input type="checkbox" class="faq-toggle hidden">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </label>
+                    <div class="faq-answer px-5 text-ink-soft leading-[1.7]">
+                        No, webhooks are write-only. AI agents can't retrieve note content through webhook endpoints. If your agent needs to read existing notes (for context-aware updates or retrieval augmented generation), you must use the Local REST API plugin alongside webhooks. Many users run both: REST API provides read access for agents, webhooks handle write operations for outputs. See our <a href="/guides/rest-api-vs-webhooks" class="text-accent hover:underline">REST API vs Webhooks</a> guide for a detailed comparison.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Other Guides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/guides/how-it-works" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">How It Works</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Architecture, setup, integration examples</p>
+                        <span class="text-xs text-ink-muted">8 min read</span>
+                    </a>
+                    <a href="/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">How to Receive External Data in Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Complete guide to sending data to Obsidian</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                    <a href="/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted Obsidian Webhooks: Setup Guide</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Step-by-step tutorial with Docker</p>
+                        <span class="text-xs text-ink-muted">18 min read</span>
+                    </a>
+                    <a href="/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">10 Automation Recipes</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Copy-paste webhook recipes for Zapier, Make, n8n, IFTTT</p>
+                        <span class="text-xs text-ink-muted">11 min read</span>
+                    </a>
+                    <a href="/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">When to use pull vs push architecture</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-ink-dark text-white px-6 md:px-16 lg:px-[120px] pt-[60px] pb-[60px]">
+        <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between gap-12">
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display text-lg font-bold text-white uppercase">Obsidian Webhooks</h3>
+                    <p class="text-sm text-ink-muted">Webhook delivery to Obsidian</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-status"></span>
+                        <span class="text-sm text-ink-muted">Operational</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-16 md:gap-20">
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
+                        <a href="/guides/" class="footer-link text-sm text-white transition-colors">Guides</a>
+                        <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Resources</h4>
+                        <a href="/health" class="footer-link text-sm text-white transition-colors">Health Check</a>
+                        <a href="/info" class="footer-link text-sm text-white transition-colors">API Info</a>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="h-px bg-[#333333]"></div>
+            <div class="flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#555555]">
+                <span>2026 Obsidian Webhooks</span>
+                <span>A product by Khabaroff.Studio</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        document.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.textContent = 'Copy';
+            btn.className = 'copy-btn ' + (pre.classList.contains('bg-ink-dark') ? 'dark' : 'light');
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+            pre.appendChild(btn);
+        });
+        // Mobile menu
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            burgerBtn.setAttribute('aria-expanded', isOpen);
+            burgerBtn.innerHTML = isOpen
+                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+        });
+    </script>
+</body>
+</html>

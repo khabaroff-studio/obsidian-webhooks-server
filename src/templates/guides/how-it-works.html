@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How It Works — Obsidian Webhooks</title>
     <meta name="description" content="Architecture, setup, integration examples — all on one page. How Obsidian Webhooks delivers events from external services to your vault.">
-    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
-    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
-    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/how-it-works">
-    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+    <link rel="canonical" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works">
+    <link rel="alternate" hreflang="en" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works">
+    <link rel="alternate" hreflang="ru" href="https://obsidian-webhooks.khabaroff.studio/ru/guides/how-it-works">
+    <link rel="alternate" hreflang="x-default" href="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works">
 
     <!-- Open Graph -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="How It Works — Obsidian Webhooks">
     <meta property="og:description" content="Architecture, setup, and integration examples. How Obsidian Webhooks delivers events from external services to your vault.">
-    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/how-it-works">
+    <meta property="og:url" content="https://obsidian-webhooks.khabaroff.studio/guides/how-it-works">
     <meta property="og:image" content="https://obsidian-webhooks.khabaroff.studio/assets/og-image.png">
     <meta property="og:site_name" content="Obsidian Webhooks">
 
@@ -27,6 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/guides.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -54,53 +55,6 @@
             },
         }
     </script>
-
-    <style>
-        html { scroll-behavior: smooth; }
-        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        ::selection { background: #7C3AED; color: white; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fadeInUp 0.6s ease forwards; }
-        .animate-delay-1 { animation-delay: 0.1s; }
-        .animate-delay-2 { animation-delay: 0.2s; }
-        .animate-delay-3 { animation-delay: 0.3s; }
-
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
-        .stagger-4 { transition-delay: 0.4s; }
-
-        .btn-lift { transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease; }
-        .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-
-        .arrow-nudge { transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1); display: inline-block; }
-        .btn-lift:hover .arrow-nudge,
-        a:hover .arrow-nudge { transform: translateX(4px); }
-
-        .card-hover:hover { border-color: #0a0a0a; }
-
-        .footer-link { position: relative; }
-        .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #7C3AED; transition: width 0.3s ease; }
-        .footer-link:hover::after { width: 100%; }
-
-        code { font-family: 'SF Mono', 'Fira Code', monospace; }
-        pre { overflow-x: auto; position: relative; }
-        .copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 8px; font-size: 11px; font-family: inherit; border: none; border-radius: 4px; cursor: pointer; opacity: 0; transition: opacity 0.2s ease; }
-        pre:hover .copy-btn { opacity: 1; }
-        .copy-btn.light { background: #e5e5e5; color: #444; }
-        .copy-btn.light:hover { background: #d4d4d4; }
-        .copy-btn.dark { background: #333; color: #aaa; }
-        .copy-btn.dark:hover { background: #444; }
-
-        #mobileMenu { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.2s ease; }
-        #mobileMenu.open { max-height: 320px; opacity: 1; }
-    </style>
 </head>
 <body class="font-body text-ink bg-paper">
 
@@ -111,7 +65,7 @@
                 Obsidian Webhooks
             </a>
             <nav class="flex items-center gap-4 md:gap-8">
-                <a href="/how-it-works" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">How It Works</a>
+                <a href="/guides/" class="hidden md:block text-xs font-medium text-ink hover:text-accent transition-colors">Guides</a>
                 <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="hidden md:flex items-center gap-1.5 text-xs font-medium text-ink hover:text-accent transition-colors">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
@@ -120,7 +74,7 @@
                 <span class="hidden lg:flex items-center gap-1.5 text-xs">
                     <span class="text-ink font-semibold">EN</span>
                     <span class="text-line">|</span>
-                    <a href="/ru" class="text-ink-muted hover:text-ink transition-colors">RU</a>
+                    <a href="/ru/guides/how-it-works" class="text-ink-muted hover:text-ink transition-colors">RU</a>
                 </span>
                 <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
                     <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
@@ -135,7 +89,7 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="fixed top-[72px] left-0 right-0 bg-white/95 backdrop-blur-md border-b border-line z-40 md:hidden">
         <div class="flex flex-col px-6 py-5 gap-4">
-            <a href="/how-it-works" class="text-sm font-medium text-ink hover:text-accent transition-colors">How It Works</a>
+            <a href="/guides/" class="text-sm font-medium text-ink hover:text-accent transition-colors">Guides</a>
             <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm font-medium text-ink hover:text-accent transition-colors">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                 GitHub
@@ -144,7 +98,7 @@
             <div class="flex items-center gap-2 pt-2 border-t border-line">
                 <span class="text-sm text-ink font-semibold">EN</span>
                 <span class="text-sm text-line">|</span>
-                <a href="/ru" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
+                <a href="/ru/guides/how-it-works" class="text-sm text-ink-muted hover:text-ink transition-colors">RU</a>
             </div>
         </div>
     </div>
@@ -153,8 +107,9 @@
         <!-- ==================== HERO ==================== -->
         <section class="bg-white pt-[120px] sm:pt-[140px] pb-16 sm:pb-[80px] px-5 sm:px-6 md:px-16 lg:px-[120px]">
             <div class="max-w-[1440px] mx-auto flex flex-col gap-4">
-                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in">How Obsidian Webhooks Works</h1>
-                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-1">Architecture, setup, integration examples — all on one page</p>
+                <a href="/guides/" class="text-sm text-accent hover:underline opacity-0 animate-fade-in">&larr; All Guides</a>
+                <h1 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight opacity-0 animate-fade-in animate-delay-1">How Obsidian Webhooks Works</h1>
+                <p class="text-lg text-ink-soft leading-[1.7] opacity-0 animate-fade-in animate-delay-2">Architecture, setup, integration examples — all on one page</p>
             </div>
         </section>
 
@@ -183,7 +138,7 @@
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
                 <div>
                     <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Quick Start</h2>
-                    <p class="text-lg text-ink-soft mt-3">From signup to your first note in vault — 5 minutes</p>
+                    <p class="text-lg text-ink-soft mt-3">From signup to your first note in vault — 5 minutes. See also: <a href="/guides/self-hosted-webhooks-setup" class="text-accent hover:underline">Self-Hosted Setup Guide</a></p>
                 </div>
 
                 <!-- Step 1 -->
@@ -226,7 +181,7 @@
   "https://obsidian-webhooks.khabaroff.studio/webhook/{your_webhook_key}?path=inbox/test.md" \
   -H "Content-Type: application/json" \
   -d '{"content": "# First note\n\nSent via webhook!"}'</code></pre>
-                    <p class="text-lg text-ink-soft leading-[1.7]">A note will appear in your vault within 1-3 seconds at <code class="bg-paper-warm px-1.5 py-0.5 font-mono">inbox/test.md</code>.</p>
+                    <p class="text-lg text-ink-soft leading-[1.7]">A note will appear in your vault within 1-3 seconds at <code class="bg-paper-warm px-1.5 py-0.5 font-mono">inbox/test.md</code>. For more examples, see <a href="/guides/webhook-recipes" class="text-accent hover:underline">10 Automation Recipes</a>.</p>
                     <div class="flex flex-col gap-2 text-lg text-ink-muted">
                         <p class="text-ink-soft font-medium">Server response:</p>
                         <p><code class="text-ink bg-paper-warm px-1.5 py-0.5">200 OK</code> — content accepted and queued</p>
@@ -279,7 +234,7 @@ Content-Type: application/json
             <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
                 <div>
                     <h2 class="font-display text-4xl md:text-[56px] font-bold text-ink leading-tight">Integration Examples</h2>
-                    <p class="text-lg text-ink-soft mt-3">Works with any service that supports HTTP POST</p>
+                    <p class="text-lg text-ink-soft mt-3">Works with any service that supports HTTP POST. See <a href="/guides/webhook-recipes" class="text-accent hover:underline">10 ready-to-use recipes</a> for Zapier, Make, n8n, and more.</p>
                 </div>
 
                 <div class="flex flex-col gap-8">
@@ -373,6 +328,40 @@ def handle_message(update, context):
                 </div>
             </div>
         </section>
+
+        <!-- ==================== OTHER GUIDES ==================== -->
+        <section class="border-t border-line bg-paper-warm py-20 px-6 md:px-16 lg:px-[120px]">
+            <div class="max-w-[1440px] mx-auto flex flex-col gap-12">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-ink leading-tight">Other Guides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="/guides/receive-data-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">How to Receive External Data in Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Complete guide to sending data to Obsidian from external services using webhooks.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                    <a href="/guides/self-hosted-webhooks-setup" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">Self-Hosted Obsidian Webhooks: Setup Guide</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Step-by-step tutorial for setting up your own webhook server with Docker.</p>
+                        <span class="text-xs text-ink-muted">18 min read</span>
+                    </a>
+                    <a href="/guides/webhook-recipes" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-3">
+                        <h3 class="font-body text-lg font-bold text-ink">10 Automation Recipes</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Copy-paste webhook recipes for Zapier, Make, n8n, IFTTT with JSON payloads.</p>
+                        <span class="text-xs text-ink-muted">11 min read</span>
+                    </a>
+                    <a href="/guides/ai-agents-obsidian" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-1">
+                        <h3 class="font-body text-lg font-bold text-ink">Connect AI Agents to Obsidian</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Integrate Claude, GPT, and custom agents with your knowledge base via webhooks.</p>
+                        <span class="text-xs text-ink-muted">14 min read</span>
+                    </a>
+                    <a href="/guides/rest-api-vs-webhooks" class="card-hover border border-line bg-white p-6 flex flex-col gap-3 fade-in stagger-2">
+                        <h3 class="font-body text-lg font-bold text-ink">REST API vs Webhooks</h3>
+                        <p class="text-sm text-ink-soft leading-relaxed">Comparison guide: when to use Local REST API plugin vs Webhooks Server.</p>
+                        <span class="text-xs text-ink-muted">12 min read</span>
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- ==================== FOOTER ==================== -->
@@ -391,7 +380,7 @@ def handle_message(update, context):
                     <div class="flex flex-col gap-4">
                         <h4 class="text-xs font-semibold text-ink-muted uppercase">Product</h4>
                         <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server/releases" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Download Plugin</a>
-                        <a href="/how-it-works" class="footer-link text-sm text-white transition-colors">How it works</a>
+                        <a href="/guides/" class="footer-link text-sm text-white transition-colors">Guides</a>
                         <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="footer-link flex items-center gap-2 text-sm text-white transition-colors">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                             GitHub
