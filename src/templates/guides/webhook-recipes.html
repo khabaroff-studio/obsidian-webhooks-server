@@ -459,12 +459,6 @@
 
                 <p class="text-lg text-ink-soft leading-[1.7] mt-6">Webhook automation turns Obsidian into a universal inbox for your digital life. Whether you're tracking GitHub issues, archiving Slack conversations, or logging AI interactions, these recipes give you a starting point to build your own automation workflows.</p>
 
-                <div class="mt-8">
-                    <a href="/login" class="btn-lift bg-ink text-white text-sm font-medium px-7 py-3 inline-flex items-center gap-2 hover:bg-accent">
-                        <span class="arrow-nudge">&#8594;</span> Get API Keys
-                    </a>
-                </div>
-
             </div>
         </section>
 
@@ -637,10 +631,12 @@
         // FAQ accordion
         document.querySelectorAll('.faq-toggle').forEach(btn => {
             const answer = btn.nextElementSibling;
-            answer.style.display = 'none';
             btn.addEventListener('click', () => {
-                const isOpen = answer.style.display !== 'none';
-                answer.style.display = isOpen ? 'none' : 'block';
+                const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+                answer.style.maxHeight = isOpen ? '0' : '500px';
+                answer.style.opacity = isOpen ? '0' : '1';
+                answer.style.paddingTop = isOpen ? '0' : '8px';
+                answer.style.paddingBottom = isOpen ? '0' : '16px';
                 btn.setAttribute('aria-expanded', !isOpen);
                 btn.querySelector('svg').style.transform = isOpen ? '' : 'rotate(180deg)';
             });

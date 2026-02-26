@@ -30,7 +30,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 a:hover .arrow-nudge { transform: translateX(4px); }
 
 /* Cards */
-.card-hover { transition: border-color 0.2s ease; }
+.card-hover { transition: border-color 0.2s ease; cursor: pointer; }
 .card-hover:hover { border-color: #0a0a0a; }
 
 /* Footer links */
@@ -71,5 +71,11 @@ pre:hover .copy-btn { opacity: 1; }
 .guide-prose hr { border: none; border-top: 1px solid #e5e5e5; margin: 2rem 0; }
 
 /* FAQ accordion */
-.faq-toggle:checked + .faq-answer { max-height: 500px; opacity: 1; padding-top: 8px; padding-bottom: 16px; }
 .faq-answer { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease; }
+/* Checkbox inside label (most pages) */
+label:has(.faq-toggle:checked) + .faq-answer { max-height: 500px; opacity: 1; padding-top: 8px; padding-bottom: 16px; }
+/* Checkbox as sibling (webhook-recipes_ru) */
+.faq-toggle:checked ~ .faq-answer { max-height: 500px; opacity: 1; padding-top: 8px; padding-bottom: 16px; }
+/* Chevron rotation */
+label:has(.faq-toggle:checked) svg { transform: rotate(180deg); }
+.faq-toggle:checked + label svg { transform: rotate(180deg); }
