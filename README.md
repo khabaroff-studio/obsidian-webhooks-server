@@ -196,6 +196,10 @@ plugin/                      # Obsidian plugin (TypeScript)
 - **Request body limits** via `io.LimitReader` (10 MB)
 - **Mutex protection** for SSE client map
 
+## Acknowledgments
+
+Inspired by [obsidian-webhooks](https://github.com/trashhalo/obsidian-webhooks) by [@trashhalo](https://github.com/trashhalo) — the original proof of concept for webhook-driven Obsidian workflows.
+
 ## License
 
 MIT

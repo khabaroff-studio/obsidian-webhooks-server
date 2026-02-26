@@ -109,8 +109,9 @@
         #mobileMenu.open { max-height: 320px; opacity: 1; }
     </style>
 
-    <!-- PostHog Analytics -->
+    <!-- PostHog Analytics (disabled on localhost) -->
     <script>
+    if (!['localhost','127.0.0.1'].includes(location.hostname)) {
         !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
         posthog.init('phc_cBBWO6SRttjXK3we3pCcBe1qZHpoeZTh114PjWErKoc', {
             api_host: 'https://eu.i.posthog.com',
@@ -121,6 +122,7 @@
             enable_heatmaps: false,
             capture_performance: false,
         })
+    }
     </script>
 
     <script type="application/ld+json">
@@ -414,13 +416,22 @@
                             <p class="text-lg text-ink-soft leading-[1.7] pt-3">Да. Создайте отдельную пару ключей для&nbsp;каждого волта &#8212; у&nbsp;каждого будет свой webhook URL и&nbsp;своя очередь доставки. Можно также разделять ключи по&nbsp;сервисам: если один скомпрометирован, отзываете только его.</p>
                         </div>
                     </div>
-                    <div class="faq-item py-6 fade-in stagger-4">
+                    <div class="faq-item py-6 border-b border-line fade-in stagger-4">
                         <div class="faq-trigger flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-ink-dark">Какие данные вы собираете?</h3>
                             <span class="faq-icon text-ink-muted select-none">+</span>
                         </div>
                         <div class="faq-answer">
                             <p class="text-lg text-ink-soft leading-[1.7] pt-3"><strong>Лендинг:</strong> анонимные просмотры страниц и&nbsp;клики по&nbsp;кнопкам через PostHog (серверы в&nbsp;EU). Без записи экрана, без персональных данных. <strong>Сервер:</strong> ваш email (для аутентификации), очередь доставки вебхуков (зашифрована AES-256, удаляется после подтверждения доставки). <strong>Плагин:</strong> не&nbsp;собирает ничего. Ноль аналитики, ноль телеметрии. Мы&nbsp;не&nbsp;продаём данные. Весь код открыт &#8212; проверьте сами.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item py-6 fade-in stagger-4">
+                        <div class="faq-trigger flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-ink-dark">Это связано с&nbsp;obsidian-webhooks от&nbsp;@trashhalo?</h3>
+                            <span class="faq-icon text-ink-muted select-none">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-lg text-ink-soft leading-[1.7] pt-3">Да. Этот проект вдохновлён <a href="https://github.com/trashhalo/obsidian-webhooks" target="_blank" rel="noopener" class="text-accent hover:underline">obsidian-webhooks</a> от&nbsp;@trashhalo &#8212; оригинальным proof of&nbsp;concept, который показал, что вебхуки + Obsidian &#8212; отличная идея. Мы&nbsp;пересобрали всё с&nbsp;нуля как полноценное self-hosted решение с&nbsp;шифрованием, аутентификацией, exactly-once доставкой и&nbsp;возможностью managed-хостинга.</p>
                         </div>
                     </div>
                 </div>
