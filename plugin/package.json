@@ -1,6 +1,6 @@
 {
 	"name": "webhooks-v2",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Receive webhooks and create/update notes in your vault via self-hosted Go server with real-time SSE updates",
 	"main": "main.js",
 	"scripts": {

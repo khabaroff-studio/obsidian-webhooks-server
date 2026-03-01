@@ -1,7 +1,7 @@
 {
 	"id": "webhooks-v2",
 	"name": "Webhooks V2",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "Receive webhooks from external services and create notes in your vault via a self-hosted server with real-time delivery.",
 	"author": "khabaroff",
