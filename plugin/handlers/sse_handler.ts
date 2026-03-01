@@ -92,9 +92,8 @@ export class SSEHandler {
 	 * If already connected, the existing connection will be closed first.
 	 * Creates an EventSource and sets up event handlers.
 	 *
-	 * @returns Promise<void>
 	 */
-	async connect(): Promise<void> {
+	connect(): void {
 		// If already connected, disconnect first
 		if (this.eventSource) {
 			this.disconnect();

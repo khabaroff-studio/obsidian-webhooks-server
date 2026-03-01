@@ -214,7 +214,7 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 			// Then: Establish SSE connection for real-time events
 			this.log("Establishing SSE connection...");
 			if (this.sseHandler) {
-				await this.sseHandler.connect();
+				this.sseHandler.connect();
 			}
 
 			// Start periodic polling if enabled

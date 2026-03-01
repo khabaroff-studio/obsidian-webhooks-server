@@ -131,7 +131,7 @@ describe("SSEHandler", () => {
 	 * Test 1: Connection establishment
 	 */
 	test("should establish SSE connection with correct URL", async () => {
-		await handler.connect();
+		handler.connect();
 
 		// Wait for connection to open (mock opens async after 10ms)
 		await new Promise((resolve) => setTimeout(resolve, 20));
@@ -146,7 +146,7 @@ describe("SSEHandler", () => {
 	 * Test 2: Event parsing from SSE stream
 	 */
 	test("should parse and handle events from SSE stream", async () => {
-		await handler.connect();
+		handler.connect();
 
 		// Wait for connection to open
 		await new Promise((resolve) => setTimeout(resolve, 20));
@@ -176,7 +176,7 @@ describe("SSEHandler", () => {
 	 * Test 3: Disconnection
 	 */
 	test("should cleanly disconnect and close EventSource", async () => {
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		const instance = MockEventSource.getLatest();
@@ -192,7 +192,7 @@ describe("SSEHandler", () => {
 	 * Test 4: Error handling
 	 */
 	test("should handle SSE errors gracefully", async () => {
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		const instance = MockEventSource.getLatest();
@@ -225,7 +225,7 @@ describe("SSEHandler", () => {
 			{ autoReconnect: true, reconnectDelayMs: 50 }
 		);
 
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		const firstInstance = MockEventSource.getLatest();
@@ -248,7 +248,7 @@ describe("SSEHandler", () => {
 	 * Test 6: Connection state callbacks
 	 */
 	test("should invoke state change callbacks correctly", async () => {
-		await handler.connect();
+		handler.connect();
 
 		// Wait for connection
 		await new Promise((resolve) => setTimeout(resolve, 20));
@@ -269,7 +269,7 @@ describe("SSEHandler", () => {
 	 * Test 7: Multiple events in sequence
 	 */
 	test("should handle multiple events in sequence", async () => {
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		const instance = MockEventSource.getLatest();
@@ -310,7 +310,7 @@ describe("SSEHandler", () => {
 	 * Test 8: Invalid JSON handling
 	 */
 	test("should handle invalid JSON gracefully", async () => {
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		const instance = MockEventSource.getLatest();
@@ -332,7 +332,7 @@ describe("SSEHandler", () => {
 		expect(handler.isConnected()).toBe(false);
 
 		// Connect
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		// Should be connected
@@ -349,13 +349,13 @@ describe("SSEHandler", () => {
 	 * Test 10: Prevent multiple simultaneous connections
 	 */
 	test("should prevent multiple simultaneous connections", async () => {
-		await handler.connect();
+		handler.connect();
 		await new Promise((resolve) => setTimeout(resolve, 20));
 
 		const firstInstanceCount = MockEventSource.getInstances().length;
 
 		// Try to connect again
-		await handler.connect();
+		handler.connect();
 
 		// Should not create a new instance (should use existing or replace)
 		const secondInstanceCount = MockEventSource.getInstances().length;
