@@ -43,7 +43,7 @@ welcome:
   now_you_can: "What you can do:"
   button_text: "Open Dashboard"
   next_steps_title: "Quick start:"
-  help_text: "Questions? Check the <a href=\"https://github.com/khabaroff-studio/obsidian-webhooks-server\" style=\"color: #0a0a0a; font-weight: 600;\">docs on GitHub</a> or reply to this email."
+  help_text: "Questions? Check the <a href=\"https://obsidian-webhooks.khabaroff.studio/guides/\" style=\"color: #0a0a0a; font-weight: 600;\">guides</a> or reply to this email."
 
   features:
     - icon: ""

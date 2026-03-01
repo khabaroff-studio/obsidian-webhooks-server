@@ -14,7 +14,7 @@
 
 Open your dashboard: {{.DashboardUrl}}
 
-Questions? Check the docs on GitHub or reply to this email.
+Questions? Check the guides at https://obsidian-webhooks.khabaroff.studio/guides/ or reply to this email.
 
 —
 {{.BrandName}}
