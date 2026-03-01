@@ -44,7 +44,7 @@ func getDefaultEmailConfig() *templates.EmailConfig {
 			Tagline:      "Webhook delivery to Obsidian",
 			Website:      "https://obsidian-webhooks.khabaroff.studio",
 			DashboardURL: "https://obsidian-webhooks.khabaroff.studio/dashboard",
-			DocsURL:      "https://github.com/khabaroff-studio/obsidian-webhooks-server",
+			DocsURL:      "https://obsidian-webhooks.khabaroff.studio/guides/",
 		},
 		Design: struct {
 			PrimaryColor  string `yaml:"primary_color"`
