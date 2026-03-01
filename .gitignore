@@ -36,6 +36,12 @@ go.work
 .LSOverride
 ._*
 
+# Node modules
+node_modules/
+
+# Tailwind intermediate file
+src/templates/assets/tailwind-input.css
+
 # Plugin build artifacts
 plugin/node_modules/
 plugin/main.js
@@ -55,6 +61,7 @@ logs/
 tmp/
 temp/
 *.tmp
+openspec/
 
 # Database dumps
 *.sql.backup

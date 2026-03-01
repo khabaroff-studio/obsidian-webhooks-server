@@ -1,4 +1,4 @@
-.PHONY: test test-verbose test-coverage vet fmt lint build clean
+.PHONY: test test-verbose test-coverage vet fmt lint build clean css
 
 # Run all tests
 test:
@@ -38,6 +38,10 @@ build:
 clean:
 	rm -rf bin/
 	rm -f coverage.out coverage.html
+
+# Build Tailwind CSS
+css:
+	npx tailwindcss -i src/templates/assets/tailwind-input.css -o src/templates/assets/tailwind.css --minify
 
 # Install development tools
 install-tools:

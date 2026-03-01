@@ -24,36 +24,27 @@
     <meta name="twitter:title" content="Guides — Obsidian Webhooks">
     <meta name="twitter:description" content="Guides and tutorials for Obsidian Webhooks.">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/fonts.css">
     <link rel="stylesheet" href="/assets/guides.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/tailwind.css">
+
+    <!-- PostHog Analytics (disabled on localhost) -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ['Oswald', 'sans-serif'],
-                        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                    },
-                    colors: {
-                        ink: '#0a0a0a',
-                        'ink-soft': '#444444',
-                        'ink-muted': '#777777',
-                        'ink-dark': '#1a1a1a',
-                        accent: '#7C3AED',
-                        line: '#e5e5e5',
-                        paper: '#FFFFFF',
-                        'paper-warm': '#f5f5f5',
-                        'paper-cta': '#f7f7f7',
-                        github: '#24292e',
-                        status: '#22c55e',
-                    },
-                },
-            },
-        }
+    if (!['localhost','127.0.0.1'].includes(location.hostname)) {
+        (window.requestIdleCallback || setTimeout)(function() {
+            !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+            posthog.init('phc_cBBWO6SRttjXK3we3pCcBe1qZHpoeZTh114PjWErKoc', {
+                api_host: 'https://eu.i.posthog.com',
+                autocapture: false,
+                capture_pageview: true,
+                capture_pageleave: true,
+                disable_session_recording: true,
+                enable_heatmaps: false,
+                capture_performance: false,
+            })
+        });
+    }
     </script>
 </head>
 <body class="font-body text-ink bg-paper">
@@ -76,7 +67,7 @@
                     <span class="text-line">|</span>
                     <a href="/ru/guides/" class="text-ink-muted hover:text-ink transition-colors">RU</a>
                 </span>
-                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"header_keys","location":"header"}'>
                     <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Get API Keys</span>
                 </a>
                 <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Open menu" aria-expanded="false">
@@ -215,7 +206,7 @@
                     </div>
                     <div class="flex flex-col gap-4">
                         <h4 class="text-xs font-semibold text-ink-muted uppercase">Contact</h4>
-                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"telegram","location":"footer"}'>Telegram</a>
                     </div>
                 </div>
             </div>
@@ -244,6 +235,19 @@
                 ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
                 : '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>';
         });
+    </script>
+
+    <!-- PostHog event tracking -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-ph-event]').forEach(function(el) {
+            el.addEventListener('click', function() {
+                const evt = this.getAttribute('data-ph-event');
+                const props = JSON.parse(this.getAttribute('data-ph-properties') || '{}');
+                if (window.posthog) posthog.capture(evt, props);
+            });
+        });
+    });
     </script>
 </body>
 </html>
