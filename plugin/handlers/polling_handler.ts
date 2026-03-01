@@ -5,6 +5,7 @@
  * or as a complementary sync mechanism alongside SSE.
  */
 
+import { requestUrl } from "obsidian";
 import type { WebhookEvent } from "../types";
 
 /**
@@ -21,7 +22,7 @@ export class PollingHandler {
 	private clientKey: string;
 	private onEvent: EventCallback;
 	private polling: boolean = false;
-	private pollingTimer: NodeJS.Timeout | null = null;
+	private pollingTimer: ReturnType<typeof setInterval> | null = null;
 	private defaultIntervalMs: number = 5000; // 5 seconds default
 
 	/**
@@ -46,16 +47,14 @@ export class PollingHandler {
 	async pollOnce(): Promise<void> {
 		try {
 			const url = `${this.serverUrl}/events/${this.clientKey}?poll=true`;
-			const response = await fetch(url);
+			const response = await requestUrl({ url, method: "GET", throw: false });
 
-			if (!response.ok) {
-				console.error(
-					`Polling failed: ${response.status} ${response.statusText}`
-				);
+			if (response.status < 200 || response.status >= 300) {
+				console.error(`Polling failed: ${response.status}`);
 				return;
 			}
 
-			const events: WebhookEvent[] = await response.json();
+			const events = response.json as WebhookEvent[];
 
 			// Process each event through the callback
 			for (const event of events) {
@@ -93,11 +92,11 @@ export class PollingHandler {
 		const interval = intervalMs ?? this.defaultIntervalMs;
 
 		// Poll immediately on start
-		this.pollOnce();
+		void this.pollOnce();
 
 		// Set up recurring poll
 		this.pollingTimer = setInterval(() => {
-			this.pollOnce();
+			void this.pollOnce();
 		}, interval);
 	}
 

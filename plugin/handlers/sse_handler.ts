@@ -60,7 +60,7 @@ export class SSEHandler {
 
 	private eventSource: EventSource | null = null;
 	private reconnectAttempts: number = 0;
-	private reconnectTimer: NodeJS.Timeout | null = null;
+	private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 	private isManualDisconnect: boolean = false;
 
 	/**
@@ -97,7 +97,7 @@ export class SSEHandler {
 	async connect(): Promise<void> {
 		// If already connected, disconnect first
 		if (this.eventSource) {
-			await this.disconnect();
+			this.disconnect();
 		}
 
 		// Mark as intentional connection
@@ -141,7 +141,7 @@ export class SSEHandler {
 	 *
 	 * @returns Promise<void>
 	 */
-	async disconnect(): Promise<void> {
+	disconnect(): void {
 		// Mark as manual disconnect to prevent auto-reconnect
 		this.isManualDisconnect = true;
 
@@ -199,7 +199,7 @@ export class SSEHandler {
 		this.eventSource.onmessage = async (event: MessageEvent) => {
 			try {
 				// Parse event data as JSON
-				const webhookEvent: WebhookEvent = JSON.parse(event.data);
+				const webhookEvent = JSON.parse(event.data as string) as WebhookEvent;
 
 				// Invoke event callback
 				await this.onEvent(webhookEvent);
@@ -267,7 +267,7 @@ export class SSEHandler {
 		// Schedule reconnection
 		this.reconnectTimer = setTimeout(() => {
 			this.reconnectTimer = null;
-			this.connect();
+			void this.connect();
 		}, delay);
 	}
 }

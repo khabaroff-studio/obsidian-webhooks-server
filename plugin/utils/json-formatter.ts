@@ -61,7 +61,7 @@ export function formatData(
  * @param data - String to parse
  * @returns Parsed object or null if invalid JSON
  */
-function tryParseJSON(data: string): any | null {
+function tryParseJSON(data: string): unknown {
 	try {
 		return JSON.parse(data);
 	} catch {
@@ -80,13 +80,13 @@ function tryParseJSON(data: string): any | null {
  *   ...other fields
  * }
  */
-function isNoteFormat(obj: any): boolean {
+function isNoteFormat(obj: unknown): obj is Record<string, unknown> {
 	return (
 		typeof obj === "object" &&
 		obj !== null &&
-		(obj.hasOwnProperty("title") ||
-			obj.hasOwnProperty("content") ||
-			obj.hasOwnProperty("tags"))
+		("title" in obj ||
+			"content" in obj ||
+			"tags" in obj)
 	);
 }
 
@@ -100,13 +100,13 @@ function isNoteFormat(obj: any): boolean {
  * - date/created/updated: Timestamps (go to frontmatter)
  * - Any other fields go to frontmatter as-is
  */
-function formatAsNote(obj: any): string {
-	const frontmatter: Record<string, any> = {};
+function formatAsNote(obj: Record<string, unknown>): string {
+	const frontmatter: Record<string, unknown> = {};
 	let content = "";
 
 	// Extract content field
 	if (obj.content !== undefined) {
-		content = String(obj.content);
+		content = typeof obj.content === "string" ? obj.content : JSON.stringify(obj.content);
 	}
 
 	// Extract and format known fields for frontmatter
@@ -122,7 +122,7 @@ function formatAsNote(obj: any): string {
 		if (
 			!knownFields.includes(key) &&
 			key !== "content" &&
-			obj.hasOwnProperty(key)
+			Object.prototype.hasOwnProperty.call(obj, key)
 		) {
 			frontmatter[key] = obj[key];
 		}
@@ -151,7 +151,7 @@ function formatAsNote(obj: any): string {
 /**
  * Format a single frontmatter field as YAML
  */
-function formatFrontmatterField(key: string, value: any): string {
+function formatFrontmatterField(key: string, value: unknown): string {
 	if (value === null || value === undefined) {
 		return `${key}: null\n`;
 	}
@@ -175,6 +175,9 @@ function formatFrontmatterField(key: string, value: any): string {
 		return `${key}: ${value}\n`;
 	}
 
-	// Numbers, booleans, etc.
-	return `${key}: ${value}\n`;
+	// Numbers, booleans, etc. — convert via String() for type safety
+	const stringified = typeof value === "number" || typeof value === "boolean"
+		? value.toString()
+		: JSON.stringify(value);
+	return `${key}: ${stringified}\n`;
 }

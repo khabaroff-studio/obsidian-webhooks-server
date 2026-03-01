@@ -12,6 +12,8 @@
  * - Optional logging callbacks
  */
 
+import { requestUrl } from "obsidian";
+
 /**
  * Configuration options for ACKHandler
  */
@@ -128,38 +130,33 @@ export class ACKHandler {
 	private async sendACK(eventId: string): Promise<boolean> {
 		const url = `${this.serverUrl}/ack/${this.clientKey}/${eventId}`;
 
-		try {
-			const response = await fetch(url, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+		const response = await requestUrl({
+			url,
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			throw: false,
+		});
 
-			if (response.ok) {
-				// Success (200, 204, etc.)
-				return true;
-			}
-
-			// Check for special cases
-			if (response.status === 409) {
-				// Conflict - event already processed (idempotent)
-				return true;
-			}
-
-			// 5xx errors - retry
-			if (response.status >= 500) {
-				throw new Error(
-					`Server error: ${response.status} ${response.statusText}`
-				);
-			}
-
-			// 4xx errors (except 409) - don't retry
-			return false;
-		} catch (error) {
-			// Network errors and other exceptions - retry
-			throw error;
+		if (response.status >= 200 && response.status < 300) {
+			// Success (200, 204, etc.)
+			return true;
 		}
+
+		// Check for special cases
+		if (response.status === 409) {
+			// Conflict - event already processed (idempotent)
+			return true;
+		}
+
+		// 5xx errors - retry
+		if (response.status >= 500) {
+			throw new Error(`Server error: ${response.status}`);
+		}
+
+		// 4xx errors (except 409) - don't retry
+		return false;
 	}
 
 	/**

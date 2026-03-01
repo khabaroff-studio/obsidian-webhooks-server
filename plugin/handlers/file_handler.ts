@@ -6,8 +6,8 @@
  */
 
 import type { WebhookEvent, FileOperationOptions } from "../types";
-import type { Vault, TFile } from "obsidian";
-import { normalizePath } from "obsidian";
+import type { Vault } from "obsidian";
+import { TAbstractFile, TFile, normalizePath } from "obsidian";
 import { formatData } from "../utils/json-formatter";
 
 /**
@@ -60,8 +60,8 @@ export class FileHandler {
 		if (fileExists) {
 			// File exists - get it and update
 			const existingFile = this.vault.getAbstractFileByPath(path);
-			if (existingFile && this.isFile(existingFile)) {
-				await this.updateExistingFile(existingFile as TFile, content, opts);
+			if (existingFile instanceof TFile) {
+				await this.updateExistingFile(existingFile, content, opts);
 			} else {
 				// Fallback: file exists but not in cache - force update via adapter
 				const existingContent = await this.vault.adapter.read(path);
@@ -149,8 +149,8 @@ export class FileHandler {
 	/**
 	 * Check if abstract file is a file (has extension property)
 	 */
-	private isFile(file: any): boolean {
-		return file && file.hasOwnProperty("extension");
+	private isFile(file: TAbstractFile): file is TFile {
+		return file instanceof TFile;
 	}
 
 	/**
@@ -217,10 +217,10 @@ export class FileHandler {
 			// Handle race condition: file was created between check and create
 			if (error instanceof Error && error.message.includes("already exists")) {
 				const existingFile = this.vault.getAbstractFileByPath(path);
-				if (existingFile && this.isFile(existingFile)) {
+				if (existingFile instanceof TFile) {
 					// File exists now - update it instead (append mode)
-					const existingContent = await this.vault.read(existingFile as any);
-					await this.vault.modify(existingFile as any, existingContent + content);
+					const existingContent = await this.vault.read(existingFile);
+					await this.vault.modify(existingFile, existingContent + content);
 				} else {
 					// File still doesn't exist - re-throw original error
 					throw error;

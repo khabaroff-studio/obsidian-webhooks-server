@@ -106,16 +106,16 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 	 * Load settings from disk
 	 */
 	async loadSettings() {
-		const loadedData = await this.loadData();
+		const loadedData = (await this.loadData()) as Record<string, unknown> | null;
 
 		// Migration: Handle v1 settings (endpoint → serverUrl)
-		if (loadedData && loadedData.endpoint && !loadedData.serverUrl) {
+		if (loadedData && "endpoint" in loadedData && !("serverUrl" in loadedData)) {
 			loadedData.serverUrl = loadedData.endpoint;
 			delete loadedData.endpoint;
 			this.log("Migrated v1 settings: endpoint → serverUrl");
 		}
 
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData) as WebhookSettings;
 
 		// Apply smart defaults (v3.0 - override saved values)
 		this.applySmartDefaults();
@@ -178,15 +178,15 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 		this.pollingHandler = new PollingHandler(
 			this.settings.serverUrl,
 			this.settings.clientKey,
-			this.handleEvent.bind(this)
+			(event: WebhookEvent) => this.handleEvent(event)
 		);
 
 		// SSE handler - handles real-time events
 		this.sseHandler = new SSEHandler(
 			this.settings.serverUrl,
 			this.settings.clientKey,
-			this.handleEvent.bind(this),
-			this.updateConnectionState.bind(this)
+			(event: WebhookEvent) => this.handleEvent(event),
+			(state: string, message: string) => this.updateConnectionState(state as ConnectionState, message)
 		);
 
 		this.log("Handlers initialized");
@@ -303,7 +303,6 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 			}
 
 			// Write to file using FileHandler
-			const startTime = Date.now();
 			if (this.fileHandler) {
 				await this.fileHandler.processEvent(event, {
 					mode: this.settings.defaultMode,
@@ -311,7 +310,6 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 					separator: separator,
 				});
 			}
-			const processingTime = Date.now() - startTime;
 
 			this.log(`Successfully wrote to ${event.path}`);
 
@@ -410,7 +408,7 @@ export default class ObsidianWebhooksPlugin extends Plugin {
 	 */
 	log(message: string) {
 		if (this.settings.enableDebugLogging) {
-			console.log(`[ObsidianWebhooks] ${message}`);
+			console.debug(`[ObsidianWebhooks] ${message}`);
 		}
 	}
 }

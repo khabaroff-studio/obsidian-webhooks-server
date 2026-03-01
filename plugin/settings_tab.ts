@@ -7,7 +7,7 @@
  * - Smart defaults that "just work"
  */
 
-import { App, Notice, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting, requestUrl } from "obsidian";
 import type ObsidianWebhooksPlugin from "./main";
 
 export class WebhookSettingTab extends PluginSettingTab {
@@ -66,7 +66,7 @@ export class WebhookSettingTab extends PluginSettingTab {
 			.setDesc("Get your key from the dashboard")
 			.addText((text) =>
 				text
-					.setPlaceholder("ck_...")
+					.setPlaceholder("Paste your client key")
 					.setValue(this.plugin.settings.clientKey)
 					.onChange(async (value) => {
 						this.plugin.settings.clientKey = value.trim();
@@ -111,18 +111,16 @@ export class WebhookSettingTab extends PluginSettingTab {
 
 		try {
 			const startTime = Date.now();
-			const response = await fetch(
-				`${this.plugin.settings.serverUrl}/test/${clientKey}`,
-				{
-					method: "POST",
-					signal: AbortSignal.timeout(5000),
-				}
-			);
+			const response = await requestUrl({
+				url: `${this.plugin.settings.serverUrl}/test/${clientKey}`,
+				method: "POST",
+				throw: false,
+			});
 
-			if (!response.ok) {
+			if (response.status < 200 || response.status >= 300) {
 				const errorMsg = response.status === 401 || response.status === 404
 					? "Invalid client key"
-					: `Server error: ${response.statusText}`;
+					: `Server error: ${response.status}`;
 				resultDiv.textContent = `Test failed: ${errorMsg}`;
 				resultDiv.classList.add("test-error");
 				return;
@@ -137,9 +135,7 @@ export class WebhookSettingTab extends PluginSettingTab {
 				resultDiv.remove();
 			}, 10000);
 		} catch (error) {
-			const errorMsg = error instanceof Error
-				? (error.name === "TimeoutError" ? "Connection timeout" : error.message)
-				: "Network error";
+			const errorMsg = error instanceof Error ? error.message : "Network error";
 			resultDiv.textContent = `Test failed: ${errorMsg}`;
 			resultDiv.classList.add("test-error");
 		}
@@ -154,8 +150,8 @@ export class WebhookSettingTab extends PluginSettingTab {
 
 	private renderAdvancedSettings(containerEl: HTMLElement): void {
 		// Collapsible Advanced Settings section
-		const advancedSetting = new Setting(containerEl)
-			.setName("Advanced settings")
+		new Setting(containerEl)
+			.setName("Advanced")
 			.setHeading()
 			.addExtraButton((button) => {
 				button
@@ -177,7 +173,7 @@ export class WebhookSettingTab extends PluginSettingTab {
 			.setDesc("Change only for self-hosted setup")
 			.addText((text) =>
 				text
-					.setPlaceholder("https://obsidian-webhooks.khabaroff.studio")
+					.setPlaceholder("https://your-server.example.com")
 					.setValue(this.plugin.settings.serverUrl)
 					.onChange(async (value) => {
 						// Normalize: remove trailing slash
@@ -238,7 +234,7 @@ export class WebhookSettingTab extends PluginSettingTab {
 			.setDesc("View your keys and webhook logs")
 			.addButton((button) => {
 				button
-					.setButtonText("Open Dashboard")
+					.setButtonText("Open dashboard")
 					.onClick(() => {
 						const clientKey = this.plugin.settings.clientKey;
 						if (!clientKey) {
