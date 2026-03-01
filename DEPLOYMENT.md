@@ -100,6 +100,8 @@ curl http://localhost:8081/health
 docker compose logs -f
 ```
 
+The container runs with `network_mode: host`, binding directly to the configured PORT (default: 8081).
+
 The server will:
 - Start on the configured PORT (default: 8081)
 - Connect to PostgreSQL
@@ -109,9 +111,13 @@ The server will:
 
 ## 4. Reverse Proxy (Nginx)
 
-Example Nginx configuration for SSL termination and SSE support:
+See `nginx.conf` for the full reference configuration. Key points:
 
 ```nginx
+upstream webhooks_server {
+    server localhost:8081;
+}
+
 server {
     listen 443 ssl http2;
     server_name your-domain.com;
@@ -119,18 +125,36 @@ server {
     ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
 
+    client_max_body_size 10M;
+
     location / {
-        proxy_pass http://127.0.0.1:8081;
+        proxy_pass http://webhooks_server;
+        proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # SSE support (critical for real-time delivery)
+        proxy_read_timeout 3600s;
         proxy_buffering off;
         proxy_cache off;
-        proxy_read_timeout 86400s;
-        proxy_send_timeout 86400s;
+    }
+
+    # Dedicated SSE location (critical for real-time delivery)
+    location /events {
+        proxy_pass http://webhooks_server;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_read_timeout 3600s;
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_redirect off;
+
+        default_type text/event-stream;
     }
 }
 
@@ -143,8 +167,9 @@ server {
 
 Key settings for SSE:
 - `proxy_buffering off` - prevents Nginx from buffering SSE events
-- `proxy_read_timeout 86400s` - keeps SSE connections alive for 24h
-- No `http2` on the proxy_pass (HTTP/1.1 required for SSE)
+- `proxy_read_timeout 3600s` - keeps SSE connections alive
+- Separate `/events` location with `Connection ""` header for proper SSE streaming
+- `proxy_http_version 1.1` - HTTP/1.1 required for SSE
 
 ## 5. Create Admin User
 
@@ -183,6 +208,7 @@ open https://your-domain.com
 
 Docker Compose includes automatic health monitoring:
 - Checks `/health` every 30 seconds
+- 3 retries with 10s timeout before marking unhealthy
 - Restarts on failure (`restart: unless-stopped`)
 
 ### Log Monitoring
@@ -195,12 +221,33 @@ docker compose logs -f
 docker compose logs --since 1h | grep -i error
 ```
 
+## 8. CI/CD
+
+GitHub Actions pipeline (`.github/workflows/ci.yml`):
+
+```
+Push to main → Run Go tests (with PostgreSQL) → Deploy to production (SSH + Docker)
+```
+
+Deployment is automatic on push to `main`.
+
 ## Updating
 
 ```bash
 git pull origin main
 docker compose build --no-cache
 docker compose up -d
+```
+
+## Frontend CSS
+
+Tailwind CSS is pre-built and committed to the repository. Docker does not require Node.js.
+
+If you modify HTML templates and need to rebuild CSS:
+
+```bash
+npm install        # first time only
+make css           # rebuild src/templates/assets/tailwind.css
 ```
 
 ## Troubleshooting
@@ -217,9 +264,10 @@ docker compose up -d
 
 ### SSE not working through proxy
 - Ensure `proxy_buffering off` in Nginx config
+- Verify separate `/events` location exists with `Connection ""` header
 - Check that no upstream proxy caches responses
 - Verify `Content-Type: text/event-stream` headers pass through
 
 ### Database connection fails with Supabase
-- Supabase requires IPv6 - use `network_mode: host` in docker-compose
+- Supabase requires IPv6 - `network_mode: host` is already set in docker-compose.yml
 - Verify the connection string includes `?sslmode=require` if needed

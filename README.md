@@ -113,6 +113,7 @@ requests.post(
 | Plugin | TypeScript, Obsidian API |
 | Auth | Mailgun (magic links), JWT |
 | Encryption | AES-256-GCM |
+| Frontend | Tailwind CSS (pre-built) |
 | Deploy | Docker, Nginx |
 | CI/CD | GitHub Actions |
 
@@ -161,6 +162,10 @@ make test
 # Lint
 make lint
 
+# Rebuild Tailwind CSS (after changing HTML templates)
+npm install        # first time only
+make css
+
 # Test database
 docker compose -f docker-compose.test.yml up -d   # port 5433
 
@@ -173,6 +178,8 @@ make build
 ```
 main.go                      # Entry point & routes
 schema.sql                   # Database schema
+tailwind.config.js           # Tailwind CSS config
+package.json                 # Node.js deps (Tailwind build only)
 src/
 ├── handlers/                # HTTP handlers (webhook, SSE, ACK, auth, admin)
 ├── services/                # Business logic (keys, events, auth, email, crypto)
@@ -181,6 +188,7 @@ src/
 ├── database/                # Connection pool & test helpers
 ├── repositories/            # Interfaces & mocks
 └── templates/               # HTML pages & email templates
+    └── assets/              # CSS, fonts, images
 plugin/                      # Obsidian plugin (TypeScript)
 ├── main.ts                  # Plugin entry point
 ├── handlers/                # SSE, polling, ACK, file handlers
