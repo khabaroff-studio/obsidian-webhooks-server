@@ -9,9 +9,16 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/khabaroff/obsidian-webhooks-selfhosted/src/models"
 	"github.com/khabaroff/obsidian-webhooks-selfhosted/src/services"
 )
+
+// sseClient holds an SSE client's channel and its associated webhook key ID
+type sseClient struct {
+	ch           chan interface{}
+	webhookKeyID uuid.UUID
+}
 
 // formatEventToJSON formats an event to JSON string including data field
 func formatEventToJSON(event *models.Event) string {
@@ -26,7 +33,7 @@ func formatEventToJSON(event *models.Event) string {
 type SSEHandler struct {
 	keyService     *services.KeyService
 	eventService   *services.EventService
-	clients        map[string]chan interface{}
+	clients        map[string]*sseClient
 	mu             sync.RWMutex
 	allowedOrigins string
 }
@@ -36,16 +43,16 @@ func NewSSEHandler(keyService *services.KeyService, eventService *services.Event
 	return &SSEHandler{
 		keyService:     keyService,
 		eventService:   eventService,
-		clients:        make(map[string]chan interface{}),
+		clients:        make(map[string]*sseClient),
 		allowedOrigins: allowedOrigins,
 	}
 }
 
 // addClient safely adds a client to the map
-func (sh *SSEHandler) addClient(key string, ch chan interface{}) {
+func (sh *SSEHandler) addClient(key string, webhookKeyID uuid.UUID, ch chan interface{}) {
 	sh.mu.Lock()
 	defer sh.mu.Unlock()
-	sh.clients[key] = ch
+	sh.clients[key] = &sseClient{ch: ch, webhookKeyID: webhookKeyID}
 }
 
 // removeClient safely removes a client from the map
@@ -112,7 +119,7 @@ func (sh *SSEHandler) handleSSEStream(c *gin.Context, clientKey string) {
 
 	// Create channel for new events
 	eventChan := make(chan interface{}, 10)
-	sh.addClient(clientKey, eventChan)
+	sh.addClient(clientKey, ck.WebhookKeyID, eventChan)
 	defer sh.removeClient(clientKey)
 
 	// Setup heartbeat
@@ -186,13 +193,24 @@ func (sh *SSEHandler) handlePolling(c *gin.Context, clientKey string) {
 	c.JSON(http.StatusOK, formattedEvents)
 }
 
-// BroadcastEvent broadcasts an event to all connected SSE clients
+// BroadcastEvent sends an event only to SSE clients whose webhook key matches the event's webhook key
 func (sh *SSEHandler) BroadcastEvent(event interface{}) {
 	sh.mu.RLock()
 	defer sh.mu.RUnlock()
-	for _, ch := range sh.clients {
+
+	// Extract target webhook key ID from SSEEvent
+	var targetWebhookKeyID uuid.UUID
+	if sseEvent, ok := event.(SSEEvent); ok {
+		targetWebhookKeyID = sseEvent.WebhookKeyID
+	}
+
+	for _, client := range sh.clients {
+		// Only send to clients that belong to this webhook key
+		if targetWebhookKeyID != uuid.Nil && client.webhookKeyID != targetWebhookKeyID {
+			continue
+		}
 		select {
-		case ch <- event:
+		case client.ch <- event:
 		default:
 			log.Println("Event channel full, dropping event")
 		}
