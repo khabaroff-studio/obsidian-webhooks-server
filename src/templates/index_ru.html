@@ -82,24 +82,6 @@
         #mobileMenu.open { max-height: 320px; opacity: 1; }
     </style>
 
-    <!-- PostHog Analytics (disabled on localhost) -->
-    <script>
-    if (!['localhost','127.0.0.1'].includes(location.hostname)) {
-        (window.requestIdleCallback || setTimeout)(function() {
-            !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-            posthog.init('phc_cBBWO6SRttjXK3we3pCcBe1qZHpoeZTh114PjWErKoc', {
-                api_host: 'https://eu.i.posthog.com',
-                autocapture: false,
-                capture_pageview: true,
-                capture_pageleave: true,
-                disable_session_recording: true,
-                enable_heatmaps: false,
-                capture_performance: false,
-            })
-        });
-    }
-    </script>
-
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -140,7 +122,7 @@
                     <span class="text-line">|</span>
                     <span class="text-ink font-semibold">RU</span>
                 </span>
-                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"header_keys","location":"header"}'>
+                <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-xs font-medium px-5 py-3 flex items-center gap-2 hover:bg-accent">
                     <span class="arrow-nudge">&#8594;</span><span class="tracking-wider uppercase">Получить ключи</span>
                 </a>
                 <button id="burgerBtn" class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-ink" aria-label="Открыть меню" aria-expanded="false">
@@ -200,10 +182,10 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 opacity-0 animate-fade-in animate-delay-4">
-                    <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-sm font-medium px-9 py-[18px] flex items-center justify-center gap-2 hover:bg-accent" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"start_free","location":"hero"}'>
+                    <a href="/login" class="btn-lift bg-ink text-[#FAFAFA] text-sm font-medium px-9 py-[18px] flex items-center justify-center gap-2 hover:bg-accent">
                         <span class="arrow-nudge">&#8594;</span> Получить ключи бесплатно
                     </a>
-                    <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="btn-lift bg-github text-white text-sm font-medium px-9 py-[18px] flex items-center justify-center gap-2" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"github","location":"hero"}'>
+                    <a href="https://github.com/khabaroff-studio/obsidian-webhooks-server" target="_blank" rel="noopener" class="btn-lift bg-github text-white text-sm font-medium px-9 py-[18px] flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                         GitHub
                     </a>
@@ -398,7 +380,7 @@
                             <span class="faq-icon text-ink-muted select-none">+</span>
                         </div>
                         <div class="faq-answer">
-                            <p class="text-lg text-ink-soft leading-[1.7] pt-3"><strong>Лендинг:</strong> анонимные просмотры страниц и&nbsp;клики по&nbsp;кнопкам через PostHog (серверы в&nbsp;EU). Без записи экрана, без персональных данных. <strong>Сервер:</strong> ваш email (для аутентификации), очередь доставки вебхуков (зашифрована AES-256, удаляется после подтверждения доставки). <strong>Плагин:</strong> не&nbsp;собирает ничего. Ноль аналитики, ноль телеметрии. Мы&nbsp;не&nbsp;продаём данные. Весь код открыт &#8212; проверьте сами.</p>
+                            <p class="text-lg text-ink-soft leading-[1.7] pt-3"><strong>Лендинг:</strong> анонимные просмотры страниц через Umami (self-hosted). Без записи экрана, без персональных данных. <strong>Сервер:</strong> ваш email (для аутентификации), очередь доставки вебхуков (зашифрована AES-256, удаляется после подтверждения доставки). <strong>Плагин:</strong> не&nbsp;собирает ничего. Ноль аналитики, ноль телеметрии. Мы&nbsp;не&nbsp;продаём данные. Весь код открыт &#8212; проверьте сами.</p>
                         </div>
                     </div>
                     <div class="faq-item py-6 fade-in stagger-4">
@@ -422,7 +404,7 @@
                     Настройте источник один раз — дальше заметки в&nbsp;Obsidian создаёт плагин.
                     Open source. Используйте бесплатно у&nbsp;нас или разверните у&nbsp;себя.
                 </p>
-                <a href="/login" class="btn-lift bg-ink text-white text-sm font-medium px-9 py-[18px] flex items-center gap-2 hover:bg-accent tracking-wider uppercase" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"start_free","location":"cta_bottom"}'>
+                <a href="/login" class="btn-lift bg-ink text-white text-sm font-medium px-9 py-[18px] flex items-center gap-2 hover:bg-accent tracking-wider uppercase">
                     <span class="arrow-nudge">&#8594;</span> Получить ключи
                 </a>
             </div>
@@ -462,7 +444,7 @@
                     </div>
                     <div class="flex flex-col gap-4">
                         <h4 class="text-xs font-semibold text-ink-muted uppercase">Контакт</h4>
-                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors" data-ph-event="cta_clicked" data-ph-properties='{"button_id":"telegram","location":"footer"}'>Telegram</a>
+                        <a href="https://t.me/khabaroff" target="_blank" rel="noopener" class="footer-link text-sm text-white transition-colors">Telegram</a>
                     </div>
                 </div>
             </div>
@@ -496,17 +478,6 @@
                 document.querySelectorAll('.faq-item.active').forEach(i => i.classList.remove('active'));
                 // Toggle current
                 if (!wasActive) item.classList.add('active');
-            });
-        });
-
-        // PostHog event tracking
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('[data-ph-event]').forEach(function(el) {
-                el.addEventListener('click', function() {
-                    const evt = this.getAttribute('data-ph-event');
-                    const props = JSON.parse(this.getAttribute('data-ph-properties') || '{}');
-                    if (window.posthog) posthog.capture(evt, props);
-                });
             });
         });
 
