@@ -88,7 +88,8 @@ END
 $$;
 
 -- Keep webhook_keys as a view for backward compatibility
-CREATE OR REPLACE VIEW webhook_keys AS
+-- security_invoker = true: view runs with caller's privileges, not creator's (fixes SECURITY DEFINER lint)
+CREATE OR REPLACE VIEW webhook_keys WITH (security_invoker = true) AS
 SELECT
     id,
     key_value,
@@ -100,7 +101,7 @@ FROM api_keys
 WHERE key_type = 'webhook';
 
 -- Keep client_keys as a view for backward compatibility
-CREATE OR REPLACE VIEW client_keys AS
+CREATE OR REPLACE VIEW client_keys WITH (security_invoker = true) AS
 SELECT
     id,
     key_value,
@@ -181,3 +182,4 @@ CREATE INDEX IF NOT EXISTS idx_webhook_logs_webhook_status ON webhook_logs(webho
 -- Composite indexes for common queries
 CREATE INDEX IF NOT EXISTS idx_events_webhook_key_processed ON events(webhook_key_id, processed);
 CREATE INDEX IF NOT EXISTS idx_events_created_expires ON events(created_at, expires_at);
+
