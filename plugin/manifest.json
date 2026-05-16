@@ -5,6 +5,7 @@
 	"minAppVersion": "0.15.0",
 	"description": "Receive webhooks from external services and create notes in your vault via a self-hosted server with real-time delivery.",
 	"author": "khabaroff",
-	"authorUrl": "https://github.com/khabaroff",
+	"authorUrl": "https://khabaroff.com/about/",
+	"fundingUrl": "https://obsidian-webhooks.khabaroff.studio/",
 	"isDesktopOnly": false
 }
